@@ -1,0 +1,77 @@
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sigil-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sigil-layer.base {
+  position: relative;
+  filter: drop-shadow(0 0 5px rgba(155, 0, 0, 0.5));
+}
+
+.red-shift {
+  left: 2px;
+  /* Filter makes the whole SVG red for the ghost effect */
+  filter: drop-shadow(-2px 0 red) sepia(100%) saturate(500%) hue-rotate(-50deg);
+  animation: glitch-step 3s infinite step-end;
+  opacity: 0;
+}
+
+.blue-shift {
+  left: -2px;
+  /* Filter makes the whole SVG cyan for the ghost effect */
+  filter: drop-shadow(2px 0 cyan) sepia(100%) saturate(500%) hue-rotate(140deg);
+  animation: glitch-step 3s infinite step-end;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+@keyframes glitch-step {
+  /* 0% to 30% (Approx 1 second): High activity */
+  0% { opacity: 1; clip-path: inset(10% 0 30% 0); transform: translate(-2px, 1px); }
+  5% { opacity: 1; clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+  10% { opacity: 1; clip-path: inset(40% 0 50% 0); transform: translate(-1px, 2px); }
+  15% { opacity: 1; clip-path: inset(80% 0 5% 0); transform: translate(1px, -2px); }
+  20% { opacity: 1; clip-path: inset(20% 0 70% 0); transform: translate(-2px, 0); }
+  25% { opacity: 1; clip-path: inset(50% 0 20% 0); transform: translate(2px, 1px); }
+  30% { opacity: 1; clip-path: inset(0% 0 90% 0); transform: translate(-1px, -1px); }
+
+  /* 31% to 100% (The 2-second pause): Invisible and static */
+  31%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+}
+
+.glitch-wrapper::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+
+.flicker-text {
+  animation: text-flicker 5s linear infinite;
+}
+
+@keyframes text-flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    opacity: 1;
+    text-shadow: none;
+  }
+  20%, 24%, 55% {
+    opacity: 0.3;
+    fill: #9B0000;
+  }
+}
