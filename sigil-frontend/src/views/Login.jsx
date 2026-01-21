@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import axiosClient from '../services/axios-client';
+import { redirect } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const { setUser } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,6 +20,9 @@ const LoginPage = () => {
 
             const userResponse = await axiosClient.get('/api/user');
             console.log('Logged in user:', userResponse.data);
+            setUser(userResponse.data);
+
+            redirect('/');
         }catch (err) {
             setError('Login failed. Please check your credentials.');
             console.error(err);
