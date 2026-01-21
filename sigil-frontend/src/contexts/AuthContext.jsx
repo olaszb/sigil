@@ -20,12 +20,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
   useEffect(() => {
-    getUser();
+    if (localStorage.getItem('isLoggedIn')){
+      getUser();
+    }else{
+      setLoading(false);
+    }
   }, []);
 
   const logout = async () => {
     await axiosClient.post("/api/logout");
     setUser(null);
+    localStorage.removeItem('isLoggedIn');
   };
 
   return (

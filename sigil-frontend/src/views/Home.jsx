@@ -1,7 +1,8 @@
 import { useAuth } from "../contexts/AuthContext";
-
+import { useNavigate } from "react-router-dom";
 const HomePage = () => {
-    const {logout} = useAuth();
+    const {logout, user} = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
@@ -11,12 +12,18 @@ const HomePage = () => {
             console.error("Logout failed:", error);
         }
     };
+    
 
   return (
     <div>
       <h1>Welcome to the Home Page</h1>
       <p>This is the main landing page of the application.</p>
-      <button onClick={handleLogout} className="border rounded-md p-2 hover:bg-gray-400">Logout</button>
+        {user 
+        ? 
+            (<button onClick={handleLogout} className="border rounded-md p-2 hover:bg-gray-400">Logout</button>)
+        :
+            (<button onClick={() => navigate('/login')} className="border rounded-md p-2 hover:bg-gray-400">Log in</button>)
+        }
     </div>
   );
 };

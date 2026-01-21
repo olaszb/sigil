@@ -12,4 +12,20 @@ const axiosClient = axios.create({
   xsrfHeaderName: 'X-XSRF-TOKEN',
 });
 
+
+//if we get a 401 response from the server, redirect to login page
+//so if a session expires the user redirected to login
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      if(!window.location.pathname.includes('/login')){
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosClient;

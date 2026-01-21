@@ -21,7 +21,8 @@ const LoginPage = () => {
             const userResponse = await axiosClient.get('/api/user');
             console.log('Logged in user:', userResponse.data);
             setUser(userResponse.data);
-
+            //added so useEffect doesnt throw 401 errors every time we navigate to login page
+            localStorage.setItem('isLoggedIn', 'true');
             redirect('/');
         }catch (err) {
             setError('Login failed. Please check your credentials.');
