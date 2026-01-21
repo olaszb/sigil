@@ -5,6 +5,7 @@ import { PrivateGuard, PublicGuard } from './util/Guard';
 import { AuthProvider } from './contexts/AuthContext';
 import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
+import NotFoundPage from './views/NotFound';
 
 function App() {
 
@@ -27,6 +28,9 @@ function App() {
           <Route element={<PublicGuard/>}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+
+          {/* Fallback */}
+          <Route path="*" element={<NotFoundPage />} />
 
         </Routes>
       </BrowserRouter>
