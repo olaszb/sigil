@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -49,4 +50,13 @@ Secondary Surface,Iron,#1A1A1E,For cards and headers; looks like metal.
 Primary Accent,Spectral Gold,#D4AF37,"For ""Buy"" buttons; feels like a rare treasure."
 Secondary Accent,Crimson Ritual,#880808,For alerts/errors; deep and serious.
 Text (Primary),Parchment,#F5F5DC,Off-white; easier on the eyes than pure white.
+
+
+
+
+Component,Font,Weight,Styling Tip
+Main Titles,Cinzel,700 (Bold),"Add letter-spacing: 0.1em to make it look ""royal."""
+Navigation,Inter,500 (Medium),Use uppercase and text-parchment.
+Body Text,Inter,400 (Regular),Keep it at 14px or 16px for readability.
+Price/Stats,Montserrat,600 (Semi-Bold),Use your Spectral Gold color here.
 */

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import GlitchSigil from "../util/GlitchSigil";
 
 
 const Navbar = () => {
@@ -18,7 +19,7 @@ const Navbar = () => {
     return (
         <nav className="flex justify-between items-center p-4 bg-primary-bg text-parchment">
             <div>
-                <h1>Sigil</h1>
+                <GlitchSigil />
             </div>
 
             <div>
