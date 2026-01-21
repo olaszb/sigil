@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@theme {
+    --color-primary-bg: hsl(var(--primary-bg));
+    --color-iron: hsl(var(--iron));
+    --color-primary-accent: hsl(var(--primary-accent));
+    --color-secondary-accent: hsl(var(--secondary-accent));
+    --color-parchment: hsl(var(--parchment));
+
+
+    --color-main-accent: hsl(var(--main-accent));
+    --color-hover-state: hsl(var(--hover-state));
+    --color-subtle-accent: hsl(var(--subtle-accent));
+    --color-danger-alert: hsl(var(--danger-alert));
+
+}
+
+@layer base {
+    :root {
+        --primary-bg: 240, 11%, 15%; /* Obsidian | Infinite, deep void. */
+        --iron: 240, 7%, 11%; /* Iron | For cards and headers; looks like metal. */
+        --primary-accent: 45, 64%, 52%; /* Spectral Gold | For "Buy" buttons; feels like a rare treasure. */
+        --secondary-accent: 0, 89%, 28%; /* Crimson Ritual | For alerts/errors; deep and serious. */
+        --parchment: 60, 56%, 91%; /* Parchment | Off-white; easier on the eyes than pure white. */
+
+
+        --main-accent: 0, 100%, 30%; /* Cursed Crimson | Primary buttons, active states, key branding.*/
+        --hover-state: 0, 100%, 41%; /* Sanguine Glow  | When a user interacts with an element. */
+        --subtle-accent: 0, 89%, 15%; /* Dried Blood | Border highlights or background glows for cards*/
+        --danger-alert: 0, 100%, 60%; /* Fresh Wound | Serious errors or urgent notifications. */
+    }
+}
+
+
+/* 
+Role,Color Name,Hex Code,Purpose
+Main Accent,Cursed Crimson,#9B0000,"Primary buttons, active states, key branding."
+Hover State,Sanguine Glow,#D00000,When a user interacts with an element.
+Subtle Accent,Dried Blood,#4A0404,Border highlights or background glows for cards.
+Danger/Alert,Fresh Wound,#FF3131,Serious errors or urgent notifications.
+
+
+
+Role,Color Name,Hex Code,Visual Vibe
+Primary Background,Obsidian,#0D0D0F,"Infinite, deep void."
+Secondary Surface,Iron,#1A1A1E,For cards and headers; looks like metal.
+Primary Accent,Spectral Gold,#D4AF37,"For ""Buy"" buttons; feels like a rare treasure."
+Secondary Accent,Crimson Ritual,#880808,For alerts/errors; deep and serious.
+Text (Primary),Parchment,#F5F5DC,Off-white; easier on the eyes than pure white.
+*/

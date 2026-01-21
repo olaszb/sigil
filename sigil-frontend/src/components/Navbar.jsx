@@ -16,7 +16,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="flex justify-between items-center p-4 bg-gray-200">
+        <nav className="flex justify-between items-center p-4 bg-primary-bg text-parchment">
             <div>
                 <h1>Sigil</h1>
             </div>
@@ -24,7 +24,7 @@ const Navbar = () => {
             <div>
                 {user 
                 ? 
-                    (<button onClick={handleLogout} className="border rounded-md p-2 hover:bg-gray-400">Logout</button>)
+                    (<button onClick={handleLogout} className="border border-iron bg-main-accent hover:bg-hover-state text-white px-2 py-1 rounded-lg">Logout</button>)
                 :
                     (<button onClick={() => navigate('/login')} className="border rounded-md p-2 hover:bg-gray-400">Log in</button>)
                 }
