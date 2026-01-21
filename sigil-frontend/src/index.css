@@ -2,7 +2,8 @@
 
 @theme {
     --color-primary-bg: hsl(var(--primary-bg));
-    --color-iron: hsl(var(--iron));
+    --color-secondary-bg: hsl(var(--secondary-bg));
+    /* --color-iron: hsl(var(--iron)); */
     --color-primary-accent: hsl(var(--primary-accent));
     --color-secondary-accent: hsl(var(--secondary-accent));
     --color-parchment: hsl(var(--parchment));
@@ -17,8 +18,9 @@
 
 @layer base {
     :root {
-        --primary-bg: 240, 11%, 15%; /* Obsidian | Infinite, deep void. */
-        --iron: 240, 7%, 11%; /* Iron | For cards and headers; looks like metal. */
+        --primary-bg: 240, 8%, 8%; /* Obsidian | Infinite, deep void. */
+        --secondary-bg: 240, 7%, 12%; /* Iron | For cards and headers; looks like metal. */
+        /* --iron: 240, 7%, 11%; Iron | For cards and headers; looks like metal. */
         --primary-accent: 45, 64%, 52%; /* Spectral Gold | For "Buy" buttons; feels like a rare treasure. */
         --secondary-accent: 0, 89%, 28%; /* Crimson Ritual | For alerts/errors; deep and serious. */
         --parchment: 60, 56%, 91%; /* Parchment | Off-white; easier on the eyes than pure white. */
