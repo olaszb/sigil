@@ -8,8 +8,8 @@ const MainLayout = () => {
   return (
     <div className="flex">
       <Navbar>
-        <NavbarItem icon={<HomeSVG />} text="Home"/>
-        <NavbarItem icon={<DashboardSVG />} text="Dashboard"/>
+        <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
+        <NavbarItem icon={<DashboardSVG />} text="Dashboard" to="/dashboard"/>
       </Navbar>
       <main>
         <Outlet />
