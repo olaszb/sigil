@@ -32,18 +32,30 @@ const Navbar = ({ children }) => {
         className={`h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
         ${expanded ? "w-64" : "w-16"} transition-all`}
       >
-        <div className="p-4 pb-2 flex justify-between items-center overflow-hidden h-20 my-2">
+        <div className={`
+            flex items-center h-20 my-2 pb-2 transition-all
+            ${expanded ? "justify-between px-3" : "justify-center"}
+        `}>
           <div
-            className={`transition-all overflow-hidden ${expanded ? "w-32" : "w-0"}`}
+            className={`overflow-hidden transition-all overflow-hidden  ${expanded ? "w-32 pl-3" : "w-0"}`}
           >
             <GlitchSigil expanded={expanded} />
           </div>
-          <button
-            onClick={() => setExpanded((curr) => !curr)}medieval scroll
-            className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
-          >
-            {expanded ? <XSVG /> : <MenuSVG />}
-          </button>
+          <div className="relative group flex items-center justify-center">
+            <button
+                onClick={() => setExpanded((curr) => !curr)}
+                medieval
+                scroll
+                className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
+            >
+                {expanded ? <XSVG /> : <MenuSVG />}
+            </button>
+            {!expanded && (
+                <div className="absolute left-full rounded-md px-2 py-1 mt-2 ml-5 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
+                Menu
+                </div>
+            )}
+          </div>
         </div>
 
         <NavbarContext.Provider value={{ expanded }}>

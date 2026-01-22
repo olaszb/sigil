@@ -3,7 +3,7 @@ const MenuSVG = ({ size = "100%" }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox="-5 -10 100 100"
+      viewBox="0 -10 100 100"
       width={size}
       height={size}
     >
