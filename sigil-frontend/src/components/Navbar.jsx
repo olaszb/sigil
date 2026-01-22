@@ -1,38 +1,111 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import GlitchSigil from "../util/GlitchSigil";
+import {
+  ChevronFirst,
+  ChevronLast,
+  MoreVertical,
+  MoreVerticalIcon,
+} from "lucide-react";
+import { createContext, useContext, useState } from "react";
+import GlitchSigil from "../util/icons/logo/GlitchSigil";
+import XSVG from "../util/icons/XSVG";
+import MenuSVG from "../util/icons/MenuSVG";
 
+const NavbarContext = createContext();
+const Navbar = ({ children }) => {
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+  const [expanded, setExpanded] = useState(true);
 
-const Navbar = () => {
-    const {logout, user} = useAuth();
-    const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log("User logged out successfully.");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-            console.log("User logged out successfully.");
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    };
+  return (
+    <aside className="h-screen">
+      <nav
+        className={`h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
+        ${expanded ? "w-64" : "w-16"} transition-all`}
+      >
+        <div className="p-4 pb-2 flex justify-between items-center overflow-hidden h-20 my-2">
+          <div
+            className={`transition-all overflow-hidden ${expanded ? "w-32" : "w-0"}`}
+          >
+            <GlitchSigil expanded={expanded} />
+          </div>
+          <button
+            onClick={() => setExpanded((curr) => !curr)}medieval scroll
+            className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
+          >
+            {expanded ? <XSVG /> : <MenuSVG />}
+          </button>
+        </div>
 
-    return (
-        <nav className="flex justify-between items-center p-4 bg-primary-bg text-parchment">
-            <div>
-                <GlitchSigil />
+        <NavbarContext.Provider value={{ expanded }}>
+          <ul className="flex-1 px-3">{children}</ul>
+        </NavbarContext.Provider>
+
+        <div className="border-t flex p-3">
+          <img
+            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+            alt="User Avatar"
+            className="w-10 h-10 rounded-md"
+          />
+          <div
+            className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52" : "w-0"}`}
+          >
+            <div className="leading-4">
+              <h4 className="font-semibold">John Doe</h4>
+              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
             </div>
-
-            <div>
-                {user 
-                ? 
-                    (<button onClick={handleLogout} className="border border-iron bg-main-accent hover:bg-hover-state text-white px-2 py-1 rounded-lg">Logout</button>)
-                :
-                    (<button onClick={() => navigate('/login')} className="border rounded-md p-2 hover:bg-gray-400">Log in</button>)
-                }
-            </div>
-
-        </nav>
-    );
+            <MoreVerticalIcon size={20} />
+          </div>
+        </div>
+      </nav>
+    </aside>
+  );
 };
 
 export default Navbar;
+
+export function NavbarItem({ icon, text, active, alert }) {
+  const { expanded } = useContext(NavbarContext);
+  return (
+    <li
+      className={`relative flex items-center py-1 px-3 my-1
+            font-medium rounded-md cursor-pointer transition-colors group
+            ${
+              active
+                ? "bg-gradient-totr from-indigo-200 to-indigo-100 text-indigo-800"
+                : "hover:bg-secondary-bg text-gray-600"
+            }
+            ${!expanded ? "justify-center px-0" : ""}`}
+    >
+      <div className="flex items-center justify-center w-10 h-10 shrink-0">
+        {icon}
+      </div>
+
+      <span
+        className={`overflow-hidden transition-all text-parchment font-['Cinzel'] font-normal ${expanded ? "w-52 ml-3" : "w-0"}`}
+      >
+        {text}
+      </span>
+      {alert && (
+        <div
+          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${expanded ? "" : "top-2"}`}
+        />
+      )}
+
+      {!expanded && (
+        <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
+          {text}
+        </div>
+      )}
+    </li>
+  );
+}
