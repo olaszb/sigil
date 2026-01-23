@@ -47,8 +47,6 @@ const Navbar = ({ children }) => {
           <div className="relative group flex items-center justify-center">
             <button
               onClick={() => setExpanded((curr) => !curr)}
-              medieval
-              scroll
               className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
             >
               {expanded ? <XSVG /> : <MenuSVG />}
