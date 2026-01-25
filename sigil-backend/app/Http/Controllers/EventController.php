@@ -12,7 +12,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        $events = Event::orderBy('start_time', 'desc')->paginate(10);
+        return response()->json($events);
     }
 
     /**
