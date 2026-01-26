@@ -6,12 +6,14 @@ import DashboardSVG from "./icons/DashboardSVG";
 
 const MainLayout = () => {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-secondary-bg">
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
         <NavbarItem icon={<DashboardSVG />} text="Dashboard" to="/dashboard"/>
       </Navbar>
-      <main>
+
+
+      <main className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         <Outlet />
       </main>
     </div>

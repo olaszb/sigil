@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
+import HeroSection from "../components/home/HeroSection";
 
 const HomePage = () => {
     
@@ -41,15 +42,12 @@ const HomePage = () => {
     }, []);
 
   return (
-    <>
-        
-        <div className="bg-secondary-bg text-parchment">
-        <h1>Welcome to the Home Page</h1>
-        <p>This is the main landing page of the application.</p>
+    <div className="bg-secondary-bg text-parchment min-w-screen min-h-screen">
+        <HeroSection/>  
+        <h1 className="text-center font-bold font-[Cinzel] my-5 text-2xl" >Events</h1>
         <Events events={events} />
             
-        </div>
-    </>
+    </div>
   );
 };
 

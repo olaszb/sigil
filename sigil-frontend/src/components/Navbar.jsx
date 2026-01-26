@@ -28,71 +28,79 @@ const Navbar = ({ children }) => {
   };
 
   return (
-    <aside className="h-screen">
-      <nav
-        className={`h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
-        ${expanded ? "w-64" : "w-16"} transition-all`}
-      >
-        <div
-          className={`
-            flex items-center h-20 my-2 pb-2 transition-all
-            ${expanded ? "justify-between px-3" : "justify-center"}
-        `}
+    <>
+      {expanded && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity" 
+          onClick={() => setExpanded(false)}
+        />
+      )}
+
+      <aside className="h-screen w-16 flex-shrink-0 relative">
+        <nav
+          className={`h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
+          ${expanded ? "fixed w-64 translate-x-0" : "absolute w-16"} transition-all z-50`}
         >
           <div
-            className={`overflow-hidden transition-all overflow-hidden  ${expanded ? "w-32 pl-3" : "w-0"}`}
+            className={`
+              flex items-center h-20 my-2 pb-2 transition-all
+              ${expanded ? "justify-between px-3" : "justify-center"}
+          `}
           >
-            <GlitchSigil expanded={expanded} />
-          </div>
-          <div className="relative group flex items-center justify-center">
-            <button
-              onClick={() => setExpanded((curr) => !curr)}
-              className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
+            <div
+              className={`overflow-hidden transition-all overflow-hidden  ${expanded ? "w-32 pl-3" : "w-0"}`}
             >
-              {expanded ? <XSVG /> : <MenuSVG />}
-            </button>
-            {!expanded && (
-              <div className="absolute left-full rounded-md px-2 py-1 mt-2 ml-5 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
-                Menu
-              </div>
+              <GlitchSigil expanded={expanded} />
+            </div>
+            <div className="relative group flex items-center justify-center">
+              <button
+                onClick={() => setExpanded((curr) => !curr)}
+                className="rounded-lg w-10 h-10 flex items-center justify-center text-parchment hover:text-main-accent transition-colors"
+              >
+                {expanded ? <XSVG /> : <MenuSVG />}
+              </button>
+              {!expanded && (
+                <div className="absolute left-full rounded-md px-2 py-1 mt-2 ml-5 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
+                  Menu
+                </div>
+              )}
+            </div>
+          </div>
+
+          <NavbarContext.Provider value={{ expanded }}>
+            <ul className="flex-1 px-3">{children}</ul>
+          </NavbarContext.Provider>
+
+          <div className="border-t flex p-3">
+            {user ? (
+              <>
+                <img
+                  src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-md"
+                />
+                <div
+                  className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52 opacity-100" : "w-0 opacity-0"}`}
+                >
+                  <div className="leading-4">
+                    <h4 className="font-semibold font-[Montserrat]">
+                      {user.name}
+                    </h4>
+                    <span className="text-xs text-gray-600 font-[Montserrat]">
+                      {user.email}
+                    </span>
+                  </div>
+                  <button onClick={handleLogout} className="ml-2">
+                    <LogOut size={20} />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <></>
             )}
           </div>
-        </div>
-
-        <NavbarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">{children}</ul>
-        </NavbarContext.Provider>
-
-        <div className="border-t flex p-3">
-          {user ? (
-            <>
-              <img
-                src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-                alt="User Avatar"
-                className="w-10 h-10 rounded-md"
-              />
-              <div
-                className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52" : "w-0"}`}
-              >
-                <div className="leading-4">
-                  <h4 className="font-semibold font-[Montserrat]">
-                    {user.name}
-                  </h4>
-                  <span className="text-xs text-gray-600 font-[Montserrat]">
-                    {user.email}
-                  </span>
-                </div>
-                <button onClick={handleLogout} className="ml-2">
-                  <LogOut size={20} />
-                </button>
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
-      </nav>
-    </aside>
+        </nav>
+      </aside>
+    </>
   );
 };
 
@@ -128,7 +136,7 @@ export function NavbarItem({ icon, text, active, alert, to }) {
         )}
 
         {!expanded && (
-          <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0">
+          <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
             {text}
           </div>
         )}
