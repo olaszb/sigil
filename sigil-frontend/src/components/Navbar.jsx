@@ -16,7 +16,7 @@ const NavbarContext = createContext();
 const Navbar = ({ children }) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -37,7 +37,7 @@ const Navbar = ({ children }) => {
 
       <aside className="h-screen w-16 flex-shrink-0 relative">
         <nav
-          className={`h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
+          className={`fixed h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
           ${expanded ? "fixed w-64 translate-x-0" : "absolute w-16"} transition-all z-50`}
         >
           <div

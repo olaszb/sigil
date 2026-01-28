@@ -42,9 +42,9 @@ const HomePage = () => {
     }, []);
 
   return (
-    <div className="bg-secondary-bg text-parchment min-w-screen min-h-screen">
+    <div className="bg-secondary-bg text-parchment w-full min-h-screen">
         <HeroSection/>  
-        <h1 className="text-center font-bold font-[Cinzel] my-5 text-2xl" >Events</h1>
+        <h1 className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
         <Events events={events} />
             
     </div>

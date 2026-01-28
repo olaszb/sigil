@@ -5,7 +5,7 @@ const Events = ({events}) => {
     
 
     return (
-        <>
+        <div className="flex flex-col items-center w-full pb-4 py-8">
             {events.map((event) => (
                 <EventItem 
                     key={event.id}
@@ -14,7 +14,7 @@ const Events = ({events}) => {
                     start_time={event.start_time}
                 />
             ))}
-        </>
+        </div>
     );
 }
 
