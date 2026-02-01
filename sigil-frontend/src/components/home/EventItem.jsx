@@ -38,7 +38,9 @@ const EventItem = ({ title, description, start_time }) => {
         <p className="text-sm font-bold uppercase leading-none tracking-[0.2rem]">
           {monthNames[date.getMonth()]}
         </p>
-        <p className="text-5xl font-[Cinzel] leading-none font-black">{date.getDate()}</p>
+        <p className="text-5xl font-[Cinzel] leading-none font-black">
+          {date.getDate()}
+        </p>
         <p className="text-xs uppercase font-medium leading-none">
           {weekDays[date.getDay()]}
         </p>
@@ -47,33 +49,42 @@ const EventItem = ({ title, description, start_time }) => {
       {/* Image */}
 
       <div className="relative shrink-0">
-        <img src="/public/images.jpeg" className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500" />
+        <img
+          src="/public/images.jpeg"
+          className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+        />
       </div>
 
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">{title}</h2>
-        <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">{description}</p>
+        <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
+          {title}
+        </h2>
+        <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
+          {description}
+        </p>
       </div>
 
       {/* Buy Ticket */}
 
       <div className="absolute top-0 right-0">
-        <button className="relative overflow-hidden
-    pl-8 pr-6 py-3 bg-main-accent text-primary-bg
-    [clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)] 
-    tracking-[0.15em] text-[10px] font-black uppercase
-    
-    before:content-[''] before:absolute before:inset-0
-    before:bg-parchment before:translate-y-[100%]
-    before:transition-translate before:duration-400 before:ease-in-out
-    hover:before:translate-y-0
-    
-    ">
-    <span className="relative z-10 hover:text-primary-bg transition-colors duration-300">
-      Claim Your Sigil
-    </span>
+        <button
+          className="relative overflow-hidden
+                    pl-8 pr-6 py-3 bg-main-accent text-primary-bg
+                    [clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)] 
+                    tracking-[0.15em] text-[10px] font-black uppercase
+                    
+                    before:content-[''] before:absolute before:inset-0
+                    before:bg-parchment before:translate-y-[100%]
+                    before:transition-transform before:duration-400 before:ease-in-out
+                    hover:before:translate-y-0
+                    
+                    "
+        >
+          <span className="relative z-10 hover:text-primary-bg transition-colors duration-300">
+            Claim Your Sigil
+          </span>
         </button>
       </div>
     </div>
@@ -81,4 +92,3 @@ const EventItem = ({ title, description, start_time }) => {
 };
 
 export default EventItem;
-

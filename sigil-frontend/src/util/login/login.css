@@ -1,0 +1,8 @@
+@keyframes bloodFall {
+    0% { transform: translateY(0) scaleY(1); opacity: 1; }
+    30% { transform: translateY(20px) scaleY(1.3); opacity: 1; }
+    100% { transform: translateY(110px) scaleY(1); opacity: 0; }
+  }
+.animate-blood-fall {
+    animation: bloodFall 3s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  }
