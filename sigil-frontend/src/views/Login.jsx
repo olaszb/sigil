@@ -33,11 +33,14 @@ const LoginPage = () => {
 
   return (
     <>
+      {/* Background image */}
       <img
         src="/public/Vampire_Castle.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale "
       />
+      {/* Background effects */}
       <div className="fixed inset-0 bg-black/60 z-10"></div>
+      <div className="fixed inset-0 pointer-events-none z-15 bg-[radial-gradient(circle,transparent_40%,black_120%)]"></div>
 
       <div
         className="relative min-h-screen w-full flex items-center justify-center
@@ -79,7 +82,7 @@ const LoginPage = () => {
             className="flex flex-col justify-center items-center text-parchment"
             onSubmit={handleLogin}
           >
-            <h1 className="text-4xl font-[Cinzel] mb-8">Login</h1>
+            <h1 className="text-4xl font-[Cinzel] mb-8 drop-shadow-[2px_2px_0px_rgba(154,0,0,1)]">Login</h1>
             {/* Email */}
             <div className="mb-5 flex flex-col">
               {/* <label for="email" className='mb-2 font-[Inter]'>Email:</label> */}
@@ -91,7 +94,7 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 required
-                className="w-60 border border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                 font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                 "
               />
@@ -107,7 +110,7 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                className="w-60 border border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                 font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                 "
               />
