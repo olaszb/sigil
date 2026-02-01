@@ -1,11 +1,11 @@
-const SigilSVG = () => {
+const SigilSVG = ({size=80}) => {
   return (
     <svg
       viewBox="-10 -10 120 120"
       xmlns="http://www.w3.org/2000/svg"
       style={{ maxHeight: "500px" }}
-      width={82}
-      height={80}
+      width={size}
+      height={size}
     >
 
       <g fill="#9B0000">
