@@ -3,6 +3,7 @@ import axiosClient from "../services/axios-client";
 import { redirect } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/login/login.css";
+import { Fingerprint, Key, Scroll, ScrollText, Skull } from "lucide-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -58,63 +59,69 @@ const LoginPage = () => {
             style={{
               clipPath:
                 "polygon(0% 0%, 100% 0%, 100% 20%, 85% 90%, 75% 40%, 60% 80%, 50% 30%, 35% 100%, 25% 50%, 10% 85%, 0% 20%)",
-            }}
-          ></div>
+            }}/>
           <div
             className="absolute left-[10%] -bottom-3 w-2 h-3 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "3s" }}
-          ></div>
+            style={{ animationDelay: "1s" }}/>
 
-          <div className="absolute left-[35%] -bottom-3 w-3 h-4 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"></div>
-
+          <div className="absolute left-[35%] -bottom-3 w-3 h-4 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"/>
+          
           <div
             className="absolute left-[70%] -bottom-3 w-2 h-3 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "4s" }}
-          ></div>
+            style={{ animationDelay: "4s" }}/>
 
           <div
             className="absolute left-[90%] -bottom-3 w-3 h-4 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "2s" }}
-          ></div>
+            style={{ animationDelay: "2s" }}/>
 
           {/* Form */}
           <form
             className="flex flex-col justify-center items-center text-parchment"
-            onSubmit={handleLogin}
-          >
-            <h1 className="text-4xl font-[Cinzel] mb-8 drop-shadow-[2px_2px_0px_rgba(154,0,0,1)]">Login</h1>
+            onSubmit={handleLogin}>
+
+            <h1 className="text-4xl font-[Cinzel] mb-8">Login</h1>
+
             {/* Email */}
             <div className="mb-5 flex flex-col">
-              {/* <label for="email" className='mb-2 font-[Inter]'>Email:</label> */}
-              <input
-                name="email"
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-                className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
-                                "
-              />
+                <div className="relative group">
+                    <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
+                        <Scroll size={16}/>
+                    </div>
+                    <input
+                        name="email"
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        required
+                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                                        font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
+                    />
+                </div>
             </div>
+
             {/* Password */}
             <div className="mb-5 flex flex-col">
-              {/* <label for="password" className='mb-2 font-[Inter]'>Password:</label> */}
-              <input
-                name="password"
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-                className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
-                                "
-              />
+                <div className="relative group">
+                    <div className="absolute bottom-2 right-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
+                        <Key size={16}/>
+                    </div>
+                    <input
+                        name="password"
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        required
+                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                                        font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
+                                        "
+                    />
+                </div>
             </div>
+
             {/* Submit */}
             <div className="my-5">
               <button
