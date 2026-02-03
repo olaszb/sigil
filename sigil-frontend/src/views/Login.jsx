@@ -37,7 +37,7 @@ const LoginPage = () => {
       {/* Background image */}
       <img
         src="/public/Vampire_Castle.jpg"
-        className="fixed inset-0 w-full h-full object-cover z-0 grayscale "
+        className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
       <div className="fixed inset-0 bg-black/60 z-10"></div>
@@ -79,10 +79,11 @@ const LoginPage = () => {
             className="flex flex-col justify-center items-center text-parchment"
             onSubmit={handleLogin}>
 
-            <h1 className="text-4xl font-[Cinzel] mb-8">Login</h1>
+            <h1 className="text-4xl font-[Cinzel] mb-8">Rite of Entry</h1>
 
             {/* Email */}
             <div className="mb-5 flex flex-col">
+                <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Sigil Address</label>
                 <div className="relative group">
                     <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
                         <Scroll size={16}/>
@@ -103,6 +104,7 @@ const LoginPage = () => {
 
             {/* Password */}
             <div className="mb-5 flex flex-col">
+                <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Shadow Key</label>
                 <div className="relative group">
                     <div className="absolute bottom-2 right-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
                         <Key size={16}/>

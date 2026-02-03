@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
 import NotFoundPage from './views/NotFound';
+import RegisterPage from './views/Register';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           {/* Only for not logged in users */}
           <Route element={<PublicGuard/>}>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Route>
 
           {/* Fallback */}
