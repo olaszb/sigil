@@ -7,6 +7,7 @@ import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
 import NotFoundPage from './views/NotFound';
 import RegisterPage from './views/Register';
+import CreateEvent from './views/CreateEvent';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/create-event" element={<CreateEvent />} />
             </Route>
           </Route>
           
