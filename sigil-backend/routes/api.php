@@ -14,5 +14,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
     return $request->user();
     });
+    Route::post('/create-event', [EventController::class, 'store'])->name('events.store');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
