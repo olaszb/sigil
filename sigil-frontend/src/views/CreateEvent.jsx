@@ -169,7 +169,6 @@ const CreateEvent = () => {
                   Binding Sigil (Image)
                 </label>
 
-                {/* The Label acts as the clickable area for the hidden input */}
                 <label className="relative flex-1 border-2 border-dashed border-parchment/10 hover:border-main-accent/50 transition-all flex flex-col items-center justify-center cursor-pointer group bg-black/20 overflow-hidden">
                   <input
                     type="file"
@@ -183,7 +182,7 @@ const CreateEvent = () => {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        className="w-full h-full object-cover transition-all duration-700"
                       />
 
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center">
@@ -231,7 +230,7 @@ const CreateEvent = () => {
 
           {/* Animation */}
           <div
-            className="absolute -bottom-9 -left-0.6 w-[100.5%] h-10 bg-subtle-accent pointer-events-none"
+            className="absolute -bottom-9 -left-0.5 w-[100.3%] h-10 bg-subtle-accent pointer-events-none"
             style={{
               clipPath:
                 "polygon(0% 0%, 100% 0%, 100% 20%, 85% 90%, 75% 40%, 60% 80%, 50% 30%, 35% 100%, 25% 50%, 10% 85%, 0% 20%)",
