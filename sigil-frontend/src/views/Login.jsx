@@ -3,7 +3,7 @@ import axiosClient from "../services/axios-client";
 import { redirect } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/login/login.css";
-import { Fingerprint, Key, Scroll, ScrollText, Skull } from "lucide-react";
+import { Key, Scroll, } from "lucide-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
