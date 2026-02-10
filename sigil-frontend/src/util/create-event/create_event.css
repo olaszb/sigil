@@ -1,25 +1,25 @@
 
-/* 1. Target the calendar icon and make it "parchment" colored */
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    filter: invert(89%) sepia(13%) saturate(541%) hue-rotate(352deg) brightness(97%) contrast(92%);
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.3s;
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #9A0000;
 }
 
-input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+@keyframes scrollDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
     opacity: 1;
-    /* Optional: Make it glow red on hover */
-    filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(107%);
+    transform: translateY(0);
+  }
 }
 
-/* 2. Style the inner text (day/month/year placeholders) */
-input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
-    color: #EFE6D7; /* Parchment color */
-}
-
-/* 3. Style the specific highlighted field (e.g., when they click 'month') */
-input[type="datetime-local"]::-webkit-datetime-edit-field:focus {
-    background-color: rgba(154, 0, 0, 0.4); /* Blood red highlight */
-    color: white;
+.animate-scroll-down {
+  animation: scrollDown 0.3s ease-out forwards;
 }

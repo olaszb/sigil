@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
@@ -153,7 +153,7 @@ const CreateEvent = () => {
                         onClick={() => setIsOpen(false)}
                       />
 
-                      <div className="absolute top-full left-0 w-full mt-1 bg-primary-bg border border-parchment/20 z-30 max-h-48 overflow-y-auto shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="absolute top-full left-0 w-full mt-1 bg-primary-bg border border-parchment/20 z-30 max-h-48 overflow-y-auto shadow-2xl animate-scroll-down">
                         {venues.length > 0 ? (
                           venues.map((v) => (
                             <div
