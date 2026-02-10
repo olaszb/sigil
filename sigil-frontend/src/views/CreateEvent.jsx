@@ -197,7 +197,8 @@ const CreateEvent = () => {
                     placeholder="Event Description"
                     required
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
+                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
+                                            resize-none h-[110px]"
                   />
                 </div>
               </div>
