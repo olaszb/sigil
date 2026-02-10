@@ -32,8 +32,9 @@ class EventController extends Controller
             $data['image_url'] = $request->file('image_url')->store('event_images', 'public');
         }
 
-        $data['organizer_id'] = $request->user()->id;
-        $data['slug'] = Str::slug($data['title']) . '-' . $data['id'];
+        // $data['organizer_id'] = $request->user()->id;
+        $event_id = Event::max('id') + 1; 
+        $data['slug'] = Str::slug($data['title']) . '-' . $event_id;
 
         $event = Event::create($data);
 

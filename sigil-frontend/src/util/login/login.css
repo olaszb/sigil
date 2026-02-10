@@ -6,3 +6,14 @@
 .animate-blood-fall {
     animation: bloodFall 3s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
   }
+
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #9A0000; /* Main Accent Red */
+}

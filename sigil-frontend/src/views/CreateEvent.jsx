@@ -1,17 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
   Castle,
-  Fingerprint,
-  ImageIcon,
-  Key,
   PenTool,
-  Scroll,
   ScrollText,
-  Skull,
   Sparkles,
 } from "lucide-react";
 
@@ -19,10 +14,29 @@ const CreateEvent = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startTime, setStartTime] = useState("");
-  const [venue, setVenue] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
+
+  const [venues, setVenues] = useState([]);
+  const [selectedVenueId, setSelectedVenueId] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const response = await axiosClient.get("/api/venues");
+        setVenues(response.data);
+      } catch (err) {
+        console.error("Error fetching venues:", err);
+        setError("Failed to load venues. Please try again later.");
+      }
+    };
+    fetchVenues();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,9 +46,33 @@ const CreateEvent = () => {
     }
   };
 
-  const handleCreateEvent = (e) => {
+  const handleCreateEvent = async (e) => {
     e.preventDefault();
-    // Implement event creation logic here
+    setError(null);
+    const formData = new FormData();
+    formData.append("organizer_id", user.id);
+    formData.append("venue_id", selectedVenueId);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("start_time", startTime);
+    if (image) {
+      formData.append("image_url", image);
+    }
+    try {
+      await axiosClient
+        .post("/api/events", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log("Event created:", response.data);
+          navigate("/");
+        });
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error(err);
+    }
   };
 
   return (
@@ -98,18 +136,47 @@ const CreateEvent = () => {
                   <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
                     <Castle size={16} />
                   </div>
-                  <input
-                    name="venue"
-                    id="venue"
-                    type="text"
-                    value={venue}
-                    onChange={(e) => setVenue(e.target.value)}
-                    placeholder="Event Venue"
-                    required
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(!isOpen)}
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
-                  />
+                  >
+                    {selectedVenueId
+                      ? venues.find((v) => v.id === selectedVenueId)?.name
+                      : "Select Location"}
+                  </button>
+                  {isOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-20"
+                        onClick={() => setIsOpen(false)}
+                      />
+
+                      <div className="absolute top-full left-0 w-full mt-1 bg-primary-bg border border-parchment/20 z-30 max-h-48 overflow-y-auto shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+                        {venues.length > 0 ? (
+                          venues.map((v) => (
+                            <div
+                              key={v.id}
+                              onClick={() => {
+                                setSelectedVenueId(v.id);
+                                setIsOpen(false);
+                              }}
+                              className="w-full border-b border-parchment/20 hover:bg-main-accent hover:text-white transition-colors duration-400 font-[Montserrat]"
+                            >
+                              {v.name}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="p-3 text-[10px] text-parchment/30 italic">
+                            No locations found...
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
+                <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 
               {/* Description */}
@@ -161,8 +228,6 @@ const CreateEvent = () => {
 
             {/* Right Column */}
             <div className="w-full h-full md:w-110 bg-black/20 p-4 flex flex-col border-t md:border-t-0">
-              
-              
               {/* Image Upload */}
               <div className="flex-1 flex flex-col mb-8">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
