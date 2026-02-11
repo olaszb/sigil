@@ -30,7 +30,7 @@ const EventTab = ({title, start_time, venue_name}) => {
 
 
   return (
-    <div className="relative max-w-6xl mx-auto -mt-26.5">
+    <div className="relative ">
             <div className="flex justify-end gap-0 mr-15">
                 <div className="px-8 py-4 h-fit bg-main-accent flex flex-col items-center justify-center text-primary-bg cursor-default">
                     <p className="text-sm font-bold uppercase leading-none tracking-[0.2rem]">

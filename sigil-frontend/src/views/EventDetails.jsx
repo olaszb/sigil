@@ -34,8 +34,26 @@ const EventDetails = () => {
   return (
     <div className="w-full min-h-screen bg-secondary-bg text-parchment">
         <EventHero title={event?.title} image_url={event?.image_url} start_time={event?.start_time} />
+        
 
-        <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name}/>
+        <div className="relative max-w-6xl mx-auto px-8">
+            <div className="absolute left-8 right-8 -top-26.5 z-30">
+                <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name}/>
+            </div>
+
+            <div className="pt-10 pb-20"> 
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                  <div className="md:col-span-2">
+                      <h2 className="text-main-accent font-[Cinzel] text-xl mb-4 border-b border-parchment/10 pb-2">
+                        Ritual Description
+                      </h2>
+                      <p className="font-[Montserrat] leading-relaxed text-parchment/70 whitespace-pre-line">
+                        {event?.description}
+                      </p>
+                  </div>
+               </div>
+            </div>
+        </div>
     </div>
   );
 }
