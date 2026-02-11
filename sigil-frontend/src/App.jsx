@@ -6,6 +6,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
 import NotFoundPage from './views/NotFound';
+import RegisterPage from './views/Register';
+import CreateEvent from './views/CreateEvent';
+import EventDetails from './views/EventDetails';
 
 function App() {
 
@@ -17,16 +20,19 @@ function App() {
           <Route element={<MainLayout />}>
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
+            <Route path='/events/:slug' element={<EventDetails />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/create-event" element={<CreateEvent />} />
             </Route>
           </Route>
           
           {/* Only for not logged in users */}
           <Route element={<PublicGuard/>}>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Route>
 
           {/* Fallback */}

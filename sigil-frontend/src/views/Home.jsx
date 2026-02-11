@@ -22,7 +22,6 @@ const HomePage = () => {
         try {
             const response = await axiosClient.get(`/api/events?page=${page}`);
             setEvents(response.data.data);
-            console.log("Fetched events:", response.data.data);
             setPagination({
                 current_page: response.data.current_page,
                 last_page: response.data.last_page,

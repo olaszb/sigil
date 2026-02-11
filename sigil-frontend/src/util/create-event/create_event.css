@@ -1,0 +1,25 @@
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #9A0000;
+}
+
+@keyframes scrollDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll-down {
+  animation: scrollDown 0.3s ease-out forwards;
+}

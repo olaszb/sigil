@@ -15,9 +15,14 @@ class Event extends Model
         'description',
         'start_time',
         'image_url',
+        'slug',
     ];
 
     public function tickets(){
         return $this->hasMany(Ticket::class);
+    }
+
+    public function venue(){
+        return $this->belongsTo(Venue::class);
     }
 }

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('Test1234'),
+            'role' => 'organizer',
         ]);
 
         Venue::factory()->create([
@@ -41,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Spring Festival',
             'description' => 'A celebration of spring with music and food.',
             'start_time' => now()->addMonths(2),
+            'slug' => 'spring-festival-2026',
         ]);
 
         Event::factory()->create([
@@ -49,6 +51,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Dexfest',
             'description' => 'Tokyo, Japan. Dexcore, Nocturnal Bloodlust, Sailing Before The Wind',
             'start_time' => now()->addMonths(2),
+            'slug' => 'dexfest-2026',
         ]);
     }
 }

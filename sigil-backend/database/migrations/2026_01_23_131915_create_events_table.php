@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->dateTime('start_time');
             $table->string('image_url')->nullable();
+            $table->string('slug')->unique();
             $table->timestamps();
             
         });
