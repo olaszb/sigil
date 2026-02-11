@@ -12,6 +12,7 @@ const Events = ({events}) => {
                     title={event.title}
                     description={event.description}
                     start_time={event.start_time}
+                    slug={event.slug}
                 />
             ))}
         </div>

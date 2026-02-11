@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEventRequest;
 use App\Models\Event;
+use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -48,9 +49,14 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Event $event)
-    {
-        //
+    public function show($slug)
+    {  
+       $event = Event::with('venue')->where('slug', $slug)->firstOrFail();
+       
+       return response()->json([
+        'event' => $event,
+        'venue' => $event->venue
+       ]);
     }
 
     /**

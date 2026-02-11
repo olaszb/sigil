@@ -1,4 +1,6 @@
-const EventItem = ({ title, description, start_time }) => {
+import { Link } from "react-router-dom";
+
+const EventItem = ({ title, description, start_time, slug }) => {
   const date = new Date(start_time);
 
   const monthNames = [
@@ -47,20 +49,23 @@ const EventItem = ({ title, description, start_time }) => {
       </div>
 
       {/* Image */}
-
-      <div className="relative shrink-0">
-        <img
-          src="/public/images.jpeg"
-          className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
-        />
-      </div>
+      <Link to={`/events/${slug}`}>
+        <div className="relative shrink-0">
+          <img
+            src="/public/images.jpeg"
+            className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+          />
+        </div>
+      </Link>
 
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
-          {title}
-        </h2>
+        <Link to={`/events/${slug}`}>
+          <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
+            {title}
+          </h2>
+        </Link>
         <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
           {description}
         </p>
