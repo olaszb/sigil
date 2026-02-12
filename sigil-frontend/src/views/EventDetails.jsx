@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
+import EditorRenderer from "../components/create-event/Editor/EditorRenderer";
 
 const EventDetails = () => {
     const [event, setEvent] = useState(null);
@@ -44,9 +45,11 @@ const EventDetails = () => {
                       <h2 className="text-main-accent font-[Cinzel] text-xl mb-4 border-b border-parchment/10 pb-2">
                         Ritual Description
                       </h2>
-                      <p className="font-[Montserrat] leading-relaxed text-parchment/70 whitespace-pre-line">
-                        {event?.description}
-                      </p>
+                      {event?.description ? (
+                        <RitualRenderer jsonContent={event.description} />
+                        ) : (
+                        <p className="italic opacity-30">The records for this ritual are blank...</p>
+                      )}
                   </div>
                </div>
             </div>

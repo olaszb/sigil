@@ -23,7 +23,7 @@ const EditorToolbar = () => {
                 setIsUnderline(selection.hasFormat("underline"));
             }
         })
-    });
+    }, [editor]);
 
     useEffect(() => {
         return editor.registerUpdateListener(({editorState}) => {

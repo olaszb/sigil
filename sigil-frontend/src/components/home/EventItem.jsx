@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getPlainTextFromLexical } from "../../util/helper";
 
 const EventItem = ({ title, description, start_time, slug }) => {
   const date = new Date(start_time);
@@ -67,7 +68,7 @@ const EventItem = ({ title, description, start_time, slug }) => {
           </h2>
         </Link>
         <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
-          {description}
+          {getPlainTextFromLexical(description)}
         </p>
       </div>
 
