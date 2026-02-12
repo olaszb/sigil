@@ -218,7 +218,7 @@ const CreateEvent = () => {
               </div>
               
               {/* Image Upload */}
-              <div className="flex-1 flex flex-col mb-4">
+              <div className="flex-1 flex flex-col mb-4 h-[250px]">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
                   Binding Sigil (Image)
                 </label>
@@ -279,8 +279,8 @@ const CreateEvent = () => {
               </div>
             </div>
 
-            {error && <p className="text-danger-alert">{error}</p>}
           </form>
+            {error && <p className="text-danger-alert">{error}</p>}
         </div>
       </div>
     </>

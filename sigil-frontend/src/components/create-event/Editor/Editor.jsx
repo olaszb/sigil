@@ -22,13 +22,17 @@ const Editor = ({ onChange }) => {
     <div className="group relative border border-parchment/10 hover:border-main-accent/60 bg-black/40 min-h-[150px] transition-all duration-400 focus-within:border-main-accent/50">
       <LexicalComposer initialConfig={initialConfig}>
         <EditorToolbar/>
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable className="outline-none p-3 min-h-[150px]" />
-          }
-          
-          ErrorBoundary={LexicalErrorBoundary}
-        />
+        <div className="relative h-[250px] max-h-[300px] overflow-y-auto custom-scrollbar">
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable className="outline-none p-3 min-h-[150px]" />
+            }
+            
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+
+        </div>
+
         <ListPlugin />
         <HistoryPlugin />
         <OnChangePlugin

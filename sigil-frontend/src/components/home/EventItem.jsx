@@ -1,33 +1,9 @@
 import { Link } from "react-router-dom";
-import { getPlainTextFromLexical } from "../../util/helper";
+import { getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
 
 const EventItem = ({ title, description, start_time, slug }) => {
   const date = new Date(start_time);
 
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const weekDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
 
   return (
     <div
@@ -37,7 +13,7 @@ const EventItem = ({ title, description, start_time, slug }) => {
                 overflow-hidden"
     >
       {/* Date */}
-      <div className="px-8 bg-main-accent flex flex-col items-center justify-center text-primary-bg cursor-default">
+      <div className="w-30 px-8 bg-main-accent flex flex-col items-center justify-center text-primary-bg cursor-default">
         <p className="text-sm font-bold uppercase leading-none tracking-[0.2rem]">
           {monthNames[date.getMonth()]}
         </p>
