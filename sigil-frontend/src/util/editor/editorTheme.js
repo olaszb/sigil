@@ -2,7 +2,6 @@ const editorTheme = {
   paragraph: "mb-2 text-parchment/80 font-[Montserrat]",
   ltr: "text-left",
   rtl: "text-right",
-  placeholder: "text-parchment/20",
   heading: {
     h1: "text-4xl font-[Cinzel] text-main-accent mb-4 mt-2 block",
     h2: "text-2xl font-[Cinzel] text-main-accent/80 mb-3 mt-2 block",
@@ -19,6 +18,9 @@ const editorTheme = {
     underline: "underline",
     underlineStrikethrough: "underline line-through",
   },
+  center: "text-center",
+  left: "text-left",
+  right: "text-right",
 };
 
 export default editorTheme;

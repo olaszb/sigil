@@ -39,7 +39,7 @@ const EventDetails = () => {
                 <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name}/>
             </div>
 
-            <div className="pt-10 pb-20"> 
+            <div className="pt-10 pb-20 w-[90%]"> 
                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                   <div className="md:col-span-2">
                       <h2 className="text-main-accent font-[Cinzel] text-xl mb-4 border-b border-parchment/10 pb-2">

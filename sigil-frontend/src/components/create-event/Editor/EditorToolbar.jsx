@@ -1,12 +1,12 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection, $createParagraphNode } from "lexical";
-import { Bold, Italic, Underline, Heading1, List, Quote, Heading2 } from "lucide-react";
+import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection, $createParagraphNode, FORMAT_ELEMENT_COMMAND } from "lexical";
+import { Bold, Italic, Underline, Heading1, List, Quote, Heading2, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { $createHeadingNode, $isHeadingNode} from "@lexical/rich-text"
 import { $setBlocksType } from "@lexical/selection";
 import { $createQuoteNode, $isQuoteNode, } from "@lexical/rich-text";
-import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, $isListNode } from "@lexical/list";
-import { $getNearestNodeOfType } from "@lexical/utils";
+import { INSERT_UNORDERED_LIST_COMMAND, $isListNode } from "@lexical/list";
+
 
 const EditorToolbar = () => {
     const [editor] = useLexicalComposerContext();
@@ -96,6 +96,10 @@ const EditorToolbar = () => {
         }
     }
 
+    const formatAlignment = (alignment) => {
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment);
+    };
+
     return (
         <div className="flex gap-2 p-2 border-b border-parchment/10 group-hover:border-main-accent/60 group-focus-within:border-main-accent/60 transition-colors duration-400 bg-black/20">
             <button type="button"
@@ -149,6 +153,26 @@ const EditorToolbar = () => {
                 onClick={formatQuote} 
                 className={`p-1 transition-colors ${isQuote ? "text-main-accent" : "text-parchment/60"}`}>
                 <Quote size={16} />
+            </button>
+
+            <div className="w-[1px] h-6 bg-parchment/10 mx-1" /> 
+
+            <button type="button"
+                onClick={() => formatAlignment('left')}
+                className="p-1 text-parchment/60 hover:text-main-accent transition-colors">
+                <AlignLeft size={16} />
+            </button>
+
+            <button type="button"
+                onClick={() => formatAlignment('center')}
+                className="p-1 text-parchment/60 hover:text-main-accent transition-colors">
+                <AlignCenter size={16} />
+            </button>
+
+            <button type="button"
+                onClick={() => formatAlignment('right')}
+                className="p-1 text-parchment/60 hover:text-main-accent transition-colors">
+                <AlignRight size={16} />
             </button>
         </div>
     );
