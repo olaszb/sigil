@@ -25,7 +25,7 @@ class CreateEventRequest extends FormRequest
             'venue_id' => 'required|exists:venues,id',
             'organizer_id' => 'required|exists:users,id',
             'title' => 'required|max:255',
-            'description' => 'required|max:1000',
+            'description' => 'required|max:5000',
             'start_time' => 'required|date',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

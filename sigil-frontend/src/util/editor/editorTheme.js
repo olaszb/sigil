@@ -1,5 +1,5 @@
 const editorTheme = {
-    paragraph: "mb-2 text-parchment/80 font-[Montserrat]",
+  paragraph: "mb-2 text-parchment/80 font-[Montserrat]",
   ltr: "text-left",
   rtl: "text-right",
   placeholder: "text-parchment/20",
@@ -11,7 +11,7 @@ const editorTheme = {
   list: {
     ul: "list-disc ml-6 mb-4",
     ol: "list-decimal ml-6 mb-4",
-    listitem: "mb-1"
+    listitem: "mb-1",
   },
   text: {
     bold: "font-bold text-main-accent",
@@ -19,21 +19,16 @@ const editorTheme = {
     underline: "underline",
     underlineStrikethrough: "underline line-through",
   },
-  link: "text-main-accent underline underline-offset-4 cursor-pointer",
-}
+};
 
 export default editorTheme;
 
-
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
-import { LinkNode, AutoLinkNode } from "@lexical/link";
 
 export const EDITOR_NODES = [
   HeadingNode,
   QuoteNode,
   ListNode,
   ListItemNode,
-  LinkNode,
-  AutoLinkNode
 ];

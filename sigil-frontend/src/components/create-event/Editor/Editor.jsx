@@ -4,11 +4,8 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import {HeadingNode, QuoteNode} from "@lexical/rich-text"
-import {ListNode, ListItemNode} from "@lexical/list"
-import {LinkNode, AutoLinkNode} from "@lexical/link"
 import EditorToolbar from "./EditorToolbar";
-import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin"
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import editorTheme, { EDITOR_NODES } from "../../../util/editor/editorTheme";
 
 const theme = editorTheme;
@@ -32,7 +29,7 @@ const Editor = ({ onChange }) => {
           
           ErrorBoundary={LexicalErrorBoundary}
         />
-        <LinkPlugin />
+        <ListPlugin />
         <HistoryPlugin />
         <OnChangePlugin
           onChange={(editorState) => {

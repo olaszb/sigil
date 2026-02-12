@@ -1,10 +1,12 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection } from "lexical";
-import { Bold, Italic, Underline, Link, Heading1, List, Quote, Heading2 } from "lucide-react";
-import { TOGGLE_LINK_COMMAND } from "@lexical/link"
+import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection, $createParagraphNode } from "lexical";
+import { Bold, Italic, Underline, Heading1, List, Quote, Heading2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { $createHeadingNode, $isHeadingNode} from "@lexical/rich-text"
 import { $setBlocksType } from "@lexical/selection";
+import { $createQuoteNode, $isQuoteNode, } from "@lexical/rich-text";
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, $isListNode } from "@lexical/list";
+import { $getNearestNodeOfType } from "@lexical/utils";
 
 const EditorToolbar = () => {
     const [editor] = useLexicalComposerContext();
@@ -13,7 +15,6 @@ const EditorToolbar = () => {
     const [isUnderline, setIsUnderline] = useState(false);
     const [isHeadingOne, setIsHeadingOne] = useState(false);
     const [isHeadingTwo, setIsHeadingTwo] = useState(false);
-    const [isLink, setIsLink] = useState(false);
     const [isList, setIsList] = useState(false);
     const [isQuote, setIsQuote] = useState(false);
 
@@ -44,6 +45,9 @@ const EditorToolbar = () => {
                     setIsHeadingOne(false);
                     setIsHeadingTwo(false);
                 }
+
+                setIsQuote($isQuoteNode(element));
+                setIsList($isListNode(element));
             }
         })
     }, [editor]);
@@ -56,12 +60,6 @@ const EditorToolbar = () => {
         });
     }, [editor, updateToolbar])
 
-    const insertLink = useCallback(() => {
-        const url = prompt("Enter the URL of the portal:");
-        if (url) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
-        }
-    }, [editor])
 
     const formatHeading = useCallback((headingSize) => {
         editor.update(() => {
@@ -71,6 +69,32 @@ const EditorToolbar = () => {
         }
     });
     }, [editor])
+
+    const formatQuote = () => {
+        if (!isQuote){
+            editor.update(() => {
+                const selection = $getSelection();
+                if ($isRangeSelection(selection)) {
+                    $setBlocksType(selection, () => $createQuoteNode());
+                }
+            });
+        } else{
+            editor.update(() => {
+                const selection = $getSelection();
+                if ($isRangeSelection(selection)) {
+                    $setBlocksType(selection, () => $createParagraphNode());
+                }
+            });
+        }
+    }
+
+    const formatBulletList = () => {
+        if (!isList) {
+            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+        } else {
+            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+        }
+    }
 
     return (
         <div className="flex gap-2 p-2 border-b border-parchment/10 group-hover:border-main-accent/60 group-focus-within:border-main-accent/60 transition-colors duration-400 bg-black/20">
@@ -115,16 +139,15 @@ const EditorToolbar = () => {
 
             <div className="w-[1px] h-6 bg-parchment/10 mx-1" /> 
 
-            <button onClick={insertLink} className="p-1 hover:text-main-accent text-parchment/60">
-                <Link size={16} />
+            <button type="button"
+                onClick={formatBulletList}
+                className={`p-1 transition-colors ${isList ? "text-main-accent" : "text-parchment/60"}`}>
+                <List size={16} />
             </button>
 
-            <button 
-                onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')} 
-                className={`p-1 transition-colors ${
-                    isQuote ? "text-main-accent" : "text-parchment/60 hover:text-main-accent"
-                }`}
-            >
+            <button type="button"
+                onClick={formatQuote} 
+                className={`p-1 transition-colors ${isQuote ? "text-main-accent" : "text-parchment/60"}`}>
                 <Quote size={16} />
             </button>
         </div>
