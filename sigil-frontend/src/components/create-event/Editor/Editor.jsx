@@ -6,23 +6,18 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import {HeadingNode, QuoteNode} from "@lexical/rich-text"
 import {ListNode, ListItemNode} from "@lexical/list"
+import {LinkNode, AutoLinkNode} from "@lexical/link"
 import EditorToolbar from "./EditorToolbar";
+import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin"
+import editorTheme, { EDITOR_NODES } from "../../../util/editor/editorTheme";
 
-const theme = {
-  paragraph: "mb-2 text-parchment/80 font-[Montserrat]",
-  text: {
-    bold: "font-bold text-main-accent",
-    italic: "italic",
-    underline: "underline"
-  },
-
-};
+const theme = editorTheme;
 
 const Editor = ({ onChange }) => {
   const initialConfig = {
     namespace: "EventEditor",
     theme,
-    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
+    nodes: EDITOR_NODES,
     onError: (error) => console.error(error),
   };
 
@@ -32,16 +27,16 @@ const Editor = ({ onChange }) => {
         <EditorToolbar/>
         <RichTextPlugin
           contentEditable={
-            <ContentEditable className="outline-none p-3 min-h-[150px] text-sm" />
+            <ContentEditable className="outline-none p-3 min-h-[150px]" />
           }
           
           ErrorBoundary={LexicalErrorBoundary}
         />
+        <LinkPlugin />
         <HistoryPlugin />
         <OnChangePlugin
           onChange={(editorState) => {
             editorState.read(() => {
-              // Convert editor state to a string or JSON to save in your form
               onChange(JSON.stringify(editorState.toJSON()));
             });
           }}

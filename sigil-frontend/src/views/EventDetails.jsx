@@ -46,7 +46,7 @@ const EventDetails = () => {
                         Ritual Description
                       </h2>
                       {event?.description ? (
-                        <RitualRenderer jsonContent={event.description} />
+                        <EditorRenderer jsonContent={event.description} />
                         ) : (
                         <p className="italic opacity-30">The records for this ritual are blank...</p>
                       )}
