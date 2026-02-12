@@ -10,9 +10,6 @@ const EventDetails = () => {
     const [loading, setLoading] = useState(false);
     const { slug } = useParams();
 
-
-
-    // Fetch event details and venue information using the event ID from the URL
     useEffect(() => {
         setLoading(true);
         const fetchEvent = async () => {

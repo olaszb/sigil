@@ -9,6 +9,7 @@ import {
   ScrollText,
   Sparkles,
 } from "lucide-react";
+import Editor from "../components/create-event/Editor/Editor";
 
 const CreateEvent = () => {
   const [title, setTitle] = useState("");
@@ -91,7 +92,7 @@ const CreateEvent = () => {
                     z-20"
       >
         <div
-          className="relative w-full max-w-5xl h-[30rem] bg-primary-bg border border-parchment/20
+          className="relative w-full max-w-5xl bg-primary-bg border border-parchment/20
                     flex flex-col"
         >
           {/* Form */}
@@ -99,11 +100,11 @@ const CreateEvent = () => {
             Rite of Creation
           </h1>
           <form
-            className="flex flex-col md:flex-row h-full justify-center items-center text-parchment"
+            className="flex flex-col md:flex-row h-full justify-center items-stretch text-parchment"
             onSubmit={handleCreateEvent}
           >
             {/* Left Column */}
-            <div className="flex-1 p-4 border-r border-parchment/20 h-full">
+            <div className="flex-[4] p-4 border-r border-parchment/20 h-full">
               {/* Title */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
@@ -185,33 +186,23 @@ const CreateEvent = () => {
                   Ritual Details
                 </label>
                 <div className="relative group">
-                  <div className="absolute right-2 top-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
+                  <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
                     <PenTool size={16} />
                   </div>
-                  <textarea
-                    name="description"
-                    id="description"
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Event Description"
-                    required
-                    className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
-                                            resize-none h-[110px]"
-                  />
+                  <Editor onChange={(content) => setDescription(content)}/>
+                  
                 </div>
               </div>
+            </div>
 
+            {/* Right Column */}
+            <div className="flex-[3] bg-black/20 p-4 flex flex-col border-t md:border-t-0">
               {/* Date */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
                   Ritual Date & Time
                 </label>
                 <div className="relative group">
-                  {/* <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
-                            <Scroll size={16}/>
-                        </div> */}
                   <input
                     name="start_time"
                     id="start_time"
@@ -225,12 +216,9 @@ const CreateEvent = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="w-full h-full md:w-110 bg-black/20 p-4 flex flex-col border-t md:border-t-0">
+              
               {/* Image Upload */}
-              <div className="flex-1 flex flex-col mb-8">
+              <div className="flex-1 flex flex-col mb-4">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
                   Binding Sigil (Image)
                 </label>
@@ -273,7 +261,7 @@ const CreateEvent = () => {
               </div>
 
               {/* Submit */}
-              <div className="my-5 flex justify-center">
+              <div className="my-3 flex justify-center">
                 <button
                   type="submit"
                   className="relative overflow-hidden
@@ -293,31 +281,6 @@ const CreateEvent = () => {
 
             {error && <p className="text-danger-alert">{error}</p>}
           </form>
-
-          {/* Animation */}
-          <div
-            className="absolute -bottom-9 -left-0.5 w-[100.3%] h-10 bg-subtle-accent pointer-events-none"
-            style={{
-              clipPath:
-                "polygon(0% 0%, 100% 0%, 100% 20%, 85% 90%, 75% 40%, 60% 80%, 50% 30%, 35% 100%, 25% 50%, 10% 85%, 0% 20%)",
-            }}
-          />
-          <div
-            className="absolute left-[10%] -bottom-3 w-2 h-3 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "1s" }}
-          />
-
-          <div className="absolute left-[35%] -bottom-3 w-3 h-4 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]" />
-
-          <div
-            className="absolute left-[70%] -bottom-3 w-2 h-3 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "4s" }}
-          />
-
-          <div
-            className="absolute left-[90%] -bottom-3 w-3 h-4 bg-subtle-accent rounded-full animate-blood-fall pointer-events-none blur-[0.5px]"
-            style={{ animationDelay: "2s" }}
-          />
         </div>
       </div>
     </>
