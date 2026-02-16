@@ -9,15 +9,29 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+//get events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
+
+//get single event
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('event.show');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
     return $request->user();
     });
-    Route::post('/events', [EventController::class, 'store'])->name('event.store');
-    Route::put('/events/{event}', [EventController::class, 'update'])->name('event.update');
-    Route::get('/venues', [VenueController::class, 'getVenues'])->name('venues.index');
+    //logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    //create event
+    Route::post('/events', [EventController::class, 'store'])->name('event.store');
+    
+    //update event
+    Route::put('/events/{event}', [EventController::class, 'update'])->name('event.update');
+    
+    //get venues
+    Route::get('/venues', [VenueController::class, 'getVenues'])->name('venues.index');
+    
+    //delete event
+    Route::delete('/events/{event}' , [EventController::class, 'destroy'])->name('event.destroy');
 });

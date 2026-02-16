@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import Editor from "../components/create-event/Editor/Editor";
 import { getImageUrl } from "../util/helper";
+import { toastConfig } from "../util/toastConfig";
+import { toast } from "react-toastify";
 
 const UpdateEvent = ( ) => {
   const [id, setId] = useState("");
@@ -91,7 +93,7 @@ const UpdateEvent = ( ) => {
           },
         })
         .then((response) => {
-          console.log("Event updated:", response.data);
+          toast('Ritual updated successfully!', toastConfig);
           navigate(`/events/${response.data.event.slug}`);
         });
     } catch (err) {

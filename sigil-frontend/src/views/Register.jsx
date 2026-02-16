@@ -4,6 +4,8 @@ import axiosClient from "../services/axios-client";
 import { useAuth } from "../contexts/AuthContext";
 import { redirect } from "react-router-dom";
 import "../util/register/register.css";
+import { toast } from "react-toastify";
+import { toastConfig } from "../util/toastConfig";
 
 const RegisterPage = () => {
     const [name, setName] = useState("");
@@ -33,6 +35,7 @@ const RegisterPage = () => {
             setUser(userResponse.data);
             //added so useEffect doesnt throw 401 errors every time we navigate to login page
             localStorage.setItem("isLoggedIn", "true");
+            toast("Pact sealed successfully!", toastConfig);
             redirect("/");
         } catch (err) {
             setError("Registration failed. Please check your details.");

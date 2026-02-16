@@ -10,6 +10,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import Editor from "../components/create-event/Editor/Editor";
+import { toast } from "react-toastify";
+import { toastConfig } from "../util/toastConfig";
 
 const CreateEvent = () => {
   const [title, setTitle] = useState("");
@@ -66,8 +68,9 @@ const CreateEvent = () => {
             "Content-Type": "multipart/form-data",
           },
         })
+        // eslint-disable-next-line no-unused-vars
         .then((response) => {
-          console.log("Event created:", response.data);
+          toast("Ritual created successfully!", toastConfig);
           navigate("/");
         });
     } catch (err) {

@@ -4,12 +4,13 @@ import HomeSVG from "./icons/HomeSVG";
 import DashboardSVG from "./icons/DashboardSVG";
 import QuillSVG from "./icons/QuillSVG";
 import { useAuth } from "../contexts/AuthContext";
-
+import { ToastContainer } from "react-toastify";
 const MainLayout = () => {
   const { user } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-secondary-bg">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
         {user && (

@@ -1,8 +1,6 @@
 import { getImageUrl } from "../../util/helper";
 
-const EventHero = ({ image_url, start_time }) => {
-  const date = new Date(start_time);
-
+const EventHero = ({ image_url }) => {
     return (
         <div className="relative w-full h-[500px]">
             <div 
