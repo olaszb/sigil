@@ -5,8 +5,8 @@ const EventTab = ({ title, start_time, venue_name }) => {
 
   return (
     <div className="relative ">
-      <div className="flex justify-end gap-0 mr-15">
-        <div className="w-30 px-8 py-4 h-fit bg-main-accent flex flex-col items-center justify-center text-primary-bg cursor-default">
+      <div className="flex justify-end gap-0 mr-15 pointer-events-none">
+        <div className="w-30 px-8 py-4 h-fit bg-main-accent flex flex-col items-center justify-center text-primary-bg cursor-default pointer-events-auto">
           <p className="text-sm font-bold uppercase leading-none tracking-[0.2rem]">
             {monthNames[date.getMonth()]}
           </p>
@@ -17,7 +17,7 @@ const EventTab = ({ title, start_time, venue_name }) => {
             {weekDays[date.getDay()]}
           </p>
         </div>
-        <div className="w-[350px] bg-primary-bg shadow-2xl px-4">
+        <div className="w-[350px] bg-primary-bg shadow-2xl px-4 pointer-events-auto">
           <div className="cursor-default">
             <h1 className="text-2xl font-bold text-main-accent font-[Cinzel] text-left mt-4 break-words whitespace-normal leading-tight">
               {title}

@@ -9,6 +9,7 @@ import NotFoundPage from './views/NotFound';
 import RegisterPage from './views/Register';
 import CreateEvent from './views/CreateEvent';
 import EventDetails from './views/EventDetails';
+import UpdateEvent from './views/UpdateEvent';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route element={<PrivateGuard/>}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/create-event" element={<CreateEvent />} />
+              <Route path="/update-event/:slug" element={<UpdateEvent />} />
             </Route>
           </Route>
           

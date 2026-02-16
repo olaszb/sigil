@@ -7,10 +7,27 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import EditorToolbar from "./EditorToolbar";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import editorTheme, { EDITOR_NODES } from "../../../util/editor/editorTheme";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useEffect, useRef, useState } from "react";
 
 const theme = editorTheme;
 
-const Editor = ({ onChange }) => {
+function LoadInitialContentPlugin( {value} ){
+    const [editor] = useLexicalComposerContext();
+    const hasLoaded = useRef(false);
+
+    useEffect(() => {
+      if (value && !hasLoaded.current){
+        const editorState = editor.parseEditorState(value);
+        editor.setEditorState(editorState);
+        hasLoaded.current = true;
+      }
+    }, [value, editor])
+
+    return null;
+  }
+
+const Editor = ({ onChange, initialValue }) => {
   const initialConfig = {
     namespace: "EventEditor",
     theme,
@@ -32,6 +49,8 @@ const Editor = ({ onChange }) => {
           />
 
         </div>
+
+        <LoadInitialContentPlugin value={initialValue} />
 
         <ListPlugin />
         <HistoryPlugin />
