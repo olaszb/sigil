@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
@@ -10,15 +10,21 @@ import {
   Sparkles,
 } from "lucide-react";
 import Editor from "../components/create-event/Editor/Editor";
+import { getImageUrl } from "../util/helper";
 
-const CreateEvent = () => {
+const UpdateEvent = ( ) => {
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
   const [startTime, setStartTime] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { slug } = useParams();
 
   const [venues, setVenues] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState("");
@@ -27,17 +33,34 @@ const CreateEvent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchVenues = async () => {
+    const initializeUpdatePage = async () => {
+        setLoading(true);
       try {
-        const response = await axiosClient.get("/api/venues");
-        setVenues(response.data);
+        const [venuesRes, eventRes] = await Promise.all([
+            axiosClient.get('/api/venues'),
+            axiosClient.get(`/api/events/${slug}`)
+        ]);
+        setVenues(venuesRes.data);
+
+        const data = eventRes.data.event;
+        setId(data.id);
+        setTitle(data.title);
+        setDescription(data.description);
+        setOriginalDescription(data.description);
+        setStartTime(data.start_time);
+        setSelectedVenueId(data.venue_id);
+        setOriginalImage(data.image_url);
       } catch (err) {
         console.error("Error fetching venues:", err);
         setError("Failed to load venues. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchVenues();
-  }, []);
+    initializeUpdatePage();
+  }, [slug]);
+
+  if (loading) return <div className="text-parchment">Consulting the archives...</div>;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -47,10 +70,11 @@ const CreateEvent = () => {
     }
   };
 
-  const handleCreateEvent = async (e) => {
+  const handleUpdateEvent = async (e) => {
     e.preventDefault();
     setError(null);
     const formData = new FormData();
+    formData.append('_method', 'PUT');
     formData.append("organizer_id", user.id);
     formData.append("venue_id", selectedVenueId);
     formData.append("title", title);
@@ -61,14 +85,14 @@ const CreateEvent = () => {
     }
     try {
       await axiosClient
-        .post("/api/events", formData, {
+        .post(`/api/events/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((response) => {
-          console.log("Event created:", response.data);
-          navigate("/");
+          console.log("Event updated:", response.data);
+          navigate(`/events/${response.data.event.slug}`);
         });
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -80,7 +104,7 @@ const CreateEvent = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/Vampire_Castle.jpg"
+        src="/public/liurnia.webp"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
@@ -97,11 +121,11 @@ const CreateEvent = () => {
         >
           {/* Form */}
           <h1 className="text-4xl font-[Cinzel] mb-8 justify-self-center self-center mt-4 text-parchment">
-            Rite of Creation
+            Rite of Modification
           </h1>
           <form
             className="flex flex-col md:flex-row h-full justify-center items-stretch text-parchment"
-            onSubmit={handleCreateEvent}
+            onSubmit={handleUpdateEvent}
           >
             {/* Left Column */}
             <div className="flex-[4] p-4 border-r border-parchment/20 h-full">
@@ -189,7 +213,7 @@ const CreateEvent = () => {
                   <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
                     <PenTool size={16} />
                   </div>
-                  <Editor onChange={(content) => setDescription(content)}/>
+                  <Editor initialValue={originalDescription} onChange={(content) => setDescription(content)}/>
                   
                 </div>
               </div>
@@ -231,10 +255,10 @@ const CreateEvent = () => {
                     onChange={handleImageChange}
                   />
 
-                  {imagePreview ? (
+                  {originalImage ? (
                     <div className="absolute inset-0 w-full h-full">
                       <img
-                        src={imagePreview}
+                        src={imagePreview ? imagePreview : getImageUrl(originalImage)}
                         alt="Preview"
                         className="w-full h-full object-cover transition-all duration-700"
                       />
@@ -274,7 +298,7 @@ const CreateEvent = () => {
                                 before:transition-transform before:duration-400 before:ease-in-out
                                 hover:before:translate-y-0 hover:text-primary-bg"
                 >
-                  <span className="relative z-10">Create Ritual</span>
+                  <span className="relative z-10">Modify Ritual</span>
                 </button>
               </div>
             </div>
@@ -287,4 +311,4 @@ const CreateEvent = () => {
   );
 };
 
-export default CreateEvent;
+export default UpdateEvent;
