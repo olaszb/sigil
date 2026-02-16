@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
+import { getImageUrl, getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
 
-const EventItem = ({ title, description, start_time, slug }) => {
+const EventItem = ({ title, description, start_time, image_url, slug }) => {
   const date = new Date(start_time);
 
 
@@ -29,7 +29,7 @@ const EventItem = ({ title, description, start_time, slug }) => {
       <Link to={`/events/${slug}`}>
         <div className="relative shrink-0">
           <img
-            src="/public/images.jpeg"
+            src={getImageUrl(image_url)}
             className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
           />
         </div>

@@ -104,7 +104,7 @@ const UpdateEvent = ( ) => {
     <>
       {/* Background image */}
       <img
-        src="/public/Vampire_Castle.jpg"
+        src="/public/liurnia.webp"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
@@ -121,7 +121,7 @@ const UpdateEvent = ( ) => {
         >
           {/* Form */}
           <h1 className="text-4xl font-[Cinzel] mb-8 justify-self-center self-center mt-4 text-parchment">
-            Rite of Creation
+            Rite of Modification
           </h1>
           <form
             className="flex flex-col md:flex-row h-full justify-center items-stretch text-parchment"
@@ -298,7 +298,7 @@ const UpdateEvent = ( ) => {
                                 before:transition-transform before:duration-400 before:ease-in-out
                                 hover:before:translate-y-0 hover:text-primary-bg"
                 >
-                  <span className="relative z-10">Create Ritual</span>
+                  <span className="relative z-10">Modify Ritual</span>
                 </button>
               </div>
             </div>

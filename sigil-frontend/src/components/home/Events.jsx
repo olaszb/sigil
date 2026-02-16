@@ -12,6 +12,7 @@ const Events = ({events}) => {
                     title={event.title}
                     description={event.description}
                     start_time={event.start_time}
+                    image_url={event.image_url}
                     slug={event.slug}
                 />
             ))}
