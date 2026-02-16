@@ -7,6 +7,7 @@ import EditorRenderer from "../components/create-event/Editor/EditorRenderer";
 import { useAuth } from "../contexts/AuthContext";
 import { Castle, Users } from "lucide-react";
 import {toast} from "react-toastify";
+import { toastConfig } from "../util/toastConfig";
 
 const EventDetails = () => {
     const [event, setEvent] = useState(null);
@@ -16,18 +17,7 @@ const EventDetails = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const notify = () => toast("Ritual archived successfully!", {
-        style: {
-            backgroundColor: '#0a0a0a',
-            // color: '#f5f5dc',
-            color: '#9a0000',
-            border: '1px solid #9a0000',
-            fontFamily: 'Cinzel, serif',
-            textTransform: 'uppercase',
-            fontSize: '12px',
-            letterSpacing: '0.1em'
-        }
-    });
+    
 
     useEffect(() => {
         setLoading(true);
@@ -53,7 +43,7 @@ const EventDetails = () => {
     const handleEventDeletion = async () => {
         try{
             await axiosClient.delete(`/api/events/${event.id}`);
-            notify();
+            toast("Ritual archived successfully!", toastConfig);
             navigate('/');
         }catch(error){
             console.error('Error archiving ritual:', error);

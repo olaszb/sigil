@@ -4,6 +4,8 @@ import { redirect } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/login/login.css";
 import { Key, Scroll, } from "lucide-react";
+import { toast } from "react-toastify";
+import { toastConfig } from "../util/toastConfig";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +27,7 @@ const LoginPage = () => {
       setUser(userResponse.data);
       //added so useEffect doesnt throw 401 errors every time we navigate to login page
       localStorage.setItem("isLoggedIn", "true");
+      toast('Seal broken successfully!', toastConfig);
       redirect("/");
     } catch (err) {
       setError("Login failed. Please check your credentials.");

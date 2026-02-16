@@ -36,6 +36,17 @@
     }
 }
 
+.Toastify__progress-bar--dark,
+.Toastify__progress-bar--default,
+.Toastify__progress-bar--success,
+.Toastify__progress-bar--error {
+    background: #9a0000 !important;
+}
+
+.Toastify__progress-bar {
+    box-shadow: 0 0 10px rgba(154, 0, 0, 0.7);
+}
+
 
 /* 
 Role,Color Name,Hex Code,Purpose
@@ -62,3 +73,5 @@ Navigation,Inter,500 (Medium),Use uppercase and text-parchment.
 Body Text,Inter,400 (Regular),Keep it at 14px or 16px for readability.
 Price/Stats,Montserrat,600 (Semi-Bold),Use your Spectral Gold color here.
 */
+
+
