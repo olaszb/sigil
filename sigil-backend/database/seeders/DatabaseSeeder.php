@@ -39,15 +39,6 @@ class DatabaseSeeder extends Seeder
         Event::factory()->create([
             'venue_id' => 1,
             'organizer_id' => 1,
-            'title' => 'Spring Festival',
-            'description' => 'A celebration of spring with music and food.',
-            'start_time' => now()->addMonths(2),
-            'slug' => 'spring-festival-2026',
-        ]);
-
-        Event::factory()->create([
-            'venue_id' => 1,
-            'organizer_id' => 1,
             'title' => 'Dexfest',
             'description' => 'Tokyo, Japan. Dexcore, Nocturnal Bloodlust, Sailing Before The Wind',
             'start_time' => now()->addMonths(2),

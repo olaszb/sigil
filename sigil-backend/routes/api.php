@@ -30,8 +30,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/events/{event}', [EventController::class, 'update'])->name('event.update');
     
     //get venues
-    Route::get('/venues', [VenueController::class, 'getVenues'])->name('venues.index');
+    Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
     
     //delete event
     Route::delete('/events/{event}' , [EventController::class, 'destroy'])->name('event.destroy');
+
+    //create venue
+    Route::post('/venues', [VenueController::class, 'store'])->name('venue.store');
+    
 });

@@ -10,6 +10,7 @@ import RegisterPage from './views/Register';
 import CreateEvent from './views/CreateEvent';
 import EventDetails from './views/EventDetails';
 import UpdateEvent from './views/UpdateEvent';
+import AddVenuePage from './views/AddVenue';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/update-event/:slug" element={<UpdateEvent />} />
+              <Route path="/add-venue" element={<AddVenuePage/>}/>
             </Route>
           </Route>
           

@@ -2,7 +2,7 @@ import { Key, Scroll, User } from "lucide-react";
 import { useState } from "react";
 import axiosClient from "../services/axios-client";
 import { useAuth } from "../contexts/AuthContext";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../util/register/register.css";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
@@ -15,6 +15,7 @@ const RegisterPage = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const { setUser } = useAuth();
     const [step, setStep] = useState(1);
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -36,7 +37,7 @@ const RegisterPage = () => {
             //added so useEffect doesnt throw 401 errors every time we navigate to login page
             localStorage.setItem("isLoggedIn", "true");
             toast("Pact sealed successfully!", toastConfig);
-            redirect("/");
+            navigate("/");
         } catch (err) {
             setError("Registration failed. Please check your details.");
             console.error(err);

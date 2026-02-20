@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
-use App\Models\Venue;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

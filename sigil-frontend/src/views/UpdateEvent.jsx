@@ -45,6 +45,7 @@ const UpdateEvent = ( ) => {
         setVenues(venuesRes.data);
 
         const data = eventRes.data.event;
+
         setId(data.id);
         setTitle(data.title);
         setDescription(data.description);
@@ -203,6 +204,7 @@ const UpdateEvent = ( ) => {
                     </>
                   )}
                 </div>
+                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link className="text-main-accent hover:underline">Add it!</Link></p>
                 <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 
