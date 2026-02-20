@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './views/Login';
 import HomePage from './views/Home';
-import { PrivateGuard, PublicGuard } from './util/Guard';
+import { AdminGuard, PrivateGuard, PublicGuard } from './util/Guard';
 import { AuthProvider } from './contexts/AuthContext';
 import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
@@ -11,6 +11,7 @@ import CreateEvent from './views/CreateEvent';
 import EventDetails from './views/EventDetails';
 import UpdateEvent from './views/UpdateEvent';
 import AddVenuePage from './views/AddVenue';
+import Venues from './views/Venues';
 
 function App() {
 
@@ -30,6 +31,11 @@ function App() {
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/update-event/:slug" element={<UpdateEvent />} />
               <Route path="/add-venue" element={<AddVenuePage/>}/>
+            </Route>
+            
+            {/* Routes for admins only */}
+            <Route element={<AdminGuard />}>
+                <Route path="/venues" element={<Venues />}/>
             </Route>
           </Route>
           

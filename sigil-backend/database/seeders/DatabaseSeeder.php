@@ -27,6 +27,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'organizer',
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('Test1234'),
+            'role' => 'admin',
+        ]);
+
         Venue::factory()->create([
             'name' => 'Grand Hall',
             'address' => '123 Main St',
