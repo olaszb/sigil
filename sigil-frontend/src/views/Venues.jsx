@@ -2,17 +2,12 @@ import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
 import Venue from "../components/venues/Venue";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import EventHero from "../components/event-details/EventHero";
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
   const [error, setError] = useState(null);
   const { user } = useAuth();
-  const navigate = useNavigate();
-
-  if(user.role !== 'admin'){
-    navigate('/');
-  }
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -29,15 +24,22 @@ const Venues = () => {
   }, []);
 
   return (
-    <div>
-      <div className="text-center w-full">
-          <h1 className="text-4xl text-main-accent font-[Cinzel] my-8">
-            Ritual Sites
-          </h1>
+    <div className="w-full">
+      <div className="grayscale">
+        <EventHero image_url={"/public/register_bg.webp"}/>
       </div>
+
+      <div className="text-center">
+        <h1 className="text-4xl text-parchment font-[Cinzel] my-8">
+          Ritual Sites
+        </h1>
+      </div>
+      
+      <div className="px-4 space-y-4">
         {venues.map((venue) => (
-            <Venue key={venue.id} venue={venue}/>
+          <Venue key={venue.id} venue={venue} />
         ))}
+      </div>
     </div>
   );
 };
