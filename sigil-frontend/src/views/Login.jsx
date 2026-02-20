@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axiosClient from "../services/axios-client";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/login/login.css";
 import { Key, Scroll, } from "lucide-react";
@@ -12,6 +12,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const { setUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ const LoginPage = () => {
       //added so useEffect doesnt throw 401 errors every time we navigate to login page
       localStorage.setItem("isLoggedIn", "true");
       toast('Seal broken successfully!', toastConfig);
-      redirect("/");
+      navigate("/");
     } catch (err) {
       setError("Login failed. Please check your credentials.");
       console.error(err);

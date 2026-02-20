@@ -19,6 +19,11 @@ const MainLayout = () => {
             <NavbarItem icon={<DashboardSVG />} text="Dashboard" to="/dashboard"/>
           </>
         )}
+        {user && user.role === 'admin' && (
+          <NavbarItem icon={<HomeSVG />} text="Venues" to="/venues"/>
+        )
+
+        }
 
       </Navbar>
 

@@ -8,7 +8,7 @@ import EditorToolbar from "./EditorToolbar";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import editorTheme, { EDITOR_NODES } from "../../../util/editor/editorTheme";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const theme = editorTheme;
 

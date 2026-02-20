@@ -11,4 +11,9 @@ const PublicGuard = () => {
     return !user ? <Outlet/> : <Navigate to="/"/>;
 };
 
-export {PrivateGuard, PublicGuard};
+const AdminGuard = () => {
+    const {user} = useAuth();
+    return user.role === 'admin' ? <Outlet /> : <Navigate to="/"/>;
+}
+
+export {PrivateGuard, PublicGuard, AdminGuard};

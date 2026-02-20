@@ -27,6 +27,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'organizer',
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('Test1234'),
+            'role' => 'admin',
+        ]);
+
         Venue::factory()->create([
             'name' => 'Grand Hall',
             'address' => '123 Main St',
@@ -34,15 +41,6 @@ class DatabaseSeeder extends Seeder
             'country' => 'Freedonia',
             'postal_code' => '12345',
             'capacity' => 500,
-        ]);
-
-        Event::factory()->create([
-            'venue_id' => 1,
-            'organizer_id' => 1,
-            'title' => 'Spring Festival',
-            'description' => 'A celebration of spring with music and food.',
-            'start_time' => now()->addMonths(2),
-            'slug' => 'spring-festival-2026',
         ]);
 
         Event::factory()->create([

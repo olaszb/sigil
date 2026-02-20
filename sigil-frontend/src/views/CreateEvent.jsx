@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
@@ -180,6 +180,7 @@ const CreateEvent = () => {
                     </>
                   )}
                 </div>
+                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link className="text-main-accent hover:underline">Add it!</Link></p>
                 <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 
