@@ -38,4 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //create venue
     Route::post('/venues', [VenueController::class, 'store'])->name('venue.store');
     
+    //delete venue
+    Route::delete('/venues/{venue}', [VenueController::class, 'destroy'])->name('venue.destroy');
 });

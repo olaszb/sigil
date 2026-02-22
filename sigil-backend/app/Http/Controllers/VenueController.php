@@ -26,4 +26,10 @@ class VenueController extends Controller
             'message' => "Venue created successfully"
         ], 201);
     }
+
+    public function destroy(Venue $venue){
+        Gate::authorize('delete', $venue);
+        $venue->delete();
+        return response()->json(['message' => 'Venue deleted successfully']);
+    }
 }
