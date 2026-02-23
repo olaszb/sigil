@@ -13,6 +13,7 @@ const MainLayout = () => {
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
+        <NavbarItem icon={<HomeSVG />} text="Past Events" to="/past-events" />
         {user && (
           <>
             <NavbarItem icon={<QuillSVG />} text="Create Event" to="/create-event"/>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use Date;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::orderBy('start_time', 'asc')->paginate(10);
+        $events = Event::where('start_time', '>=' , Date::now())->orderBy('start_time', 'asc')->paginate(10);
         return response()->json($events);
     }
 
@@ -109,4 +110,11 @@ class EventController extends Controller
         return response()->json($events);
     }
 
+    public function pastEvents(){
+        $events = Event::where('start_time', '<', now())
+            ->orderBy('start_time', 'desc')
+            ->get();
+
+        return response()->json($events);
+    }
 }

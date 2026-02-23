@@ -12,6 +12,7 @@ import EventDetails from './views/EventDetails';
 import UpdateEvent from './views/UpdateEvent';
 import AddVenuePage from './views/AddVenue';
 import Venues from './views/Venues';
+import PastEventsPage from './views/PastEvents';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
             <Route path='/events/:slug' element={<EventDetails />} />
+            <Route path='/past-events' element={<PastEventsPage />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
