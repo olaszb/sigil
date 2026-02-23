@@ -13,15 +13,19 @@ class EventPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isOrganizer() || $user->isAdmin();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Event $event): bool
+    public function view(?User $user, Event $event): bool
     {
-        return false;
+        if(!$event->trashed()){
+            return true;
+        }
+
+        return $user && ($user->id === $event->organizer_id || $user->isAdmin());
     }
 
     /**

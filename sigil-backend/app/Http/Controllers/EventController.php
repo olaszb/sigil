@@ -8,6 +8,7 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Request;
 
 class EventController extends Controller
 {
@@ -92,4 +93,20 @@ class EventController extends Controller
         $event->delete();
         return response()->json(['message' => 'Event archived successfully!']);
     }
+
+    public function archived(Request $request){
+        Gate::authorize('viewAny', Event::class);
+        $user = $request->user();
+
+        $query = Event::onlyTrashed();
+
+        if (!$user->isAdmin()){
+            $query->where('organizer_id', $user->id);
+        }
+
+        $events = $query->latest('deleted_at')->get();
+
+        return response()->json($events);
+    }
+
 }

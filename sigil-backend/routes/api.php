@@ -40,4 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     //delete venue
     Route::delete('/venues/{venue}', [VenueController::class, 'destroy'])->name('venue.destroy');
+
+    //get archived events
+    Route::get('/archived-events', [VenueController::class, 'archived'])->name('archived.index');
 });
