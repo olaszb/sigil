@@ -87,7 +87,7 @@ const EventDetails = () => {
                                 before:transition-transform before:duration-400 before:ease-in-out
                                 hover:before:translate-y-0 hover:text-primary-bg"
                                 >
-                                    <span className="relative z-10">Delete Ritual</span>
+                                    <span className="relative z-10">Archive Ritual</span>
                         </button>
                     </div>
                 }
