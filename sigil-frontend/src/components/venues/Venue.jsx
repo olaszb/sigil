@@ -1,7 +1,9 @@
-const Venue = ({ venue }) => {
+import SigilButton from "../SigilButton";
+
+const Venue = ({ venue, onDeleteClick }) => {
 
     return (
-        <div className="flex justify-between w-full border-l-2 border-main-accent bg-primary-bg gap-6 p-4">
+        <div className="flex justify-between w-full border-l-2 border-main-accent bg-primary-bg gap-6 p-4 mb-4">
             <div className="flex items-center">
                 <div className="flex flex-col border-r border-parchment/20 px-2 py-2">
                     <h1 className="text-xl text-main-accent font-[Cinzel] leading-tight tracking-wider uppercase">{venue.name}</h1>
@@ -28,19 +30,7 @@ const Venue = ({ venue }) => {
             </div>
 
             <div className="my-3 flex justify-center">
-                <button
-                  className="relative overflow-hidden
-                                    pl-8 pr-8 py-3 bg-main-accent text-primary-bg
-                                [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] 
-                                tracking-[0.15em] text-[10px] font-black uppercase
-                                
-                                before:content-[''] before:absolute before:inset-0
-                                before:bg-parchment before:translate-y-[100%]
-                                before:transition-transform before:duration-400 before:ease-in-out
-                                hover:before:translate-y-0 hover:text-primary-bg"
-                >
-                  <span className="relative z-10">Delete Venue</span>
-                </button>
+                <SigilButton text={"Delete Venue"} onClick={() => onDeleteClick(venue.id)} />
             </div>
         </div>
     );

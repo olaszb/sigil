@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "../util/register/register.css";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
+import SigilButton from "../components/SigilButton";
 
 const RegisterPage = () => {
     const [name, setName] = useState("");
@@ -193,22 +194,7 @@ const RegisterPage = () => {
 
                 {/* Submit */}
                 <div className="my-2">
-                <button
-                    type="submit"
-                    className="relative overflow-hidden
-                                    pl-8 pr-8 py-3 bg-main-accent text-primary-bg
-                                [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] 
-                                tracking-[0.15em] text-[10px] font-black uppercase
-                                
-                                before:content-[''] before:absolute before:inset-0
-                                before:bg-parchment before:translate-y-[100%]
-                                before:transition-transform before:duration-400 before:ease-in-out
-                                hover:before:translate-y-0 hover:text-primary-bg"
-                >
-                    <span className="relative z-10">
-                        Seal the Pact
-                    </span>
-                </button>
+                    <SigilButton type={"submit"} text={"Seal The Pact"} />
                 </div>
             </div>
 

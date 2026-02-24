@@ -5,21 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use Date;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    protected $pagination_limit = 10;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $events = Event::orderBy('start_time', 'asc')->paginate(10);
+        $events = Event::where('start_time', '>=' , Date::now())->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
         return response()->json($events);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -91,5 +93,28 @@ class EventController extends Controller
         Gate::authorize('delete', $event);
         $event->delete();
         return response()->json(['message' => 'Event archived successfully!']);
+    }
+
+    public function archived(Request $request){
+        Gate::authorize('viewAny', Event::class);
+        $user = $request->user();
+
+        $query = Event::onlyTrashed();
+
+        if (!$user->isAdmin()){
+            $query->where('organizer_id', $user->id);
+        }
+
+        $events = $query->latest('deleted_at')->paginate($this->pagination_limit);
+
+        return response()->json($events);
+    }
+
+    public function pastEvents(){
+        $events = Event::where('start_time', '<', now())
+            ->orderBy('start_time', 'desc')
+            ->paginate($this->pagination_limit);
+
+        return response()->json($events);
     }
 }

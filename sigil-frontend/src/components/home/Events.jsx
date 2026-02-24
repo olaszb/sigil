@@ -1,7 +1,7 @@
 import EventItem from "./EventItem";
 
 
-const Events = ({events}) => {
+const Events = ({events, type}) => {
     
 
     return (
@@ -9,11 +9,8 @@ const Events = ({events}) => {
             {events.map((event) => (
                 <EventItem 
                     key={event.id}
-                    title={event.title}
-                    description={event.description}
-                    start_time={event.start_time}
-                    image_url={event.image_url}
-                    slug={event.slug}
+                    event={event}
+                    type={type}
                 />
             ))}
         </div>

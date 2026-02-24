@@ -38,4 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
     //create venue
     Route::post('/venues', [VenueController::class, 'store'])->name('venue.store');
     
+    //delete venue
+    Route::delete('/venues/{venue}', [VenueController::class, 'destroy'])->name('venue.destroy');
+
+    //get archived events
+    Route::get('/archived-events', [EventController::class, 'archived'])->name('archived.index');
+
+    //get past events
+    Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
 });

@@ -13,6 +13,7 @@ import Editor from "../components/create-event/Editor/Editor";
 import { getImageUrl } from "../util/helper";
 import { toastConfig } from "../util/toastConfig";
 import { toast } from "react-toastify";
+import SigilButton from "../components/SigilButton";
 
 const UpdateEvent = ( ) => {
   const [id, setId] = useState("");
@@ -204,7 +205,7 @@ const UpdateEvent = ( ) => {
                     </>
                   )}
                 </div>
-                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link className="text-main-accent hover:underline">Add it!</Link></p>
+                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link to={'/add-venue'} className="text-main-accent hover:underline">Add it!</Link></p>
                 <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 
@@ -290,20 +291,7 @@ const UpdateEvent = ( ) => {
 
               {/* Submit */}
               <div className="my-3 flex justify-center">
-                <button
-                  type="submit"
-                  className="relative overflow-hidden
-                                    pl-8 pr-8 py-3 bg-main-accent text-primary-bg
-                                [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] 
-                                tracking-[0.15em] text-[10px] font-black uppercase
-                                
-                                before:content-[''] before:absolute before:inset-0
-                                before:bg-parchment before:translate-y-[100%]
-                                before:transition-transform before:duration-400 before:ease-in-out
-                                hover:before:translate-y-0 hover:text-primary-bg"
-                >
-                  <span className="relative z-10">Modify Ritual</span>
-                </button>
+                <SigilButton type={"submit"} text={"Modify Ritual"} />
               </div>
             </div>
 
