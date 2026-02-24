@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { getImageUrl, getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
+import SigilButton from "../EventButton";
+import EventButton from "../EventButton";
 
-const EventItem = ({ title, description, start_time, image_url, slug }) => {
-  const date = new Date(start_time);
+const EventItem = ({ event, type }) => {
+  const date = new Date(event.start_time);
 
 
   return (
@@ -26,10 +28,10 @@ const EventItem = ({ title, description, start_time, image_url, slug }) => {
       </div>
 
       {/* Image */}
-      <Link to={`/events/${slug}`}>
+      <Link to={`/events/${event.slug}`}>
         <div className="relative shrink-0">
           <img
-            src={getImageUrl(image_url)}
+            src={getImageUrl(event.image_url)}
             className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
           />
         </div>
@@ -38,37 +40,22 @@ const EventItem = ({ title, description, start_time, image_url, slug }) => {
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <Link to={`/events/${slug}`}>
+        <Link to={`/events/${event.slug}`}>
           <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
-            {title}
+            {event.title}
           </h2>
         </Link>
         <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
-          {getPlainTextFromLexical(description)}
+          {getPlainTextFromLexical(event.description)}
         </p>
       </div>
 
       {/* Buy Ticket */}
-
-      <div className="absolute top-0 right-0">
-        <button
-          className="relative overflow-hidden
-                    pl-8 pr-6 py-3 bg-main-accent text-primary-bg
-                    [clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)] 
-                    tracking-[0.15em] text-[10px] font-black uppercase
-                    
-                    before:content-[''] before:absolute before:inset-0
-                    before:bg-parchment before:translate-y-[100%]
-                    before:transition-transform before:duration-400 before:ease-in-out
-                    hover:before:translate-y-0
-                    
-                    "
-        >
-          <span className="relative z-10 hover:text-primary-bg transition-colors duration-300">
-            Claim Your Sigil
-          </span>
-        </button>
-      </div>
+      {type === "current" &&
+      (
+        <EventButton text={"Claim Your Sigil"}/>
+      )
+      }
     </div>
   );
 };

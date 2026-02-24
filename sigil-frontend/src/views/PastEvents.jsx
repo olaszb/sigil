@@ -75,7 +75,7 @@ const PastEventsPage = () => {
             )
             }
             {events ? (
-                <Events events={events} />
+                <Events events={events} type={viewMode}/>
             ) : (
                 <div className="w-full text-center mb-4">
                     <p className="text-parchment font-[Montserrat] font-[10px] ">There are no recorded events in the archives as of now.</p>

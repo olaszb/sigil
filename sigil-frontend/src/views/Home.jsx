@@ -44,7 +44,7 @@ const HomePage = () => {
     <div className="bg-secondary-bg text-parchment w-full min-h-screen">
         <HeroSection/>  
         <h1 className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
-        <Events events={events} />
+        <Events events={events} type={"current"}/>
             
     </div>
   );
