@@ -19,6 +19,7 @@ const PastEventsPage = () => {
 
     const fetchEvents = async (mode = 'past', page = 1) => {
         setLoading(true);
+        setEvents([]);
         try{
             const endpoint = mode === 'archived' ? '/api/archived-events' : '/api/past-events';
             const response = await axiosClient.get(`${endpoint}?page=${page}`);
@@ -39,8 +40,6 @@ const PastEventsPage = () => {
     useEffect(() => {
         fetchEvents(viewMode);
     }, [viewMode]);
-
-    if (loading) return <div className="text-parchment">Consulting the archives...</div>;
 
     return (
         <div className="w-full min-h-screen text-parchment">
@@ -74,14 +73,19 @@ const PastEventsPage = () => {
                 </div>
             )
             }
-            {events ? (
-                <Events events={events} type={viewMode}/>
-            ) : (
-                <div className="w-full text-center mb-4">
-                    <p className="text-parchment font-[Montserrat] font-[10px] ">There are no recorded events in the archives as of now.</p>
+            <div className="relative min-h-[400px] px-4"> 
+                <div className={`transition-opacity duration-500 ${loading ? 'opacity-20' : 'opacity-100'}`}>
+                    {events.length > 0 ? (
+                        <Events events={events} type={viewMode}/>
+                    ) : !loading && (
+                        <div className="w-full text-center py-20">
+                            <p className="text-parchment/40 italic font-[Montserrat] text-sm">
+                                No records found in this section of the archives.
+                            </p>
+                        </div>
+                    )}
                 </div>
-            )}
-
+            </div>
         </div>
     );
 }

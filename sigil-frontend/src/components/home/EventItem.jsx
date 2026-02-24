@@ -53,7 +53,21 @@ const EventItem = ({ event, type }) => {
       {/* Buy Ticket */}
       {type === "current" &&
       (
-        <EventButton text={"Claim Your Sigil"}/>
+        <div className="absolute top-0 right-0">
+          <EventButton text={"Claim Your Sigil"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
+        </div>
+      )
+      }
+      {type === 'archived' && (
+        <>
+          <div className="absolute top-0 right-0">
+            <EventButton text={"Restore Ritual"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
+          </div>
+
+          <div className="absolute bottom-0 right-0">
+            <EventButton text={"Burn Archive"} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
+          </div>
+        </>
       )
       }
     </div>
