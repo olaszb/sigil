@@ -46,4 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //get past events
     Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
+
+    //force delete event
+    Route::delete('/events/{id}/force', [EventController::class, 'forceDelete'])->name('event.force');
+
+    //restore event
+    Route::post('/events/{id}/restore', [EventController::class, 'restore'])->name('event.restore');
 });

@@ -117,4 +117,25 @@ class EventController extends Controller
 
         return response()->json($events);
     }
+
+    public function forceDelete($id) {
+        $event = Event::withTrashed()->findOrFail($id);
+        Gate::authorize('forceDelete', $event);
+
+        if($event->image_url){
+            Storage::disk('public')->delete($event->image_url);
+        }
+        $event->forceDelete();
+
+        return response()->json(['message' => 'Event permanently deleted!']);
+    }
+
+    public function restore($id){
+        $event = Event::withTrashed()->findOrFail($id);
+        Gate::authorize('restore', $event);
+
+        $event->restore();
+
+        return response()->json(['message' => 'Event restored successfully!']);
+    }
 }

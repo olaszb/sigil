@@ -3,7 +3,8 @@ import { getImageUrl, getPlainTextFromLexical, monthNames, weekDays } from "../.
 import SigilButton from "../EventButton";
 import EventButton from "../EventButton";
 
-const EventItem = ({ event, type }) => {
+
+const EventItem = ({ event, type, onAction }) => {
   const date = new Date(event.start_time);
 
 
@@ -61,11 +62,11 @@ const EventItem = ({ event, type }) => {
       {type === 'archived' && (
         <>
           <div className="absolute top-0 right-0">
-            <EventButton text={"Restore Ritual"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
+            <EventButton text={"Restore Ritual"} onClick={() => onAction(event, 'restore')} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
           </div>
 
           <div className="absolute bottom-0 right-0">
-            <EventButton text={"Burn Archive"} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
+            <EventButton text={"Burn Archive"} onClick={() => onAction(event, 'forceDelete')} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
           </div>
         </>
       )

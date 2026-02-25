@@ -1,7 +1,7 @@
 import EventItem from "./EventItem";
 
 
-const Events = ({events, type}) => {
+const Events = ({events, type, onAction}) => {
     
 
     return (
@@ -11,6 +11,7 @@ const Events = ({events, type}) => {
                     key={event.id}
                     event={event}
                     type={type}
+                    onAction={onAction}
                 />
             ))}
         </div>
