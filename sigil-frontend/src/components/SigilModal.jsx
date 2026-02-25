@@ -1,8 +1,21 @@
+import { useEffect } from "react";
+
 const SigilModal = ({text, closeModal, onAction}) => {
 
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === "Escape") closeModal();
+        };
+        window.addEventListener("keydown", handleEsc);
+        
+        // Cleanup the listener when the component is unmounted
+        return () => window.removeEventListener("keydown", handleEsc);
+    }, [closeModal]);
+
     return (
-        <div className="fixed inset-0 z-[100] flex justify-center items-center bg-black/80 backdrop-blur-sm">
-                <div className="bg-primary-bg border border-main-accent/50 p-8 max-w-md w-full mx-4 shadow-[0_0_50px_rgba(154,0,0,0.2)] text-center">
+        <div onClick={closeModal} className="fixed inset-0 z-[100] flex justify-center items-center bg-black/80 backdrop-blur-sm">
+                <div onClick={(e) => e.stopPropagation()} className="bg-primary-bg border border-main-accent/50 p-8 max-w-md w-full mx-4 shadow-[0_0_50px_rgba(154,0,0,0.2)] text-center">
                     <h2 className="text-2xl font-[Cinzel] text-main-accent mb-4">{text}</h2>
                     <div className="flex gap-4">
                         <button
