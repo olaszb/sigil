@@ -2,31 +2,11 @@ import { Link } from "react-router-dom";
 import { getImageUrl, getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
 import SigilButton from "../EventButton";
 import EventButton from "../EventButton";
-import axiosClient from "../../services/axios-client";
-import { toastConfig } from "../../util/toastConfig";
-import { toast } from "react-toastify";
 
-const EventItem = ({ event, type }) => {
+
+const EventItem = ({ event, type, onAction }) => {
   const date = new Date(event.start_time);
 
-
-  const handleForceDelete = async (id) => {
-    try{
-      await axiosClient.delete(`/api/events/${id}/force`);
-      toast('Ritual deleted permanently!', toastConfig);
-    }catch(err){
-      console.error('Error deleting event: ', err);
-    }
-  }
-
-  const handleRestoreEvent = async (id) => {
-    try {
-      await axiosClient.post(`/api/events/${id}/restore`);
-      toast('Ritual restored successfully!', toastConfig);
-    }catch(err){
-      console.error('Error restoring event: ', err);
-    } 
-  }
 
   return (
     <div
@@ -82,11 +62,11 @@ const EventItem = ({ event, type }) => {
       {type === 'archived' && (
         <>
           <div className="absolute top-0 right-0">
-            <EventButton text={"Restore Ritual"} onClick={() => handleRestoreEvent(event.id)} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
+            <EventButton text={"Restore Ritual"} onClick={() => onAction(event, 'restore')} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
           </div>
 
           <div className="absolute bottom-0 right-0">
-            <EventButton text={"Burn Archive"} onClick={() => handleForceDelete(event.id)} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
+            <EventButton text={"Burn Archive"} onClick={() => onAction(event, 'forceDelete')} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
           </div>
         </>
       )

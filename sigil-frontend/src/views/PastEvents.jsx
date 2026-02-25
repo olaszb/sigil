@@ -3,6 +3,9 @@ import EventHero from "../components/event-details/EventHero";
 import { useAuth } from "../contexts/AuthContext";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
+import { toastConfig } from "../util/toastConfig";
+import { toast } from "react-toastify";
+import SigilModal from "../components/SigilModal";
 
 
 const PastEventsPage = () => {
@@ -16,6 +19,7 @@ const PastEventsPage = () => {
         total: 1,
     });
     const [loading, setLoading] = useState(false);
+    const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
 
     const fetchEvents = async (mode = 'past', page = 1) => {
         setLoading(true);
@@ -41,10 +45,36 @@ const PastEventsPage = () => {
         fetchEvents(viewMode);
     }, [viewMode]);
 
+    const openModal = (event, mode) => {
+        setModal({isOpen: true, event, mode});
+    }
+
+    const closeModal = () => {
+        setModal({isOpen: false, event:null, mode:null});
+    }
+
+    const handleConfirmAction = async () => {
+        const {event, mode} = modal;
+        try{
+            if (mode === 'restore'){
+                await axiosClient.post(`/api/events/${event.id}/restore`);
+                toast('Ritual restored successfully!', toastConfig);
+            }else if (mode === 'forceDelete'){
+                await axiosClient.delete(`/api/events/${event.id}/force`);
+                toast('Ritual restored successfully!', toastConfig);
+            }
+            fetchEvents(viewMode);
+        }catch(err){
+            console.error(err);
+        }finally{
+            closeModal();
+        }
+    }
+
     return (
         <div className="w-full min-h-screen text-parchment">
             <div className="grayscale">
-                <EventHero image_url={"/public/liurnia.webp"}/>
+                <EventHero image_url={"/public/library.webp"}/>
             </div>
             
             {user?.role === 'admin' || user?.role === 'organizer' ? (
@@ -76,7 +106,7 @@ const PastEventsPage = () => {
             <div className="relative min-h-[400px] px-4"> 
                 <div className={`transition-opacity duration-500 ${loading ? 'opacity-20' : 'opacity-100'}`}>
                     {events.length > 0 ? (
-                        <Events events={events} type={viewMode}/>
+                        <Events events={events} type={viewMode} onAction={openModal}/>
                     ) : !loading && (
                         <div className="w-full text-center py-20">
                             <p className="text-parchment/40 italic font-[Montserrat] text-sm">
@@ -86,8 +116,11 @@ const PastEventsPage = () => {
                     )}
                 </div>
             </div>
+            {modal.isOpen && (
+                <SigilModal closeModal={() => closeModal()} onAction={() => handleConfirmAction()} text={modal.mode === 'restore' ? "Are you sure you'd like to restore this ritual?" : "Are you sure you'd like to burn this archive?"} />
+            )}
         </div>
     );
 }
 
-export default PastEventsPage;
+export default PastEventsPage; 
