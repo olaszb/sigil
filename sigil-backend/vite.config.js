@@ -14,5 +14,7 @@ export default defineConfig({
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        port: 5173,
+        strictPort: true
     },
 });

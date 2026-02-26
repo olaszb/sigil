@@ -11,6 +11,7 @@ import { createContext, useContext, useState } from "react";
 import GlitchSigil from "../util/icons/logo/GlitchSigil";
 import XSVG from "../util/icons/XSVG";
 import MenuSVG from "../util/icons/MenuSVG";
+import SigilButton from "./SigilButton";
 
 const NavbarContext = createContext();
 const Navbar = ({ children }) => {
@@ -95,7 +96,13 @@ const Navbar = ({ children }) => {
                 </div>
               </>
             ) : (
-              <></>
+              <div className={`
+                  flex items-center overflow-hidden transition-all duration-500 ease-in-out
+                  ${expanded ? "max-w-[500px] opacity-100" : "max-w-0 opacity-0"}
+              `}>
+                <SigilButton type="button" text={"Login"} onClick={() => navigate('/login')}/>
+                <SigilButton type="button" text={"Register"} onClick={() => navigate('/register')}/>
+              </div>
             )}
           </div>
         </nav>
