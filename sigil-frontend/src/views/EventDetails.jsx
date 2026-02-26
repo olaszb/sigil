@@ -13,7 +13,7 @@ import VenueDetails from "../components/event-details/VenueDetails";
 import SigilButton from "../components/SigilButton";
 import SigilModal from "../components/SigilModal";
 
-const EventDetails = () => {
+const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
     const [venue, setVenue] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -21,37 +21,95 @@ const EventDetails = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
+
+    const openModal = (event, mode) => {
+        setModal({isOpen: true, event, mode});
+    }
+
+    const closeModal = () => {
+        setModal({isOpen: false, event:null, mode:null});
+    }
 
     useEffect(() => {
         setLoading(true);
         const fetchEvent = async () => {
             try {
-                const response = await axiosClient.get(`/api/events/${slug}`);
+                const endpoint = mode === 'archived' ? `/api/archived-events/${slug}` : `/api/events/${slug}`;
+                const response = await axiosClient.get(endpoint);
     
                 const data = response.data;
+                
+                if(mode === 'archived'){
+                    const isOrganizer = user?.id === data.event.organizer_id;
+                    const isAdmin = user?.role === 'admin';
+
+                    if (!isOrganizer && !isAdmin) {
+                        toast("You are not permitted to view this archived ritual.", toastConfig);
+                        navigate('/');
+                        return;
+                    }
+                }
                 setEvent(data.event);
                 setVenue(data.venue);
             }catch (error) {
                 console.error("Error fetching event details:", error);
+                navigate('/not-found');
             }finally {
                 setLoading(false);
             }
         }
         fetchEvent();
-    }, [slug]);
+    }, [slug, mode, user, navigate]);
 
     if (loading) return <div className="text-parchment">Consulting the archives...</div>;
 
 
     const handleEventDeletion = async () => {
-        try{
+        try{ 
             await axiosClient.delete(`/api/events/${event.id}`);
             toast("Ritual archived successfully!", toastConfig);
             navigate('/');
         }catch(error){
             console.error('Error archiving ritual:', error);
         }
+    }
+
+    const handleConfirmAction = async () => {
+        const {event, mode} = modal;
+        try{
+            if (mode === 'restore'){
+                await axiosClient.post(`/api/events/${event.id}/restore`);
+                toast('Ritual restored successfully!', toastConfig);
+                navigate('/past-events');
+            }else if (mode === 'forceDelete'){
+                await axiosClient.delete(`/api/events/${event.id}/force`);
+                toast('Ritual restored successfully!', toastConfig);
+                navigate('/past-events');
+            }else if (mode === 'delete'){
+                await axiosClient.delete(`/api/events/${event.id}`);
+                toast("Ritual archived successfully!", toastConfig);
+                navigate('/past-events');
+            }
+            
+        }catch(err){
+            console.error(err);
+        }finally{
+            closeModal();
+        }
+    }
+
+    const formatArchiveDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
     }
 
   return (
@@ -61,25 +119,42 @@ const EventDetails = () => {
 
         <div className="relative max-w-6xl mx-auto px-8">
             <div className="absolute left-8 right-8 -top-26.5 z-30 pointer-events-none">
-                <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name}/>
+                <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name} mode={mode}/>
             </div>
 
             <div className="pt-4 pb-20 w-[90%]">
                 {(user?.id === event?.organizer_id || user?.role === 'admin') && 
-                    <div className="mb-4">
-                        <Link to={`/update-event/${slug}`} className="relative overflow-hidden
-                                    pl-8 pr-8 py-3 bg-main-accent text-primary-bg
-                                [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] 
-                                tracking-[0.15em] text-[10px] font-black uppercase
-                                
-                                before:content-[''] before:absolute before:inset-0
-                                before:bg-parchment before:translate-y-[100%]
-                                before:transition-transform before:duration-400 before:ease-in-out
-                                hover:before:translate-y-0 hover:text-primary-bg"
-                                >
-                                    <span className="relative z-10">Update Ritual</span>
-                        </Link>
-                        <SigilButton text={"Archive Ritual"} onClick={() => setIsModalOpen(true)} />
+                    <div className={`mb-4 flex ${mode ==='archived' ? 'flex-col' : ''}`}>
+                        {mode === 'archived' ? (
+                            <>
+                                <div className="flex">
+                                    <SigilButton text={'Restore Ritual'} onClick={() => openModal(event, 'restore')}/>
+                                    <SigilButton text={'Burn Archive'} onClick={() => openModal(event, 'forceDelete')}/>
+                                </div>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <div className="h-[1px] w-8 bg-main-accent"/>
+                                    <p className="font-mono text-[10px] text-parchment/60 uppercase tracking-tight">
+                                        Archived at: <span className="text-main-accent/80 ml-2">{formatArchiveDate(event?.deleted_at)}</span>
+                                    </p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Link to={`/update-event/${slug}`} className="relative overflow-hidden
+                                            pl-8 pr-8 py-3 bg-main-accent text-primary-bg
+                                        [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] 
+                                        tracking-[0.15em] text-[10px] font-black uppercase
+                                        
+                                        before:content-[''] before:absolute before:inset-0
+                                        before:bg-parchment before:translate-y-[100%]
+                                        before:transition-transform before:duration-400 before:ease-in-out
+                                        hover:before:translate-y-0 hover:text-primary-bg"
+                                        >
+                                            <span className="relative z-10">Update Ritual</span>
+                                </Link>
+                                <SigilButton text={"Archive Ritual"} onClick={() => openModal(event, 'delete')} />
+                            </>
+                        )}
                     </div>
                 }
 
@@ -92,8 +167,8 @@ const EventDetails = () => {
                </div>
             </div>
         </div>
-        {isModalOpen && 
-            <SigilModal closeModal={() => setIsModalOpen(false)} onAction={() => handleEventDeletion()} text={"Are you certain you wish to archive this ritual?"} />
+        {modal.isOpen && 
+            <SigilModal closeModal={() => closeModal()} onAction={() => handleConfirmAction()} text={modal.mode === 'restore' ? "Are you sure you'd like to restore this ritual?" : modal.mode === 'forceDelete' ? "Are you sure you'd like to burn this archive?" : "Are you sure you'd like to archive this ritual?"} />
         }
     </div>
   );

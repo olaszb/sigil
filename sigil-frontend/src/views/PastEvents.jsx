@@ -61,7 +61,7 @@ const PastEventsPage = () => {
                 toast('Ritual restored successfully!', toastConfig);
             }else if (mode === 'forceDelete'){
                 await axiosClient.delete(`/api/events/${event.id}/force`);
-                toast('Ritual restored successfully!', toastConfig);
+                toast('Archive burned successfully!', toastConfig);
             }
             fetchEvents(viewMode);
         }catch(err){

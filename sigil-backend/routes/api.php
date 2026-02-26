@@ -52,4 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //restore event
     Route::post('/events/{id}/restore', [EventController::class, 'restore'])->name('event.restore');
+
+    //get archived event
+    Route::get('/archived-events/{slug}', [EventController::class, 'showArchived'])->name('archived.show');
 });

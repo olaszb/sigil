@@ -138,4 +138,14 @@ class EventController extends Controller
 
         return response()->json(['message' => 'Event restored successfully!']);
     }
+
+    public function showArchived($slug, Request $request){
+        $event = Event::withTrashed()->where('slug', $slug)->firstOrFail();
+        Gate::authorize('view', $event);
+
+        return response()->json([
+            'event' => $event,
+            'venue' => $event->venue
+        ]);
+    }
 }

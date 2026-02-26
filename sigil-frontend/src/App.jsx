@@ -24,7 +24,7 @@ function App() {
           <Route element={<MainLayout />}>
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
-            <Route path='/events/:slug' element={<EventDetails />} />
+            <Route path='/events/:slug' element={<EventDetails mode={'normal'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
           
             {/* Private Routes */}
@@ -33,12 +33,15 @@ function App() {
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/update-event/:slug" element={<UpdateEvent />} />
               <Route path="/add-venue" element={<AddVenuePage/>}/>
+              <Route path="/archive/events/:slug" element={<EventDetails mode={'archived'}/>} />
             </Route>
             
             {/* Routes for admins only */}
             <Route element={<AdminGuard />}>
                 <Route path="/venues" element={<Venues />}/>
             </Route>
+
+
           </Route>
           
           {/* Only for not logged in users */}
