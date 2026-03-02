@@ -2,10 +2,23 @@ import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import SigilButton from "../components/SigilButton";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(false);
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/');
+            console.log("User logged out successfully.");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
     return (
         <div className="w-full min-h-screen bg-secondary-bg text-parchment">
             <div className="bg-black/40 border border-parchment/10 flex flex-col mt-10 mx-10">
@@ -27,7 +40,7 @@ const ProfilePage = ( ) => {
                             <button className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
                                 Edit Profile
                             </button>
-                            <button className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
+                            <button onClick={handleLogout} className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
                                 Logout
                             </button>
                         </div>
