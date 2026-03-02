@@ -55,4 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //get archived event
     Route::get('/archived-events/{slug}', [EventController::class, 'showArchived'])->name('archived.show');
+
+    //get event status
+    Route::get('/events/{event}/status', [EventController::class, 'getUserStatus'])->name('user.event.getStatus');
+
+    //change event status
+    Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
 });

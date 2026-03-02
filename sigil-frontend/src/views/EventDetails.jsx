@@ -5,7 +5,7 @@ import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
 import EditorRenderer from "../components/create-event/Editor/EditorRenderer";
 import { useAuth } from "../contexts/AuthContext";
-import { Castle, Users } from "lucide-react";
+import { Castle, CircleCheck, Star, Users } from "lucide-react";
 import {toast} from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import EventDescription from "../components/event-details/EventDescription";
@@ -20,8 +20,8 @@ const EventDetails = ({ mode }) => {
     const { slug } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
+    const [activeStatus, setActiveStatus] = useState(null);
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -59,21 +59,21 @@ const EventDetails = ({ mode }) => {
                 setLoading(false);
             }
         }
+        const fetchUserStatus = async (eventId) => {
+            try{
+                const response = await axiosClient.get(`/api/events/${eventId}/status`);
+                setActiveStatus(response.data.status);
+            }catch(err){
+                console.error(err);
+            }
+        }
         fetchEvent();
-    }, [slug, mode, user, navigate]);
+        if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
+            fetchUserStatus(event.id);
+        }
+    }, [slug, mode, user, navigate, event?.id]);
 
     if (loading) return <div className="text-parchment">Consulting the archives...</div>;
-
-
-    const handleEventDeletion = async () => {
-        try{ 
-            await axiosClient.delete(`/api/events/${event.id}`);
-            toast("Ritual archived successfully!", toastConfig);
-            navigate('/');
-        }catch(error){
-            console.error('Error archiving ritual:', error);
-        }
-    }
 
     const handleConfirmAction = async () => {
         const {event, mode} = modal;
@@ -110,6 +110,17 @@ const EventDetails = ({ mode }) => {
             minute: '2-digit',
             hour12: false
         });
+    }
+
+    const handleChangeStatus = async (newStatus) => {
+        try{
+            const response = await axiosClient.post(`/api/events/${event.id}/status`,{
+                status: newStatus
+            });
+            setActiveStatus(response.data.status);
+        }catch(err){
+            console.error(err);
+        }
     }
 
   return (
@@ -157,6 +168,28 @@ const EventDetails = ({ mode }) => {
                         )}
                     </div>
                 }
+                {(user?.role !== 'organizer' && user?.role !== 'admin') && (
+                    <div className="bg-black/60 mb-8 flex items-center w-fit border border-parchment/10">
+                        <button onClick={() => handleChangeStatus('interested')} className={`px-4 py-3 flex items-center border-r border-parchment/10 group transition-all duration-400
+                            ${activeStatus === 'interested' ?
+                            'bg-main-accent/10 text-main-accent shadow-[inset_0_0_15px_rgba(154,0,0,0.2)]' : 
+                            'text-parchment-50 hover:text-parchment hover:bg-parchment/5'}`}>
+                            <span className="mr-2 font-[Cinzel] tracking-widest uppercase text-[10px]">
+                                Interested
+                            </span>
+                            <Star size={14} className={`transition-transform duration-300 ${activeStatus === 'interested' ? 'fill-main-accent scale-110' : 'group-hover:scale-110'}`}/>
+                        </button>
+                        <button onClick={() => handleChangeStatus('going')} className={`px-4 py-3 flex items-center border-r border-parchment/10 group transition-all duration-400
+                            ${activeStatus === 'going' ?
+                            'bg-main-accent/10 text-main-accent shadow-[inset_0_0_15px_rgba(154,0,0,0.2)]' : 
+                            'text-parchment-50 hover:text-parchment hover:bg-parchment/5'}`}>
+                            <span className="mr-2 font-[Cinzel] tracking-widest uppercase text-[10px]">
+                                Going
+                            </span>
+                            <CircleCheck size={14} className={`transition-transform duration-300 ${activeStatus === 'going' ? 'scale-110' : 'group-hover:scale-110'}`}/>
+                        </button>
+                    </div>
+                )}
 
                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                   <div className="md:col-span-2 space-y-4">

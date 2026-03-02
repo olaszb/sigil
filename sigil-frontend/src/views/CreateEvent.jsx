@@ -181,7 +181,7 @@ const CreateEvent = () => {
                     </>
                   )}
                 </div>
-                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link to={"/add-venue"} className="text-main-accent hover:underline">Add it!</Link></p>
+                <p className="text-xs text-parchment/50">Can't find your preferred venue? <Link to={"/add-venue"} className="text-main-accent hover:underline">Add it!</Link></p>
                 <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 

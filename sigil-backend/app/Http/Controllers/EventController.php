@@ -148,4 +148,41 @@ class EventController extends Controller
             'venue' => $event->venue
         ]);
     }
+
+    public function getUserStatus(Event $event){
+        $record = auth()->user()->events()->where('event_id', $event->id)->first();
+
+        return response()->json([
+            'status' => $record ? $record->pivot->status : null
+        ]);
+    }
+
+    public function changeStatus(Request $request, Event $event){
+        Gate::authorize('changeStatus', $event);
+        $request->validate([
+            'status' => 'nullable|in:interested,going'
+        ]);
+
+        $user = $request->user();
+        $newStatus = $request->status;
+
+        $existing = $user->events()->where('event_id', $event->id)->first();
+
+        if($existing && $existing->pivot->status === $newStatus){
+            $user->events()->detach($event->id);
+            $message = "Bond severed.";
+            $currentStatus = null;
+        }else{
+            $user->events()->syncWithoutDetaching([
+                $event->id => ['status' => $newStatus]
+            ]);
+            $message = "Ritual status updated to: {$newStatus}";
+            $currentStatus = $newStatus;
+        }
+
+        return response()->json([
+            'message' => $message,
+            'status' => $currentStatus
+        ]);
+    }
 }

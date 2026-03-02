@@ -67,4 +67,12 @@ class EventPolicy
     {
         return $event->organizer_id === $user->id || $user->isAdmin();
     }
+
+    /**
+     * Determine whether the user can change their event status
+     */
+    public function changeStatus(User $user, Event $event): bool
+    {
+        return $user->role !== 'organizer' && $user->role !== 'admin';
+    }
 }
