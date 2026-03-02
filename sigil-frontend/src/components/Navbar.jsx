@@ -74,11 +74,13 @@ const Navbar = ({ children }) => {
           <div className="border-t flex p-3">
             {user ? (
               <>
-                <img
-                  src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-md"
-                />
+                <Link to="/profile">
+                  <img
+                    src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+                    alt="User Avatar"
+                    className="w-10 h-10 rounded-md"
+                  />
+                </Link>
                 <div
                   className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52 opacity-100" : "w-0 opacity-0"}`}
                 >
