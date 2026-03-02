@@ -82,14 +82,17 @@ const Navbar = ({ children }) => {
                 <div
                   className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52 opacity-100" : "w-0 opacity-0"}`}
                 >
-                  <div className="leading-4">
-                    <h4 className="font-semibold font-[Montserrat]">
-                      {user.name}
-                    </h4>
-                    <span className="text-xs text-gray-600 font-[Montserrat]">
-                      {user.email}
-                    </span>
-                  </div>
+                  <Link to="/profile">
+                    <div className="leading-4">
+                      <h4 className="font-semibold font-[Montserrat]">
+                        {user.name}
+                      </h4>
+                      <span className="text-xs text-gray-600 font-[Montserrat]">
+                        {user.email}
+                      </span>
+                    </div>
+                  </Link>
+
                   <button onClick={handleLogout} className="ml-2">
                     <LogOut size={20} />
                   </button>
