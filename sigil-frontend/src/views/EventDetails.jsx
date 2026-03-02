@@ -195,7 +195,7 @@ const EventDetails = ({ mode }) => {
                   <div className="md:col-span-2 space-y-4">
 
                     <EventDescription description={event?.description}/>
-                    <VenueDetails venue={venue}/>
+                    <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>
                   </div>
                </div>
             </div>

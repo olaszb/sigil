@@ -53,7 +53,12 @@ class EventController extends Controller
      */
     public function show($slug)
     {  
-       $event = Event::with('venue')->where('slug', $slug)->firstOrFail();
+       $event = Event::with('venue')
+       ->withCount([
+            'users as interested_count' => fn($q) => $q->where('status', 'interested'),
+            'users as going_count' => fn($q) => $q->where('status', 'going')
+       ])
+       ->where('slug', $slug)->firstOrFail();
        
        return response()->json([
         'event' => $event,

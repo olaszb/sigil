@@ -25,7 +25,7 @@ function App() {
           <Route element={<MainLayout />}>
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
-            <Route path='/events/:slug' element={<EventDetails mode={'normal'} />} />
+            <Route path='/events/:slug' element={<EventDetails mode={'current'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
           
             {/* Private Routes */}

@@ -1,6 +1,6 @@
-import { Castle, Users } from "lucide-react";
+import { Castle, CircleCheck, Star, Users } from "lucide-react";
 
-const VenueDetails = ({ venue }) => {
+const VenueDetails = ({ venue, interestedCount = 0, goingCount = 0 }) => {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border border-parchment/10 bg-black/40">
       <div className="space-y-4">
@@ -37,6 +37,20 @@ const VenueDetails = ({ venue }) => {
             <span className="ml-2 text-[10px] uppercase tracking-widest text-parchment/40 font-mono">
               Acolytes
             </span>
+          </div>
+        </div>
+        <div className="pl-7 pt-4 border-t border-parchment/5 flex gap-8">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1 text-main-accent/60 mb-1">
+                <Star size={12} />
+                <span className="text-[10px] uppercase tracking-widest font-mono">Interested:</span>
+                <span className="text-l font-[Cinzel] text-parchment/80">{interestedCount}</span>
+            </div>
+            <div className="flex items-center gap-1 text-main-accent/60 mb-1">
+                <CircleCheck size={12} />
+                <span className="text-[10px] uppercase tracking-widest font-mono">Going:</span>
+                <span className="text-l font-[Cinzel] text-parchment/80">{goingCount}</span>
+            </div>
           </div>
         </div>
       </div>
