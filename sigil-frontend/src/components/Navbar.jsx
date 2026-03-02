@@ -11,6 +11,7 @@ import { createContext, useContext, useState } from "react";
 import GlitchSigil from "../util/icons/logo/GlitchSigil";
 import XSVG from "../util/icons/XSVG";
 import MenuSVG from "../util/icons/MenuSVG";
+import SigilButton from "./SigilButton";
 
 const NavbarContext = createContext();
 const Navbar = ({ children }) => {
@@ -73,29 +74,40 @@ const Navbar = ({ children }) => {
           <div className="border-t flex p-3">
             {user ? (
               <>
-                <img
-                  src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-md"
-                />
+                <Link to="/profile">
+                  <img
+                    src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+                    alt="User Avatar"
+                    className="w-10 h-10 rounded-md"
+                  />
+                </Link>
                 <div
                   className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52 opacity-100" : "w-0 opacity-0"}`}
                 >
-                  <div className="leading-4">
-                    <h4 className="font-semibold font-[Montserrat]">
-                      {user.name}
-                    </h4>
-                    <span className="text-xs text-gray-600 font-[Montserrat]">
-                      {user.email}
-                    </span>
-                  </div>
+                  <Link to="/profile">
+                    <div className="leading-4">
+                      <h4 className="font-semibold font-[Montserrat]">
+                        {user.name}
+                      </h4>
+                      <span className="text-xs text-gray-600 font-[Montserrat]">
+                        {user.email}
+                      </span>
+                    </div>
+                  </Link>
+
                   <button onClick={handleLogout} className="ml-2">
                     <LogOut size={20} />
                   </button>
                 </div>
               </>
             ) : (
-              <></>
+              <div className={`
+                  flex items-center overflow-hidden transition-all duration-500 ease-in-out
+                  ${expanded ? "max-w-[500px] opacity-100" : "max-w-0 opacity-0"}
+              `}>
+                <SigilButton type="button" text={"Login"} onClick={() => navigate('/login')}/>
+                <SigilButton type="button" text={"Register"} onClick={() => navigate('/register')}/>
+              </div>
             )}
           </div>
         </nav>

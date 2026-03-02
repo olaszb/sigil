@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function events(){
+        return $this->belongsToMany(Event::class, 'event_user_status')->withPivot('status')->withTimestamps();
+    }
 }

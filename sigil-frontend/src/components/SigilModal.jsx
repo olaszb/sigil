@@ -9,7 +9,6 @@ const SigilModal = ({text, closeModal, onAction}) => {
         };
         window.addEventListener("keydown", handleEsc);
         
-        // Cleanup the listener when the component is unmounted
         return () => window.removeEventListener("keydown", handleEsc);
     }, [closeModal]);
 

@@ -1,7 +1,7 @@
 import { monthNames, weekDays } from "../../util/helper";
 import SigilButton from "../SigilButton";
 
-const EventTab = ({ title, start_time, venue_name }) => {
+const EventTab = ({ title, start_time, venue_name, mode }) => {
   const date = new Date(start_time);
 
   return (
@@ -24,7 +24,7 @@ const EventTab = ({ title, start_time, venue_name }) => {
               {title}
             </h1>
             <h2 className="mt-6 text-xl text-parchment font-[Montserrat]">
-              Gates open at{" "}
+              Gates {mode === 'current' ? "open" : "opened"} at{" "}
               {date.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -35,9 +35,13 @@ const EventTab = ({ title, start_time, venue_name }) => {
             </h3>
           </div>
           <hr className="my-8 text-parchment/20" />
-          <div className="flex justify-center">
-            <SigilButton text={"Ticket Types"} />
-          </div>
+          {mode === 'current' && (
+            <>
+              <div className="flex justify-center">
+                <SigilButton text={"Ticket Types"} />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

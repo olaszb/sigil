@@ -13,6 +13,7 @@ import UpdateEvent from './views/UpdateEvent';
 import AddVenuePage from './views/AddVenue';
 import Venues from './views/Venues';
 import PastEventsPage from './views/PastEvents';
+import ProfilePage from './views/Profile';
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
           <Route element={<MainLayout />}>
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
-            <Route path='/events/:slug' element={<EventDetails />} />
+            <Route path='/events/:slug' element={<EventDetails mode={'normal'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
           
             {/* Private Routes */}
@@ -33,12 +34,16 @@ function App() {
               <Route path="/create-event" element={<CreateEvent />} />
               <Route path="/update-event/:slug" element={<UpdateEvent />} />
               <Route path="/add-venue" element={<AddVenuePage/>}/>
+              <Route path="/archive/events/:slug" element={<EventDetails mode={'archived'}/>} />
+              <Route path="/profile" element={<ProfilePage />}/>
             </Route>
             
             {/* Routes for admins only */}
             <Route element={<AdminGuard />}>
                 <Route path="/venues" element={<Venues />}/>
             </Route>
+
+
           </Route>
           
           {/* Only for not logged in users */}

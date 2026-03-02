@@ -29,7 +29,7 @@ const EventItem = ({ event, type, onAction }) => {
       </div>
 
       {/* Image */}
-      <Link to={`/events/${event.slug}`}>
+      <Link to={type === 'current' ? `/events/${event.slug}` : `/archive/events/${event.slug}`}>
         <div className="relative shrink-0">
           <img
             src={getImageUrl(event.image_url)}
@@ -41,7 +41,7 @@ const EventItem = ({ event, type, onAction }) => {
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <Link to={`/events/${event.slug}`}>
+        <Link to={(type === 'current' || type === 'past') ? `/events/${event.slug}` : `/archive/events/${event.slug}`}>
           <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
             {event.title}
           </h2>

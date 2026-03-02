@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axiosClient from "../services/axios-client";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/login/login.css";
 import { Key, Scroll, } from "lucide-react";
@@ -127,6 +127,7 @@ const LoginPage = () => {
                                         "
                     />
                 </div>
+                <p className="text-xs text-parchment/50">Don't have an account yet? <Link to={"/register"} className="text-main-accent hover:underline">Register!</Link></p>
             </div>
 
             {/* Submit */}
