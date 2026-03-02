@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import SigilButton from "../components/SigilButton";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(false);
@@ -15,9 +16,21 @@ const ProfilePage = ( ) => {
                     ) : (
                         <img src="/public/default_avatar.jpg" className="rounded-full w-20 h-20 ml-4 mt-2"/>
                     )}
-                    <div className="flex flex-col items-left ml-4">
-                        <p>{user?.name}</p>
-                        <p>{user?.email}</p>
+                    <div className="flex justify-between items-center ml-4 w-full">
+                        <div className="flex flex-col ">
+                            <p className="tracking-[1px]">{user?.name}</p>
+                            <p>{user?.email}</p>
+                        </div>
+                        <div className="flex flex-col gap-2 mr-4">
+                            {/* <SigilButton text={"Edit Profile"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/>
+                            <SigilButton text={"Logout"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/> */}
+                            <button className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
+                                Edit Profile
+                            </button>
+                            <button className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
