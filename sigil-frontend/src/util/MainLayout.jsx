@@ -14,7 +14,7 @@ const MainLayout = () => {
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
         <NavbarItem icon={<HomeSVG />} text="Past Events" to="/past-events" />
-        {user && (
+        {(user && user.role !== 'user') && (
           <>
             <NavbarItem icon={<QuillSVG />} text="Create Event" to="/create-event"/>
             <NavbarItem icon={<DashboardSVG />} text="Dashboard" to="/dashboard"/>

@@ -61,4 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //change event status
     Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
+
+    //get user events
+    Route::get('/user/events', [\App\Http\Controllers\UserController::class, 'getUserEvents'])->name('user.events');
 });
