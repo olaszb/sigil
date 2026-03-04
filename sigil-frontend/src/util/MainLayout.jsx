@@ -5,6 +5,7 @@ import DashboardSVG from "./icons/DashboardSVG";
 import QuillSVG from "./icons/QuillSVG";
 import { useAuth } from "../contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
+import ClockSVG from "./icons/ClockSVG";
 const MainLayout = () => {
   const { user } = useAuth();
 
@@ -13,7 +14,7 @@ const MainLayout = () => {
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
-        <NavbarItem icon={<HomeSVG />} text="Past Events" to="/past-events" />
+        <NavbarItem icon={<ClockSVG />} text="Past Events" to="/past-events" />
         {(user && user.role !== 'user') && (
           <>
             <NavbarItem icon={<QuillSVG />} text="Create Event" to="/create-event"/>
