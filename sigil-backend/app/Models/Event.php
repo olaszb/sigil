@@ -31,4 +31,8 @@ class Event extends Model
     public function users(){
         return $this->belongsToMany(User::class, 'event_user_status')->withPivot('status')->withTimestamps();
     }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 }

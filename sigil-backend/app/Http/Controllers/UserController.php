@@ -16,4 +16,9 @@ class UserController extends Controller
 
         return response()->json($events);
     }
+
+    public function getMyComments(Request $request){
+        $comments = $request->user()->comments()->with('event:id,title,slug')->latest()->get();
+        return response()->json($comments);
+    }
 }
