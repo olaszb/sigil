@@ -1,8 +1,5 @@
-import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatArchiveDate } from "../../util/helper";
-import { toastConfig } from "../../util/toastConfig";
-import axiosClient from "../../services/axios-client";
 
 const CommentItem = ({ comment, handleDelete }) => {
     const { user } = useAuth();
@@ -17,7 +14,7 @@ const CommentItem = ({ comment, handleDelete }) => {
                 />
             </div>
 
-            <div className="flex-1 pb-8">
+            <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                     <span className="font-[Cinzel] text-sm text-main-accent tracking-wider">
                         {comment.user.name}

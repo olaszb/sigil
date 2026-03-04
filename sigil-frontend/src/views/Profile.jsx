@@ -5,6 +5,7 @@ import SigilButton from "../components/SigilButton";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
+import BoxButton from "../components/BoxButton";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
@@ -56,12 +57,12 @@ const ProfilePage = ( ) => {
                         <div className="flex flex-col gap-2 mr-4">
                             {/* <SigilButton text={"Edit Profile"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/>
                             <SigilButton text={"Logout"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/> */}
-                            <button className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
+                            <button className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
+                            hover:text-parchment bg-white/5 hover:bg-white/15 transition-all duration-300 
+                            border border-parchment/10 hover:border-parchment/20">
                                 Edit Profile
                             </button>
-                            <button onClick={handleLogout} className="px-4 py-2 border-b border-main-accent hover:bg-parchment/5 transition-colors duration-400">
-                                Logout
-                            </button>
+                            <BoxButton text={"Logout"} color={"main-accent"} onClick={handleLogout}/>
                         </div>
                     </div>
                 </div>
