@@ -3,9 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
-import EditorRenderer from "../components/create-event/Editor/EditorRenderer";
 import { useAuth } from "../contexts/AuthContext";
-import { Castle, CircleCheck, Star, Users } from "lucide-react";
+import { CircleCheck, Star } from "lucide-react";
 import {toast} from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import EventDescription from "../components/event-details/EventDescription";
@@ -13,6 +12,8 @@ import VenueDetails from "../components/event-details/VenueDetails";
 import SigilButton from "../components/SigilButton";
 import SigilModal from "../components/SigilModal";
 import { formatArchiveDate } from "../util/helper";
+import CreateComment from "../components/event-details/CreateComment";
+import CommentItem from "../components/event-details/CommentItem";
 
 const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
@@ -70,9 +71,20 @@ const EventDetails = ({ mode }) => {
                 console.error(err);
             }
         }
+        const fetchComments = async (eventId) => {
+            try{
+                const response = await axiosClient.get(`/api/events/${eventId}/comments`);
+                setComments(response.data);
+            }catch(err){
+                console.error(err);
+            }
+        }
         fetchEvent();
         if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
             fetchUserStatus(event.id);
+        }
+        if(mode === 'past' && event?.id){
+            fetchComments(event.id);
         }
     }, [slug, mode, user, navigate, event?.id]);
 
@@ -102,8 +114,6 @@ const EventDetails = ({ mode }) => {
         }
     }
 
-    
-
     const handleChangeStatus = async (newStatus) => {
         try{
             const response = await axiosClient.post(`/api/events/${event.id}/status`,{
@@ -112,6 +122,27 @@ const EventDetails = ({ mode }) => {
             setActiveStatus(response.data.status);
         }catch(err){
             console.error(err);
+        }
+    }
+    const handleCommentSubmit = async (e, commentText) => {
+        e.preventDefault();
+
+        const text = commentText.trim();
+        if(!text) return;
+
+        try{
+            await axiosClient.post(`/api/events/${event.id}/comments`, {
+                comment: text
+            });
+            toast("Whisper cast successfully!", toastConfig);
+            e.target.reset();
+            setIsCommentClicked(false);
+
+            const response = await axiosClient.get(`/api/events/${event.id}/comments`);
+            setComments(response.data);
+        }catch(err){
+            console.error(err);
+            toast("Failed to cast whisper. Please try again.", toastConfig);
         }
     }
 
@@ -195,44 +226,12 @@ const EventDetails = ({ mode }) => {
                         </div>
                         {user && (
                             <div>
-
-                                <div className="mt-2 flex">
-                                    {user?.image_url ? (
-                                        <></>
-                                    ) : (
-                                        <img src="/public/default_avatar.jpg" className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
-                                    )}
-                                    <form className="w-full">
-                                            <textarea placeholder="Leave a whisper in the archives..." 
-                                            className={`ml-2 w-full bg-black/20 border-b border-parchment/10 px-2 pt-2 focus:outline-none
-                                                focus:border-main-accent transition-all duration-500 resize-none overflow-y-auto ${isCommentClicked ? 'h-32 bg-black/60 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]' : 'h-10'}`}
-                                            onClick={() => setIsCommentClicked(true)}
-                                            />
-                                            <div className={`w-full flex justify-end mt-3 gap-3 transition-all duration-500 ease-in-out 
-                                                ${isCommentClicked ? 'opacity-100 translate-y-0 h-auto' : 'opacity-0 -translate-y-2 h-0 overflow-hidden pointer-events-none'}`}>
-                                                <button onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setIsCommentClicked(false)}} 
-                                                className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
-                                                    hover:text-parchment hover:bg-white/5 transition-all duration-300 
-                                                    border border-transparent hover:border-parchment/10">
-                                                    Cancel
-                                                </button>
-                                                <button type="submit"
-                                                className="px-6 py-2 bg-main-accent/10 border border-main-accent/40 
-                                                    text-main-accent text-[10px] uppercase tracking-[0.2em] font-bold
-                                                    hover:bg-main-accent hover:text-primary-bg transition-all duration-500
-                                                    shadow-[0_0_10px_rgba(154,0,0,0.1)] hover:shadow-[0_0_20px_rgba(154,0,0,0.3)]">
-                                                    Cast Whisper
-                                                </button>
-                                            </div>
-                                    </form>
-                                </div>
+                                <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
                                 <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent mt-2" />
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (
-                                            <Comment key={comment.id} comment={comment} handleDeleteComment={() => {}}/>
+                                            <CommentItem key={comment.id} comment={comment} handleDeleteComment={() => {}}/>
                                         ))
                                      ) : (
                                         <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>

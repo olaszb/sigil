@@ -1,7 +1,7 @@
 import { useAuth } from "../../contexts/AuthContext";
 import { formatArchiveDate } from "../../util/helper";
 
-const Comment = ({ comment, handleDeleteComment }) => {
+const CommentItem = ({ comment, handleDeleteComment }) => {
     const { user } = useAuth();
     return (
         <div className="relative flex gap-4 group mt-6">
@@ -43,4 +43,4 @@ const Comment = ({ comment, handleDeleteComment }) => {
     );
 }
 
-export default Comment;
+export default CommentItem;
