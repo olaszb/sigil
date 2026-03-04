@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -29,7 +30,8 @@ class CommentController extends Controller
 
     public function destroy(Request $request, $commentId)
     {
-        $comment = \App\Models\Comment::findOrFail($commentId);
+        $comment = Comment::findOrFail($commentId);
+        Gate::authorize('delete', $comment);
 
         // Ensure the user is the owner of the comment or an admin
         if ($request->user()->id !== $comment->user_id && !$request->user()->isAdmin()) {
