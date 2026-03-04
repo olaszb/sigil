@@ -6,7 +6,7 @@ import EventButton from "../EventButton";
 
 const EventItem = ({ event, type, onAction }) => {
   const date = new Date(event.start_time);
-
+  const { user } = useAuth();
 
   return (
     <div
@@ -52,7 +52,7 @@ const EventItem = ({ event, type, onAction }) => {
       </div>
 
       {/* Buy Ticket */}
-      {type === "current" &&
+      {(type === "current" && user?.role === 'user') &&
       (
         <div className="absolute top-0 right-0">
           <EventButton text={"Claim Your Sigil"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
