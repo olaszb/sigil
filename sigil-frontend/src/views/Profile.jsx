@@ -1,13 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import SigilButton from "../components/SigilButton";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../services/axios-client";
+import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 
 const ProfilePage = ( ) => {
-    const [eventsExpanded, setEventsExpanded] = useState(false);
+    const [eventsExpanded, setEventsExpanded] = useState(true);
+    const [activeTab, setActiveTab] = useState("interested");
+    const [events, setEvents] = useState([]);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!activeTab) return;
+
+        const fetchEvents = async () => {
+            try {
+                const { data } = await axiosClient.get(`/api/user/events?status=${activeTab.toLowerCase()}`);
+                setEvents(data);
+            }catch (error) {
+                console.error("Failed to fetch events:", error);
+            }
+        };
+        fetchEvents();
+
+    }, [activeTab]);
 
     const handleLogout = async () => {
         try {
@@ -47,32 +66,45 @@ const ProfilePage = ( ) => {
                     </div>
                 </div>
             </div>
-            <div className="bg-black/20 flex flex-row mx-10 mt-5 border border-parchment/10">
+            <div className="bg-black/20 flex flex-row mx-10 mt-5 border border-parchment/10 h-[400px] ">
                 {/* Sidebar */}
-                <div className="flex-[1] bg-black/40">
-                    <div onClick={() => setEventsExpanded((prev) => !prev)} 
-                        className="group py-4 flex items-center justify-center text-center hover:bg-parchment/5 transition-colors duration-400 border-b border-parchment/20 cursor-pointer">
-                        <span className="group-hover:text-main-accent transition-colors duration-400 mr-2">
-                            Events
-                        </span>
-                        {eventsExpanded ? <ChevronDown size={14} className="text-main-accent"/> : <ChevronRight size={14} className="text-main-accent"/>}
-                    </div>
-                    <div className={`overflow-hidden transition-all duration-500 bg-black/20 ${eventsExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}>
-                        {['Interested', 'Going', 'Attended'].map((status) => (
-                            <div key={status} className="py-3 px-4 text-xs uppercase tracking-[0.2em] text-parchment hover:text-main-accent hover:bg-parchment/5 cursor-pointer transition-all border-b border-parchment/5 relative">
-                                {status}
+                <div className="flex-[1] bg-black/40 overflow-hidden">
+                    {(user.role !== 'organizer' && user.role !== 'admin') && (
+                        <>
+                            <div onClick={() => setEventsExpanded((prev) => !prev)} 
+                                className="group py-4 flex items-center justify-center text-center hover:bg-parchment/5 transition-colors duration-400 cursor-pointer">
+                                <span className="group-hover:text-main-accent transition-colors duration-400 mr-2">
+                                    Events
+                                </span>
+                                {eventsExpanded ? <ChevronDown size={14} className="text-main-accent"/> : <ChevronRight size={14} className="text-main-accent"/>}
                             </div>
-                        ))}
-                    </div>
-                    <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 border-b border-parchment/20 cursor-pointer">
+                            <div className={`overflow-hidden transition-all duration-500 bg-black/20 ${eventsExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}>
+                                {['Interested', 'Going', 'Attended'].map((status) => (
+                                    <div key={status} onClick={() => setActiveTab(status.toLowerCase())} 
+                                        className={`py-3 px-4 text-xs uppercase tracking-[0.2em] hover:text-main-accent hover:bg-parchment/5 cursor-pointer transition-all border-b border-parchment/5 relative ${activeTab === status.toLowerCase() ? "text-main-accent bg-parchment/5" : "text-parchment"}`}>
+                                        {status}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
+                                Tickets
+                            </div>
+                        </>
+                    )}
+                    <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
                         Comments
                     </div>
-                    <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
-                        Tickets
-                    </div>
                 </div>
-                <div className="flex-[4]">
-                    asd
+                <div className="flex-[4] p-8 pb-4 overflow-y-auto">
+                    {events && events.length > 0 ? (
+                        <div >
+                            {events.map((event) => (
+                                <ProfileEventItem key={event.id} event={event}/>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-parchment">Click on a tab to view content.</p>
+                    )}
                 </div>
             </div>
         </div>

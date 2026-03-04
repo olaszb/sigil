@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -61,4 +63,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //change event status
     Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
+
+    //get user events
+    Route::get('/user/events', [UserController::class, 'getUserEvents'])->name('user.events');
+
+    //get event comments
+    Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
+
+    //post event comment
+    Route::post('/events/{eventId}/comments', [CommentController::class, 'store'])->name('event.comment.store');
+
+    //delete event comment
+    Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('event.comment.destroy');
 });

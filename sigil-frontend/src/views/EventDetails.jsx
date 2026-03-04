@@ -3,15 +3,17 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
-import EditorRenderer from "../components/create-event/Editor/EditorRenderer";
 import { useAuth } from "../contexts/AuthContext";
-import { Castle, CircleCheck, Star, Users } from "lucide-react";
+import { CircleCheck, Star } from "lucide-react";
 import {toast} from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import EventDescription from "../components/event-details/EventDescription";
 import VenueDetails from "../components/event-details/VenueDetails";
 import SigilButton from "../components/SigilButton";
 import SigilModal from "../components/SigilModal";
+import { formatArchiveDate } from "../util/helper";
+import CreateComment from "../components/event-details/CreateComment";
+import CommentItem from "../components/event-details/CommentItem";
 
 const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
@@ -22,6 +24,8 @@ const EventDetails = ({ mode }) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
     const [activeStatus, setActiveStatus] = useState(null);
+    const [isCommentClicked, setIsCommentClicked] = useState(false);
+    const [comments, setComments] = useState([]);
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -67,9 +71,20 @@ const EventDetails = ({ mode }) => {
                 console.error(err);
             }
         }
+        const fetchComments = async (eventId) => {
+            try{
+                const response = await axiosClient.get(`/api/events/${eventId}/comments`);
+                setComments(response.data);
+            }catch(err){
+                console.error(err);
+            }
+        }
         fetchEvent();
         if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
             fetchUserStatus(event.id);
+        }
+        if(mode === 'past' && event?.id){
+            fetchComments(event.id);
         }
     }, [slug, mode, user, navigate, event?.id]);
 
@@ -99,19 +114,6 @@ const EventDetails = ({ mode }) => {
         }
     }
 
-    const formatArchiveDate = (dateString) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-    }
-
     const handleChangeStatus = async (newStatus) => {
         try{
             const response = await axiosClient.post(`/api/events/${event.id}/status`,{
@@ -122,6 +124,38 @@ const EventDetails = ({ mode }) => {
             console.error(err);
         }
     }
+    const handleCommentSubmit = async (e, commentText) => {
+        e.preventDefault();
+
+        const text = commentText.trim();
+        if(!text) return;
+
+        try{
+            await axiosClient.post(`/api/events/${event.id}/comments`, {
+                comment: text
+            });
+            toast("Whisper cast successfully!", toastConfig);
+            e.target.reset();
+            setIsCommentClicked(false);
+
+            const response = await axiosClient.get(`/api/events/${event.id}/comments`);
+            setComments(response.data);
+        }catch(err){
+            console.error(err);
+            toast("Failed to cast whisper. Please try again.", toastConfig);
+        }
+    }
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await axiosClient.delete(`/api/comments/${commentId}`);
+            setComments(prev => prev.filter(comment => comment.id !== commentId));
+            toast("Whisper banished successfully!", toastConfig);
+        }catch (err) {
+            toast("Failed to banish whisper.", toastConfig);
+            console.error("Failed to delete comment:", err);
+        }
+    };
 
   return (
     <div className="w-full min-h-screen bg-secondary-bg text-parchment">
@@ -168,7 +202,7 @@ const EventDetails = ({ mode }) => {
                         )}
                     </div>
                 }
-                {(user?.role !== 'organizer' && user?.role !== 'admin') && (
+                {(user?.role !== 'organizer' && user?.role !== 'admin' && mode === 'current') && (
                     <div className="bg-black/60 mb-8 flex items-center w-fit border border-parchment/10">
                         <button onClick={() => handleChangeStatus('interested')} className={`px-4 py-3 flex items-center border-r border-parchment/10 group transition-all duration-400
                             ${activeStatus === 'interested' ?
@@ -195,7 +229,29 @@ const EventDetails = ({ mode }) => {
                   <div className="md:col-span-2 space-y-4">
 
                     <EventDescription description={event?.description}/>
-                    <VenueDetails venue={venue}/>
+                    <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>
+                    <section>
+                        <div className="flex items-center w-full">
+                            <h2 className="text-main-accent font-[Cinzel] text-xl">Comments</h2>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent" />
+                        </div>
+                        {user && (
+                            <div>
+                                <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
+                                <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent mt-2" />
+                                <div>
+                                    {comments && comments.length > 0 ? (
+                                        comments.map((comment) => (
+                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment}/>
+                                        ))
+                                     ) : (
+                                        <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                        
+                    </section>
                   </div>
                </div>
             </div>

@@ -37,7 +37,7 @@ const EventTab = ({ title, start_time, venue_name, mode }) => {
           <hr className="my-8 text-parchment/20" />
           {mode === 'current' && (
             <>
-              <div className="flex justify-center">
+              <div className="flex justify-center mb-8">
                 <SigilButton text={"Ticket Types"} />
               </div>
             </>

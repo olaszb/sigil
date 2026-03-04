@@ -2,16 +2,15 @@ import { Link } from "react-router-dom";
 import { getImageUrl, getPlainTextFromLexical, monthNames, weekDays } from "../../util/helper";
 import SigilButton from "../EventButton";
 import EventButton from "../EventButton";
-import { useAuth } from "../../contexts/AuthContext";
 
 
-const EventItem = ({ event, type, onAction }) => {
+const ProfileEventItem = ({ event }) => {
   const date = new Date(event.start_time);
-  const { user } = useAuth();
+
 
   return (
     <div
-      className="group relative flex bg-primary-bg w-full max-w-6xl mb-5 border border-parchment/20
+      className="group relative flex bg-primary-bg w-full max-w-6xl mb-4 border border-parchment/20
                 hover:shadow-[10px_10px_0px_0px_rgba(154,0,0,1)]
                 hover:-translate-x-1 hover:-translate-y-1 transition-all duration-300
                 overflow-hidden"
@@ -30,7 +29,7 @@ const EventItem = ({ event, type, onAction }) => {
       </div>
 
       {/* Image */}
-      <Link to={type === 'current' ? `/events/${event.slug}` : type === 'past' ? `/past-events/${event.slug}` : `/archive/events/${event.slug}`}>
+      <Link to={`/events/${event.slug}`}>
         <div className="relative shrink-0">
           <img
             src={getImageUrl(event.image_url)}
@@ -42,7 +41,7 @@ const EventItem = ({ event, type, onAction }) => {
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <Link to={type === 'current' ? `/events/${event.slug}` : type === 'past' ? `/past-events/${event.slug}` : `/archive/events/${event.slug}`}>
+        <Link to={`/events/${event.slug}`}>
           <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
             {event.title}
           </h2>
@@ -51,29 +50,8 @@ const EventItem = ({ event, type, onAction }) => {
           {getPlainTextFromLexical(event.description)}
         </p>
       </div>
-
-      {/* Buy Ticket */}
-      {(type === "current" && user?.role === 'user') &&
-      (
-        <div className="absolute top-0 right-0">
-          <EventButton text={"Claim Your Sigil"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
-        </div>
-      )
-      }
-      {type === 'archived' && (
-        <>
-          <div className="absolute top-0 right-0">
-            <EventButton text={"Restore Ritual"} onClick={() => onAction(event, 'restore')} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
-          </div>
-
-          <div className="absolute bottom-0 right-0">
-            <EventButton text={"Burn Archive"} onClick={() => onAction(event, 'forceDelete')} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
-          </div>
-        </>
-      )
-      }
     </div>
   );
 };
 
-export default EventItem;
+export default ProfileEventItem;

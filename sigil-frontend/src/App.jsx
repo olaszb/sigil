@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './views/Login';
 import HomePage from './views/Home';
-import { AdminGuard, PrivateGuard, PublicGuard } from './util/Guard';
+import { AdminGuard, AdminOrOrganizerGuard, PrivateGuard, PublicGuard } from './util/Guard';
 import { AuthProvider } from './contexts/AuthContext';
 import Dashboard from './views/Dashboard';
 import MainLayout from './util/MainLayout';
@@ -25,22 +25,28 @@ function App() {
           <Route element={<MainLayout />}>
             {/* Public Routes */}
             <Route path='/' element={<HomePage />} />
-            <Route path='/events/:slug' element={<EventDetails mode={'normal'} />} />
+            <Route path='/events/:slug' element={<EventDetails mode={'current'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
+            <Route path='/past-events/:slug' element={<EventDetails mode={'past'} />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/create-event" element={<CreateEvent />} />
-              <Route path="/update-event/:slug" element={<UpdateEvent />} />
-              <Route path="/add-venue" element={<AddVenuePage/>}/>
-              <Route path="/archive/events/:slug" element={<EventDetails mode={'archived'}/>} />
               <Route path="/profile" element={<ProfilePage />}/>
             </Route>
             
             {/* Routes for admins only */}
             <Route element={<AdminGuard />}>
                 <Route path="/venues" element={<Venues />}/>
+            </Route>
+
+            {/* Routes for admins or organizers */}
+            <Route element={<AdminOrOrganizerGuard />}>
+                <Route path="/create-event" element={<CreateEvent />} />
+                <Route path="/update-event/:slug" element={<UpdateEvent />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/update-event/:slug" element={<UpdateEvent />} />
+                <Route path="/add-venue" element={<AddVenuePage/>}/>
+                <Route path="/archive/events/:slug" element={<EventDetails mode={'archived'}/>} />
             </Route>
 
 
