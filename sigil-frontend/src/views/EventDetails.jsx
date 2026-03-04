@@ -146,6 +146,17 @@ const EventDetails = ({ mode }) => {
         }
     }
 
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await axiosClient.delete(`/api/comments/${commentId}`);
+            setComments(prev => prev.filter(comment => comment.id !== commentId));
+            toast("Whisper banished successfully!", toastConfig);
+        }catch (err) {
+            toast("Failed to banish whisper.", toastConfig);
+            console.error("Failed to delete comment:", err);
+        }
+    };
+
   return (
     <div className="w-full min-h-screen bg-secondary-bg text-parchment">
         <EventHero image_url={event?.image_url} />
@@ -231,7 +242,7 @@ const EventDetails = ({ mode }) => {
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (
-                                            <CommentItem key={comment.id} comment={comment} handleDeleteComment={() => {}}/>
+                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment}/>
                                         ))
                                      ) : (
                                         <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>

@@ -1,8 +1,13 @@
+import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatArchiveDate } from "../../util/helper";
+import { toastConfig } from "../../util/toastConfig";
+import axiosClient from "../../services/axios-client";
 
-const CommentItem = ({ comment, handleDeleteComment }) => {
+const CommentItem = ({ comment, handleDelete }) => {
     const { user } = useAuth();
+
+    
     return (
         <div className="relative flex gap-4 group mt-6">
             <div className="flex flex-col items-center">
@@ -30,7 +35,7 @@ const CommentItem = ({ comment, handleDeleteComment }) => {
                     <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         {(user?.id === comment.user_id || user?.role === 'admin') && (
                             <button 
-                                onClick={() => handleDeleteComment(comment.id)}
+                                onClick={() => handleDelete(comment.id)}
                                 className="text-[10px] uppercase tracking-widest text-main-accent/40 hover:text-main-accent transition-colors"
                             >
                                 Banish
