@@ -22,6 +22,7 @@ const EventDetails = ({ mode }) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
     const [activeStatus, setActiveStatus] = useState(null);
+    const [isCommentClicked, setIsCommentClicked] = useState(false);
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -168,7 +169,7 @@ const EventDetails = ({ mode }) => {
                         )}
                     </div>
                 }
-                {(user?.role !== 'organizer' && user?.role !== 'admin') && (
+                {(user?.role !== 'organizer' && user?.role !== 'admin' && mode === 'current') && (
                     <div className="bg-black/60 mb-8 flex items-center w-fit border border-parchment/10">
                         <button onClick={() => handleChangeStatus('interested')} className={`px-4 py-3 flex items-center border-r border-parchment/10 group transition-all duration-400
                             ${activeStatus === 'interested' ?
@@ -196,6 +197,48 @@ const EventDetails = ({ mode }) => {
 
                     <EventDescription description={event?.description}/>
                     <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>
+                    <section>
+                        <div className="flex items-center">
+                            <h2 className="text-main-accent font-[Cinzel] text-xl">Comments</h2>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent" />
+                        </div>
+                        {user && (
+                            <div className="mt-2 flex">
+                                {user?.image_url ? (
+                                    <></>
+                                ) : (
+                                    <img src="/public/default_avatar.jpg" className={`rounded-full ${isCommentClicked ? 'w-12 h-12' : 'w-8 h-8'}`}/>
+                                )}
+                                <form className="w-full">
+                                        <textarea placeholder="Leave a whisper in the archives..." 
+                                        className={`ml-2 w-full bg-black/20 border-b border-parchment/10 px-2 pt-2 focus:outline-none
+                                            focus:border-main-accent transition-all duration-500 resize-none overflow-y-auto ${isCommentClicked ? 'h-32 bg-black/60 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]' : 'h-10'}`}
+                                        onClick={() => setIsCommentClicked(true)}
+                                        />
+                                        <div className={`w-full flex justify-end mt-3 gap-3 transition-all duration-500 ease-in-out 
+                                            ${isCommentClicked ? 'opacity-100 translate-y-0 h-auto' : 'opacity-0 -translate-y-2 h-0 overflow-hidden pointer-events-none'}`}>
+                                            <button onClick={(e) => {
+                                                e.preventDefault();
+                                                setIsCommentClicked(false)}} 
+                                            className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
+                                                hover:text-parchment hover:bg-white/5 transition-all duration-300 
+                                                border border-transparent hover:border-parchment/10">
+                                                Cancel
+                                            </button>
+                                            <button type="submit"
+                                            className="px-6 py-2 bg-main-accent/10 border border-main-accent/40 
+                                                text-main-accent text-[10px] uppercase tracking-[0.2em] font-bold
+                                                hover:bg-main-accent hover:text-primary-bg transition-all duration-500
+                                                shadow-[0_0_10px_rgba(154,0,0,0.1)] hover:shadow-[0_0_20px_rgba(154,0,0,0.3)]">
+                                                Cast Whisper
+                                            </button>
+                                        </div>
+                                </form>
+
+                            </div>
+                        )}
+                        
+                    </section>
                   </div>
                </div>
             </div>
