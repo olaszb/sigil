@@ -45,7 +45,7 @@ class CommentController extends Controller
     }
 
     public function getUserComments($userId){
-        $comments = Comment::where('user_id', $userId)->with('event:id,name')->latest()->get();
+        $comments = Comment::where('user_id', $userId)->with('event:id,title')->latest()->get();
         return response()->json($comments);
     }
 }

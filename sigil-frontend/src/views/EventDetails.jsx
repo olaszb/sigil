@@ -238,11 +238,11 @@ const EventDetails = ({ mode }) => {
                         {user && (
                             <div>
                                 <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
-                                <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent mt-2" />
+                                <div className="h-[1px] w-full bg-parchment/20 mt-2" />
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (
-                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment}/>
+                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment} type={"eventDetails"}/>
                                         ))
                                      ) : (
                                         <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>

@@ -6,11 +6,13 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 import BoxButton from "../components/BoxButton";
+import CommentItem from "../components/event-details/CommentItem";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
     const [activeTab, setActiveTab] = useState("interested");
     const [events, setEvents] = useState([]);
+    const [comments, setComments] = useState([]);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -25,9 +27,20 @@ const ProfilePage = ( ) => {
                 console.error("Failed to fetch events:", error);
             }
         };
+        const fetchComments = async () => {
+            try {
+                const { data } = await axiosClient.get(`/api/users/${user.id}/comments`);
+                setComments(data);
+            } catch (error) {
+                console.error("Failed to fetch comments:", error);
+            }
+        };
         fetchEvents();
+        if (activeTab === "comments") {
+            fetchComments();
+        }
 
-    }, [activeTab]);
+    }, [activeTab, user.id]);
 
     const handleLogout = async () => {
         try {
@@ -92,7 +105,9 @@ const ProfilePage = ( ) => {
                             </div>
                         </>
                     )}
-                    <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
+                    <div onClick={() => setActiveTab('comments')} 
+                        className={`py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer
+                        ${activeTab === 'comments' ? "text-main-accent bg-parchment/5" : "text-parchment"}`}>
                         Comments
                     </div>
                 </div>
@@ -103,7 +118,14 @@ const ProfilePage = ( ) => {
                                 <ProfileEventItem key={event.id} event={event}/>
                             ))}
                         </div>
+                    ) : (activeTab === 'comments' && comments.length > 0) ? (
+                        <div>
+                            {comments.map((comment) => (
+                                <CommentItem key={comment.id} comment={comment} type={"profile"}/>
+                            ))}
+                        </div>
                     ) : (
+                        
                         <p className="text-parchment">Click on a tab to view content.</p>
                     )}
                 </div>

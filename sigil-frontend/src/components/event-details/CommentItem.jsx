@@ -1,10 +1,14 @@
+import { useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatArchiveDate } from "../../util/helper";
 
-const CommentItem = ({ comment, handleDelete }) => {
+const CommentItem = ({ comment, handleDelete, type }) => {
     const { user } = useAuth();
 
-    
+    useEffect(() => {
+        console.log("CommentItem rendered with comment:", comment);
+    }, [comment]);
+
     return (
         <div className="relative flex gap-4 group mt-6">
             <div className="flex flex-col items-center">
@@ -17,7 +21,7 @@ const CommentItem = ({ comment, handleDelete }) => {
             <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                     <span className="font-[Cinzel] text-sm text-main-accent tracking-wider">
-                        {comment.user.name}
+                        {comment.user?.name}
                     </span>
                     <span className="text-[9px] font-mono uppercase tracking-tighter text-parchment/30">
                         {formatArchiveDate(comment.created_at)}
@@ -28,17 +32,18 @@ const CommentItem = ({ comment, handleDelete }) => {
                     <p className="text-sm leading-relaxed text-parchment/80 font-light">
                         {comment.comment}
                     </p>
-                    
-                    <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {(user?.id === comment.user_id || user?.role === 'admin') && (
-                            <button 
-                                onClick={() => handleDelete(comment.id)}
-                                className="text-[10px] uppercase tracking-widest text-main-accent/40 hover:text-main-accent transition-colors"
-                            >
-                                Banish
-                            </button>
-                        )}
-                    </div>
+                    {type === 'eventDetails' && (
+                        <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {(user?.id === comment.user_id || user?.role === 'admin') && (
+                                <button 
+                                    onClick={() => handleDelete(comment.id)}
+                                    className="text-[10px] uppercase tracking-widest text-main-accent/40 hover:text-main-accent transition-colors"
+                                >
+                                    Banish
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
