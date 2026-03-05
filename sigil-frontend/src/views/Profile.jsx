@@ -100,7 +100,7 @@ const ProfilePage = ( ) => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
+                            <div onClick={() => setActiveTab('tickets')} className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
                                 Tickets
                             </div>
                         </>

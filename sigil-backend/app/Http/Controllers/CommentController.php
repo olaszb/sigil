@@ -29,6 +29,19 @@ class CommentController extends Controller
         return response()->json($comment, 201);
     }
 
+    public function update(Request $request, Comment $comment)
+    {
+        Gate::authorize('update', $comment);
+
+        $data = $request->validate([
+            'comment' => 'required|string|max:255',
+        ]);
+
+        $comment->update(['comment' => $data['comment']]);
+
+        return response()->json($comment);
+    }
+
     public function destroy(Request $request, $commentId)
     {
         $comment = Comment::findOrFail($commentId);

@@ -78,4 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //get user comments 
     Route::get('/users/{userId}/comments', [CommentController::class, 'getUserComments'])->name('user.comments');
+
+    //update comment
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
 });

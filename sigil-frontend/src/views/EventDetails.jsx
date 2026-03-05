@@ -88,6 +88,10 @@ const EventDetails = ({ mode }) => {
         }
     }, [slug, mode, user, navigate, event?.id]);
 
+    const handleCommentUpdated = (updatedComment) => {
+        setComments(prevComments => prevComments.map(comment => comment.id === updatedComment.id ? updatedComment : comment));
+    }
+
     if (loading) return <div className="text-parchment">Consulting the archives...</div>;
 
     const handleConfirmAction = async () => {
@@ -242,7 +246,7 @@ const EventDetails = ({ mode }) => {
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (
-                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment} type={"eventDetails"}/>
+                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment} type={"eventDetails"} onCommentUpdated={handleCommentUpdated}/>
                                         ))
                                      ) : (
                                         <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>
