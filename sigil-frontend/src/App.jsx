@@ -28,6 +28,7 @@ function App() {
             <Route path='/events/:slug' element={<EventDetails mode={'current'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
             <Route path='/past-events/:slug' element={<EventDetails mode={'past'} />} />
+            <Route path='/users/:username' element={<ProfilePage />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>

@@ -5,6 +5,7 @@ import axiosClient from "../../services/axios-client";
 import { toast } from "react-toastify";
 import { toastConfig } from "../../util/toastConfig";
 import BoxButton from "../BoxButton";
+import { Link } from "react-router-dom";
 
 const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
     const { user } = useAuth();
@@ -34,18 +35,29 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
     return (
         <div className="relative flex gap-4 group mt-6">
             <div className="flex flex-col items-center">
-                <img 
-                    src={ "/public/default_avatar.jpg"} 
-                    className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
-                />
+                {type === 'eventDetails' ? (
+                    <Link to={comment.user.name === user.name ? `/profile` : `/users/${comment.user.name}`} className="cursor-pointer">
+                        <img 
+                            src={ "/public/default_avatar.jpg"} 
+                            className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
+                        />
+                    </Link>
+                ) : (
+                    <img 
+                        src={ "/public/default_avatar.jpg"} 
+                        className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
+                    />
+                )}
             </div>
 
             <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                     {type === 'eventDetails' && (
-                        <span className="font-[Cinzel] text-sm text-main-accent tracking-wider">
-                            {comment.user.name}
-                        </span>
+                        <Link to={comment.user.name === user.name ? `/profile` : `/users/${comment.user.name}`} className="cursor-pointer">
+                            <span className="font-[Cinzel] text-sm text-main-accent tracking-wider">
+                                {comment.user.name}
+                            </span>
+                        </Link>
                     )}
                     <span className="text-[9px] font-mono uppercase tracking-tighter text-parchment/30">
                         {formatArchiveDate(comment.created_at)}

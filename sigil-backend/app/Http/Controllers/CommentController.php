@@ -57,8 +57,5 @@ class CommentController extends Controller
         return response()->json(['message' => 'Comment deleted']);
     }
 
-    public function getUserComments($userId){
-        $comments = Comment::where('user_id', $userId)->with('event:id,title')->latest()->get();
-        return response()->json($comments);
-    }
+
 }

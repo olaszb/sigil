@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import SigilButton from "../components/SigilButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 import BoxButton from "../components/BoxButton";
@@ -16,21 +16,47 @@ const ProfilePage = ( ) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
+    const { username } = useParams();
+    const [profileUser, setProfileUser] = useState(null);
+    const [isOwnProfile, setIsOwnProfile] = useState(false);
+
     useEffect(() => {
-        if (!activeTab) return;
+        const fetchProfile = async () => {
+            try {
+                if(username){
+                    const { data } = await axiosClient.get(`/api/users/${username}`);
+                    setProfileUser(data);
+                    setIsOwnProfile(data.name === user.name);
+                }else {
+                    setProfileUser(user);
+                    setIsOwnProfile(true);
+                }
+            }catch (error) {
+                console.error("Failed to fetch profile:", error);
+            }
+        };
+        fetchProfile();
+    }, [username, user]);
+
+    useEffect(() => {
+        if (!activeTab || !profileUser?.id) return;
 
         const fetchEvents = async () => {
             try {
-                const { data } = await axiosClient.get(`/api/user/events?status=${activeTab.toLowerCase()}`);
+                const url = username ? `/api/users/${username}/events` : `/api/users/events`;
+                const { data } = await axiosClient.get(url , { params: { status: activeTab } });
                 setEvents(data);
+                setComments([]);
             }catch (error) {
                 console.error("Failed to fetch events:", error);
             }
         };
         const fetchComments = async () => {
             try {
-                const { data } = await axiosClient.get(`/api/users/${user.id}/comments`);
+                const url = username ? `/api/users/${username}/comments` : `/api/users/comments`;
+                const { data } = await axiosClient.get(url);
                 setComments(data);
+                setEvents([]);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
             }
@@ -40,7 +66,9 @@ const ProfilePage = ( ) => {
             fetchComments();
         }
 
-    }, [activeTab, user.id]);
+    }, [activeTab, profileUser?.id, username]);
+
+    
 
     const handleLogout = async () => {
         try {
@@ -57,33 +85,35 @@ const ProfilePage = ( ) => {
             <div className="bg-black/40 border border-parchment/10 flex flex-col mt-10 mx-10">
                 <h2 className="text-main-accent ml-4 mt-4 font-[Cinzel] text-3xl">Profile</h2>
                 <div className="flex items-center mb-4">
-                    {user?.image_url ? (
+                    {profileUser?.image_url ? (
                         <></>
                     ) : (
                         <img src="/public/default_avatar.jpg" className="rounded-full w-20 h-20 ml-4 mt-2"/>
                     )}
                     <div className="flex justify-between items-center ml-4 w-full">
                         <div className="flex flex-col ">
-                            <p className="tracking-[1px]">{user?.name}</p>
-                            <p>{user?.email}</p>
+                            <p className="tracking-[1px]">{profileUser?.name ? <span className="text-parchment">{profileUser.name} | <span className="text-main-accent uppercase font-[Cinzel]">{profileUser.role}</span> </span> : "Loading..."}</p>
+                            {(isOwnProfile || user?.role === 'admin') && (
+                                <p className="text-sm opacity-50">{profileUser?.email}</p>
+                            )}
                         </div>
-                        <div className="flex flex-col gap-2 mr-4">
-                            {/* <SigilButton text={"Edit Profile"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/>
-                            <SigilButton text={"Logout"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"}/> */}
-                            <button className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
-                            hover:text-parchment bg-white/5 hover:bg-white/15 transition-all duration-300 
-                            border border-parchment/10 hover:border-parchment/20">
-                                Edit Profile
-                            </button>
-                            <BoxButton text={"Logout"} color={"main-accent"} onClick={handleLogout}/>
-                        </div>
+                        {isOwnProfile && (
+                            <div className="flex flex-col gap-2 mr-4">
+                                <button className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
+                                hover:text-parchment bg-white/5 hover:bg-white/15 transition-all duration-300 
+                                border border-parchment/10 hover:border-parchment/20">
+                                    Edit Profile
+                                </button>
+                                <BoxButton text={"Logout"} color={"main-accent"} onClick={handleLogout}/>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
             <div className="bg-black/20 flex flex-row mx-10 mt-5 border border-parchment/10 h-[400px] ">
                 {/* Sidebar */}
                 <div className="flex-[1] bg-black/40 overflow-hidden">
-                    {(user.role !== 'organizer' && user.role !== 'admin') && (
+                    {(profileUser?.role !== 'organizer' && profileUser?.role !== 'admin') && (
                         <>
                             <div onClick={() => setEventsExpanded((prev) => !prev)} 
                                 className="group py-4 flex items-center justify-center text-center hover:bg-parchment/5 transition-colors duration-400 cursor-pointer">
@@ -100,9 +130,15 @@ const ProfilePage = ( ) => {
                                     </div>
                                 ))}
                             </div>
-                            <div onClick={() => setActiveTab('tickets')} className="py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer">
-                                Tickets
-                            </div>
+                            {(isOwnProfile || user?.role === 'admin') && (
+                                <div 
+                                    onClick={() => setActiveTab('tickets')} 
+                                    className={`py-4 text-center hover:bg-parchment/5 hover:text-main-accent transition-colors duration-400 cursor-pointer 
+                                    ${activeTab === 'tickets' ? "text-main-accent bg-parchment/5" : "text-parchment"}`}
+                                >
+                                    Tickets
+                                </div>
+                            )}
                         </>
                     )}
                     <div onClick={() => setActiveTab('comments')} 
