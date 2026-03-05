@@ -75,4 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //delete event comment
     Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('event.comment.destroy');
+
+    //get user comments 
+    Route::get('/users/{userId}/comments', [CommentController::class, 'getUserComments'])->name('user.comments');
 });

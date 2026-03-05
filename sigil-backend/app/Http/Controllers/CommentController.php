@@ -13,6 +13,7 @@ class CommentController extends Controller
         $comments = Comment::where('event_id', $eventId)->with('user:id,name')->latest()->get();
         return response()->json($comments);
     }
+
     public function store(Request $request, $eventId)
     {
         $data = $request->validate([
@@ -41,5 +42,10 @@ class CommentController extends Controller
         $comment->delete();
 
         return response()->json(['message' => 'Comment deleted']);
+    }
+
+    public function getUserComments($userId){
+        $comments = Comment::where('user_id', $userId)->with('event:id,name')->latest()->get();
+        return response()->json($comments);
     }
 }
