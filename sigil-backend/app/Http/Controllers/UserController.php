@@ -12,6 +12,26 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function update(Request $request, User $user){
+        $data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:8|confirmed',
+        ]);
+
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+
+        if($request->hasFile('image')) {
+            $data['image_url'] = $request->file('image_url')->store('profile_images', 'public');
+        }
+
+        $user->update($data);
+
+        return response()->json($user);
+    }
+
     public function getUserEvents(Request $request, ?User $user = null){
         $status = $request->query('status');
 

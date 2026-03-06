@@ -82,9 +82,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //change event status
     Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
 
-    //get authenticated user events
-    // Route::get('/user/events', [UserController::class, 'getMyEvents'])->name('user.myEvents');
-
     //get event comments
     Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
@@ -94,10 +91,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //delete event comment
     Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('event.comment.destroy');
 
-    
-
     //update comment
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
 
-    
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
+
 });
