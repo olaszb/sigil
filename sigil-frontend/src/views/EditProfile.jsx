@@ -51,6 +51,12 @@ const EditProfile = ( ) => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (password && password !== passwordConfirmation) {
+        setError("The password fragments do not align (Passwords must match).");
+        return;
+    }
+
     const formData = new FormData();
     formData.append('_method', 'PUT');
     formData.append("name", username);
