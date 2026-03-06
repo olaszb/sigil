@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import BoxButton from "../BoxButton";
+import { getImageUrl } from "../../util/helper";
 
 const CreateComment = ({ onCommentAdded, isCommentClicked, setIsCommentClicked }) => {
     const [comment, setComment] = useState('');
@@ -14,7 +15,7 @@ const CreateComment = ({ onCommentAdded, isCommentClicked, setIsCommentClicked }
     return (
         <div className="mt-2 flex">
             {user?.image_url ? (
-                <></>
+                <img src={getImageUrl(user.image_url)} className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             ) : (
                 <img src="/public/default_avatar.jpg" className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             )}

@@ -10,7 +10,7 @@ class CommentController extends Controller
 {
     public function index($eventId)
     {
-        $comments = Comment::where('event_id', $eventId)->with('user:id,name')->latest()->get();
+        $comments = Comment::where('event_id', $eventId)->with('user:id,name,image_url')->latest()->get();
         return response()->json($comments);
     }
 

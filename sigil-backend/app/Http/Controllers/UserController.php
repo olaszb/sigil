@@ -66,7 +66,7 @@ class UserController extends Controller
     }
 
     $comments = $targetUser->comments()
-        ->with('event:id,title,slug') 
+        ->with('event:id,title,slug')->with('user:id,name,image_url')
         ->latest()
         ->get();
         
