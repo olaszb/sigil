@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -13,21 +14,29 @@ class UserController extends Controller
     }
 
     public function update(Request $request, User $user){
-        $data = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:8|confirmed',
-        ]);
+            'image_url' => 'nullable|image|max:2048|mimes:jpeg,png,jpg,gif,svg',
+        ]); 
 
-        if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
+        $user->name = $request->input('name', $user->name);
+        $user->email = $request->input('email', $user->email);
+
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
         }
 
-        if($request->hasFile('image')) {
-            $data['image_url'] = $request->file('image_url')->store('profile_images', 'public');
+        if($request->file('image_url')) {
+            if ($user->image_url) {
+                Storage::disk('public')->delete($user->image_url);
+            }
+            $user->image_url = $request->file('image_url')->store('profile_images', 'public');
         }
 
-        $user->update($data);
+        $user->save();
 
         return response()->json($user);
     }

@@ -6,6 +6,7 @@ import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 import BoxButton from "../components/BoxButton";
 import CommentItem from "../components/event-details/CommentItem";
+import { getImageUrl } from "../util/helper";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
@@ -85,7 +86,7 @@ const ProfilePage = ( ) => {
                 <h2 className="text-main-accent ml-4 mt-4 font-[Cinzel] text-3xl">Profile</h2>
                 <div className="flex items-center mb-4">
                     {profileUser?.image_url ? (
-                        <></>
+                        <img src={getImageUrl(profileUser.image_url)} className="rounded-full w-20 h-20 ml-4 mt-2"/>
                     ) : (
                         <img src="/public/default_avatar.jpg" className="rounded-full w-20 h-20 ml-4 mt-2"/>
                     )}

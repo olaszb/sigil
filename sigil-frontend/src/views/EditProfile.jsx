@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
@@ -24,7 +24,7 @@ const EditProfile = ( ) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
   const [error, setError] = useState(null);
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -55,22 +55,23 @@ const EditProfile = ( ) => {
     formData.append('_method', 'PUT');
     formData.append("name", username);
     formData.append("email", email);
-    formData.append("password", password);
-    formData.append("password_confirmation", passwordConfirmation);
+    if(password){
+        formData.append("password", password);
+        formData.append("password_confirmation", passwordConfirmation);
+    }
     if (image) {
       formData.append("image_url", image);
     }
     try {
-      await axiosClient
-        .post(`/api/users/${user.id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(() => {
-          toast('Profile updated successfully!', toastConfig);
-          navigate(`/profile`);
+        const response = await axiosClient.post(`/api/users/${user.id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
+        setUser(response.data);
+
+        toast('Profile updated successfully!', toastConfig);
+        navigate(`/profile`);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
       console.error(err);
@@ -168,7 +169,6 @@ const EditProfile = ( ) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
-                    required
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                   />
@@ -190,7 +190,6 @@ const EditProfile = ( ) => {
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
                     placeholder="Confirm Password"
-                    required
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                   />
@@ -202,12 +201,12 @@ const EditProfile = ( ) => {
             <div className="flex-[3] bg-black/20 p-4 flex flex-col justify-center items-center border-t md:border-t-0">
               
               {/* Image Upload */}
-              <div className="flex-1 flex flex-col items-center mb-4 h-[250px]">
+              <div className="flex flex-col items-center mb-4">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
                   Profile Picture
                 </label>
 
-                <label className="relative w-48 h-48 flex-1 border-2 rounded-full border-dashed border-parchment/10 hover:border-main-accent/50 transition-all flex flex-col items-center justify-center cursor-pointer group bg-black/20 overflow-hidden">
+                <label className="relative w-48 h-48 border-2 rounded-full border-dashed border-parchment/10 hover:border-main-accent/50 transition-all flex flex-col items-center justify-center cursor-pointer group bg-black/20 overflow-hidden">
                   <input
                     type="file"
                     className="hidden"
@@ -215,7 +214,7 @@ const EditProfile = ( ) => {
                     onChange={handleImageChange}
                   />
 
-                  {originalImage ? (
+                  {(imagePreview || originalImage) ? (
                     <div className="absolute inset-0 w-full h-full">
                       <img
                         src={imagePreview ? imagePreview : getImageUrl(originalImage)}
