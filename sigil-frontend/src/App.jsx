@@ -14,6 +14,7 @@ import AddVenuePage from './views/AddVenue';
 import Venues from './views/Venues';
 import PastEventsPage from './views/PastEvents';
 import ProfilePage from './views/Profile';
+import EditProfile from './views/EditProfile';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
               <Route path="/profile" element={<ProfilePage />}/>
+              <Route path="/profile/edit" element={<EditProfile />} />
             </Route>
             
             {/* Routes for admins only */}

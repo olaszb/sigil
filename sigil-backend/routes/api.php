@@ -94,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //update comment
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
 
+    //update user
     Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
 
 });

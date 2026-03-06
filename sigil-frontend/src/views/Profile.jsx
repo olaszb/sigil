@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import SigilButton from "../components/SigilButton";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 import BoxButton from "../components/BoxButton";
@@ -99,11 +98,13 @@ const ProfilePage = ( ) => {
                         </div>
                         {isOwnProfile && (
                             <div className="flex flex-col gap-2 mr-4">
-                                <button className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
-                                hover:text-parchment bg-white/5 hover:bg-white/15 transition-all duration-300 
-                                border border-parchment/10 hover:border-parchment/20">
-                                    Edit Profile
-                                </button>
+                                <Link to="/profile/edit">
+                                    <button className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
+                                    hover:text-parchment bg-white/5 hover:bg-white/15 transition-all duration-300 
+                                    border border-parchment/10 hover:border-parchment/20">
+                                        Edit Profile
+                                    </button>
+                                </Link>
                                 <BoxButton text={"Logout"} color={"main-accent"} onClick={handleLogout}/>
                             </div>
                         )}
