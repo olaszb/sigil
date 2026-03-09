@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
@@ -14,6 +14,7 @@ import { getImageUrl } from "../util/helper";
 import { toastConfig } from "../util/toastConfig";
 import { toast } from "react-toastify";
 import SigilButton from "../components/SigilButton";
+import LoadingScreen from "../components/LoadingScreen";
 
 const UpdateEvent = ( ) => {
   const [id, setId] = useState("");
@@ -43,7 +44,11 @@ const UpdateEvent = ( ) => {
             axiosClient.get('/api/venues'),
             axiosClient.get(`/api/events/${slug}`)
         ]);
-        setVenues(venuesRes.data);
+        const venuesList = Array.isArray(venuesRes.data) 
+        ? venuesRes.data 
+        : venuesRes.data.data;
+
+        setVenues(venuesList || []);
 
         const data = eventRes.data.event;
 
@@ -63,8 +68,6 @@ const UpdateEvent = ( ) => {
     };
     initializeUpdatePage();
   }, [slug]);
-
-  if (loading) return <div className="text-parchment">Consulting the archives...</div>;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -103,6 +106,8 @@ const UpdateEvent = ( ) => {
       console.error(err);
     }
   };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <>
@@ -173,7 +178,8 @@ const UpdateEvent = ( ) => {
                   >
                     {selectedVenueId
                       ? venues.find((v) => v.id === selectedVenueId)?.name
-                      : "Select Location"}
+                      : "Select Location"
+                    }
                   </button>
                   {isOpen && (
                     <>

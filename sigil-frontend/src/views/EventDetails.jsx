@@ -92,8 +92,6 @@ const EventDetails = ({ mode }) => {
         setComments(prevComments => prevComments.map(comment => comment.id === updatedComment.id ? updatedComment : comment));
     }
 
-    if (loading) return <div className="text-parchment">Consulting the archives...</div>;
-
     const handleConfirmAction = async () => {
         const {event, mode} = modal;
         try{
@@ -161,6 +159,7 @@ const EventDetails = ({ mode }) => {
         }
     };
 
+    if (loading) return <LoadingScreen />;
   return (
     <div className="w-full min-h-screen bg-secondary-bg text-parchment">
         <EventHero image_url={event?.image_url} />

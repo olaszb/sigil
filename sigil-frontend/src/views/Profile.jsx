@@ -7,6 +7,7 @@ import ProfileEventItem from "../components/profile-page/ProfileEventItem";
 import BoxButton from "../components/BoxButton";
 import CommentItem from "../components/event-details/CommentItem";
 import { getImageUrl } from "../util/helper";
+import LoadingScreen from "../components/LoadingScreen";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
@@ -20,8 +21,11 @@ const ProfilePage = ( ) => {
     const [profileUser, setProfileUser] = useState(null);
     const [isOwnProfile, setIsOwnProfile] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const fetchProfile = async () => {
+            setLoading(true);
             try {
                 if(username){
                     const { data } = await axiosClient.get(`/api/users/${username}`);
@@ -33,6 +37,8 @@ const ProfilePage = ( ) => {
                 }
             }catch (error) {
                 console.error("Failed to fetch profile:", error);
+            }finally{ 
+                setLoading(false);
             }
         };
         fetchProfile();
@@ -79,6 +85,8 @@ const ProfilePage = ( ) => {
             console.error("Logout failed:", error);
         }
     };
+
+    if (loading) return <LoadingScreen />;
 
     return (
         <div className="w-full min-h-screen bg-secondary-bg text-parchment">

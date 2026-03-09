@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import SigilModal from "../components/SigilModal";
 import { scrollToId } from "../util/helper";
 import Pagination from "../components/Pagination";
+import LoadingScreen from "../components/LoadingScreen";
 
 const PastEventsPage = () => {
     const {user} = useAuth();
@@ -73,6 +74,9 @@ const PastEventsPage = () => {
             closeModal();
         }
     }
+
+    if (loading) return <LoadingScreen />;
+    
 
     return (
         <div className="w-full min-h-screen text-parchment">

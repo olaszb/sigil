@@ -3,6 +3,7 @@ import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
 import HeroSection from "../components/home/HeroSection";
 import Pagination from "../components/Pagination";
+import LoadingScreen from "../components/LoadingScreen";
 
 const HomePage = () => {
     
@@ -37,6 +38,7 @@ const HomePage = () => {
         getEvents();
     }, [getEvents]);
 
+    if (loading) return <LoadingScreen />;
 
   return (
     <div className="bg-secondary-bg text-parchment w-full min-h-screen">

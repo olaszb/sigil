@@ -5,9 +5,10 @@ import EventHero from "../components/event-details/EventHero";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import SigilModal from "../components/SigilModal";
-import { Sparkles } from "lucide-react";
+import { LoaderCircle, Sparkles } from "lucide-react";
 import Pagination from "../components/Pagination";
 import { Link } from "react-router-dom";
+import LoadingScreen from "../components/LoadingScreen";
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
@@ -24,9 +25,13 @@ const Venues = () => {
 
   const fetchVenues = useCallback(async (page = 1) => {
     setLoading(true);
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
       try {
         const endpoint = "/api/venues";
-        const response = await axiosClient.get(`${endpoint}?page=${page}`);
+        const [response] = await Promise.all([
+            axiosClient.get(`${endpoint}?page=${page}`),
+            delay(3000) // 2 seconds of forced loading
+        ]);
         setVenues(response.data.data);
         setPagination({
           current_page: response.data.current_page,
@@ -62,16 +67,7 @@ const Venues = () => {
     setSelectedVenueId(venueId);
   }
 
-  if (loading) {
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-            <Sparkles className="text-main-accent animate-pulse" size={48} />
-            <p className="font-[Cinzel] text-parchment/50 tracking-[0.3em] animate-pulse">
-                Consulting the Ancient Maps...
-            </p>
-        </div>
-    );
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="w-full">
