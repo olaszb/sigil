@@ -73,9 +73,9 @@ const Navbar = ({ children }) => {
               <>
                 <Link to="/profile">
                   <img
-                    src={getImageUrl(user.image_url) || '/public/default-avatar.png'}
+                    src={user.image_url ? getImageUrl(user.image_url) : '/public/default_avatar.jpg'}
                     alt="User Avatar"
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-12 h-10 rounded-full object-cover"
                   />
                 </Link>
                 <div

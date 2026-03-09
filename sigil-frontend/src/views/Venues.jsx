@@ -7,6 +7,7 @@ import { toastConfig } from "../util/toastConfig";
 import SigilModal from "../components/SigilModal";
 import { Sparkles } from "lucide-react";
 import Pagination from "../components/Pagination";
+import { Link } from "react-router-dom";
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
@@ -88,6 +89,17 @@ const Venues = () => {
         {venues.map((venue) => (
           <Venue key={venue.id} venue={venue} onDeleteClick={onDeleteClick} />
         ))}
+      </div>
+
+      <div className="fixed bottom-10 right-10 z-50">
+        <Link to="/add-venue">
+          <button className="group relative flex items-center justify-center w-14 h-14 bg-primary-bg border border-main-accent rounded-full shadow-[0_0_15px_rgba(154,0,0,0.4)] hover:scale-110 transition-all duration-300">
+            <Sparkles className="text-main-accent group-hover:rotate-12 transition-transform" />
+            <span className="absolute right-16 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-main-accent text-[8px] uppercase tracking-widest px-3 py-1 whitespace-nowrap border border-main-accent/20">
+              Register New Site
+            </span>
+          </button>
+        </Link>
       </div>
 
       {pagination.last_page > 1 && (

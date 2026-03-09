@@ -85,11 +85,7 @@ const ProfilePage = ( ) => {
             <div className="bg-black/40 border border-parchment/10 flex flex-col mt-10 mx-10">
                 <h2 className="text-main-accent ml-4 mt-4 font-[Cinzel] text-3xl">Profile</h2>
                 <div className="flex items-center mb-4">
-                    {profileUser?.image_url ? (
-                        <img src={getImageUrl(profileUser.image_url)} className="rounded-full w-20 h-20 ml-4 mt-2"/>
-                    ) : (
-                        <img src="/public/default_avatar.jpg" className="rounded-full w-20 h-20 ml-4 mt-2"/>
-                    )}
+                    <img src={profileUser?.image_url ? getImageUrl(profileUser.image_url) : '/public/default_avatar.jpg'} className="rounded-full w-22 h-20 ml-4 mt-2 object-cover"/>
                     <div className="flex justify-between items-center ml-4 w-full">
                         <div className="flex flex-col ">
                             <p className="tracking-[1px]">{profileUser?.name ? <span className="text-parchment">{profileUser.name} | <span className="text-main-accent uppercase font-[Cinzel]">{profileUser.role}</span> </span> : "Loading..."}</p>
