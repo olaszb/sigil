@@ -88,7 +88,9 @@ const EventDetails = ({ mode }) => {
         }
     }, [slug, mode, user, navigate, event?.id]);
 
-    if (loading) return <div className="text-parchment">Consulting the archives...</div>;
+    const handleCommentUpdated = (updatedComment) => {
+        setComments(prevComments => prevComments.map(comment => comment.id === updatedComment.id ? updatedComment : comment));
+    }
 
     const handleConfirmAction = async () => {
         const {event, mode} = modal;
@@ -157,6 +159,7 @@ const EventDetails = ({ mode }) => {
         }
     };
 
+    if (loading) return <LoadingScreen />;
   return (
     <div className="w-full min-h-screen bg-secondary-bg text-parchment">
         <EventHero image_url={event?.image_url} />
@@ -238,11 +241,11 @@ const EventDetails = ({ mode }) => {
                         {user && (
                             <div>
                                 <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
-                                <div className="h-[1px] w-full bg-gradient-to-r from-parchment/20 to-transparent mt-2" />
+                                <div className="h-[1px] w-full bg-parchment/20 mt-2" />
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (
-                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment}/>
+                                            <CommentItem key={comment.id} comment={comment} handleDelete={handleDeleteComment} type={"eventDetails"} onCommentUpdated={handleCommentUpdated}/>
                                         ))
                                      ) : (
                                         <p className="text-parchment/50 italic mt-4">No whispers have been cast yet...</p>

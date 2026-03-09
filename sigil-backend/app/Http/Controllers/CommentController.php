@@ -10,9 +10,10 @@ class CommentController extends Controller
 {
     public function index($eventId)
     {
-        $comments = Comment::where('event_id', $eventId)->with('user:id,name')->latest()->get();
+        $comments = Comment::where('event_id', $eventId)->with('user:id,name,image_url')->latest()->get();
         return response()->json($comments);
     }
+
     public function store(Request $request, $eventId)
     {
         $data = $request->validate([
@@ -26,6 +27,19 @@ class CommentController extends Controller
         ]);
 
         return response()->json($comment, 201);
+    }
+
+    public function update(Request $request, Comment $comment)
+    {
+        Gate::authorize('update', $comment);
+
+        $data = $request->validate([
+            'comment' => 'required|string|max:255',
+        ]);
+
+        $comment->update(['comment' => $data['comment']]);
+
+        return response()->json($comment);
     }
 
     public function destroy(Request $request, $commentId)
@@ -42,4 +56,6 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Comment deleted']);
     }
+
+
 }

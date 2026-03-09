@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import BoxButton from "../BoxButton";
+import { getImageUrl } from "../../util/helper";
 
-const CreateComment = ({ eventId, onCommentAdded, isCommentClicked, setIsCommentClicked }) => {
+const CreateComment = ({ onCommentAdded, isCommentClicked, setIsCommentClicked }) => {
     const [comment, setComment] = useState('');
     const { user } = useAuth();
 
@@ -13,7 +15,7 @@ const CreateComment = ({ eventId, onCommentAdded, isCommentClicked, setIsComment
     return (
         <div className="mt-2 flex">
             {user?.image_url ? (
-                <></>
+                <img src={getImageUrl(user.image_url)} className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             ) : (
                 <img src="/public/default_avatar.jpg" className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             )}
@@ -34,13 +36,7 @@ const CreateComment = ({ eventId, onCommentAdded, isCommentClicked, setIsComment
                             border border-transparent hover:border-parchment/10">
                             Cancel
                         </button>
-                        <button type="submit"
-                        className="px-6 py-2 bg-main-accent/10 border border-main-accent/40 
-                            text-main-accent text-[10px] uppercase tracking-[0.2em] font-bold
-                            hover:bg-main-accent hover:text-primary-bg transition-all duration-500
-                            shadow-[0_0_10px_rgba(154,0,0,0.1)] hover:shadow-[0_0_20px_rgba(154,0,0,0.3)]">
-                            Cast Whisper
-                        </button>
+                        <BoxButton text={"Cast Whisper"} color={"main-accent"} type="submit"/>
                     </div>
             </form>
         </div>

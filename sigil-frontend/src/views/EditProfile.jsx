@@ -1,73 +1,44 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
 import {
-  Castle,
-  PenTool,
-  ScrollText,
+  Key,
+  Scroll,
   Sparkles,
+  User,
 } from "lucide-react";
 import Editor from "../components/create-event/Editor/Editor";
 import { getImageUrl } from "../util/helper";
 import { toastConfig } from "../util/toastConfig";
 import { toast } from "react-toastify";
 import SigilButton from "../components/SigilButton";
-import LoadingScreen from "../components/LoadingScreen";
 
-const UpdateEvent = ( ) => {
-  const [id, setId] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [originalDescription, setOriginalDescription] = useState("");
-  const [startTime, setStartTime] = useState("");
+const EditProfile = ( ) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
-  const { slug } = useParams();
-
-  const [venues, setVenues] = useState([]);
-  const [selectedVenueId, setSelectedVenueId] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const { user, setUser } = useAuth();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const initializeUpdatePage = async () => {
-        setLoading(true);
-      try {
-        const [venuesRes, eventRes] = await Promise.all([
-            axiosClient.get('/api/venues'),
-            axiosClient.get(`/api/events/${slug}`)
-        ]);
-        const venuesList = Array.isArray(venuesRes.data) 
-        ? venuesRes.data 
-        : venuesRes.data.data;
-
-        setVenues(venuesList || []);
-
-        const data = eventRes.data.event;
-
-        setId(data.id);
-        setTitle(data.title);
-        setDescription(data.description);
-        setOriginalDescription(data.description);
-        setStartTime(data.start_time);
-        setSelectedVenueId(data.venue_id);
-        setOriginalImage(data.image_url);
-      } catch (err) {
-        console.error("Error fetching venues:", err);
-        setError("Failed to load venues. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
+        if(user){
+            setUsername(user.name || "");
+            setEmail(user.email || "");
+            setOriginalImage(user.image_url || null);
+        }
     };
     initializeUpdatePage();
-  }, [slug]);
+  }, [user]);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -77,43 +48,47 @@ const UpdateEvent = ( ) => {
     }
   };
 
-  const handleUpdateEvent = async (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (password && password !== passwordConfirmation) {
+        setError("The password fragments do not align (Passwords must match).");
+        return;
+    }
+
     const formData = new FormData();
     formData.append('_method', 'PUT');
-    formData.append("organizer_id", user.id);
-    formData.append("venue_id", selectedVenueId);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("start_time", startTime);
+    formData.append("name", username);
+    formData.append("email", email);
+    if(password){
+        formData.append("password", password);
+        formData.append("password_confirmation", passwordConfirmation);
+    }
     if (image) {
       formData.append("image_url", image);
     }
     try {
-      await axiosClient
-        .post(`/api/events/${id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          toast('Ritual updated successfully!', toastConfig);
-          navigate(`/events/${response.data.event.slug}`);
+        const response = await axiosClient.post(`/api/users/${user.id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
+        setUser(response.data);
+
+        toast('Profile updated successfully!', toastConfig);
+        navigate(`/profile`);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
       console.error(err);
     }
   };
 
-  if (loading) return <LoadingScreen />;
-
   return (
     <>
       {/* Background image */}
       <img
-        src="/public/liurnia.webp"
+        src="/public/edit-profile.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
@@ -125,7 +100,7 @@ const UpdateEvent = ( ) => {
                     z-20"
       >
         <div
-          className="relative w-full max-w-5xl bg-primary-bg border border-parchment/20
+          className="relative w-full max-w-2xl bg-primary-bg border border-parchment/20
                     flex flex-col"
         >
           {/* Form */}
@@ -134,26 +109,26 @@ const UpdateEvent = ( ) => {
           </h1>
           <form
             className="flex flex-col md:flex-row h-full justify-center items-stretch text-parchment"
-            onSubmit={handleUpdateEvent}
+            onSubmit={handleUpdateProfile}
           >
             {/* Left Column */}
             <div className="flex-[4] p-4 border-r border-parchment/20 h-full">
-              {/* Title */}
+              {/* Name */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
-                  Ritual Name
+                  Name
                 </label>
                 <div className="relative group">
                   <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
-                    <ScrollText size={16} />
+                    <User size={16} />
                   </div>
                   <input
-                    name="title"
-                    id="title"
+                    name="username"
+                    id="username"
                     type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Event Title"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
                     required
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
@@ -161,104 +136,83 @@ const UpdateEvent = ( ) => {
                 </div>
               </div>
 
-              {/* Venue */}
+              {/* Email */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
-                  Ritual Location
+                  Email
                 </label>
                 <div className="relative group">
                   <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
-                    <Castle size={16} />
+                    <Scroll size={16} />
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(!isOpen)}
+                  <input
+                    name="email"
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
                     className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
-                  >
-                    {selectedVenueId
-                      ? venues.find((v) => v.id === selectedVenueId)?.name
-                      : "Select Location"
-                    }
-                  </button>
-                  {isOpen && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-20"
-                        onClick={() => setIsOpen(false)}
-                      />
-
-                      <div className="absolute top-full left-0 w-full mt-1 bg-primary-bg border border-parchment/20 z-30 max-h-48 overflow-y-auto shadow-2xl animate-scroll-down">
-                        {venues.length > 0 ? (
-                          venues.map((v) => (
-                            <div
-                              key={v.id}
-                              onClick={() => {
-                                setSelectedVenueId(v.id);
-                                setIsOpen(false);
-                              }}
-                              className="w-full border-b border-parchment/20 hover:bg-main-accent hover:text-white transition-colors duration-400 font-[Montserrat]"
-                            >
-                              {v.name}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="p-3 text-[10px] text-parchment/30 italic">
-                            No locations found...
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
+                  />
                 </div>
-                <p className="text-xs text-parchment/50">Cant find your preferred venue? <Link to={'/add-venue'} className="text-main-accent hover:underline">Add it!</Link></p>
-                <input type="hidden" name="venue_id" value={selectedVenueId} />
               </div>
 
-              {/* Description */}
+              {/* Password */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
-                  Ritual Details
+                  Password
                 </label>
                 <div className="relative group">
                   <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
-                    <PenTool size={16} />
+                    <Key size={16} />
                   </div>
-                  <Editor initialValue={originalDescription} onChange={(content) => setDescription(content)}/>
-                  
+                  <input
+                    name="password"
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
+                  />
+                </div>
+              </div>
+            {/* Password Confirmation */}
+              <div className="mb-5 flex flex-col">
+                <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative group">
+                  <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
+                    <Key size={16} />
+                  </div>
+                  <input
+                    name="password_confirmation"
+                    id="password_confirmation"
+                    type="password"
+                    value={passwordConfirmation}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    placeholder="Confirm Password"
+                    className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Right Column */}
-            <div className="flex-[3] bg-black/20 p-4 flex flex-col border-t md:border-t-0">
-              {/* Date */}
-              <div className="mb-5 flex flex-col">
-                <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
-                  Ritual Date & Time
-                </label>
-                <div className="relative group">
-                  <input
-                    name="start_time"
-                    id="start_time"
-                    type="datetime-local"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    placeholder="Event Start Time"
-                    required
-                    className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                            font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
-                  />
-                </div>
-              </div>
+            <div className="flex-[3] bg-black/20 p-4 flex flex-col justify-center items-center border-t md:border-t-0">
               
               {/* Image Upload */}
-              <div className="flex-1 flex flex-col mb-4 h-[250px]">
+              <div className="flex flex-col items-center mb-4">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
-                  Binding Sigil (Image)
+                  Profile Picture
                 </label>
 
-                <label className="relative flex-1 border-2 border-dashed border-parchment/10 hover:border-main-accent/50 transition-all flex flex-col items-center justify-center cursor-pointer group bg-black/20 overflow-hidden">
+                <label className="relative w-48 h-48 border-2 rounded-full border-dashed border-parchment/10 hover:border-main-accent/50 transition-all flex flex-col items-center justify-center cursor-pointer group bg-black/20 overflow-hidden">
                   <input
                     type="file"
                     className="hidden"
@@ -266,12 +220,12 @@ const UpdateEvent = ( ) => {
                     onChange={handleImageChange}
                   />
 
-                  {originalImage ? (
+                  {(imagePreview || originalImage) ? (
                     <div className="absolute inset-0 w-full h-full">
                       <img
                         src={imagePreview ? imagePreview : getImageUrl(originalImage)}
                         alt="Preview"
-                        className="w-full h-full object-cover transition-all duration-700"
+                        className="w-full h-full object-cover transition-all duration-700 rounded-full"
                       />
 
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center">
@@ -297,7 +251,7 @@ const UpdateEvent = ( ) => {
 
               {/* Submit */}
               <div className="my-3 flex justify-center">
-                <SigilButton type={"submit"} text={"Modify Ritual"} />
+                <SigilButton type={"submit"} text={"Save Changes"} />
               </div>
             </div>
 
@@ -309,4 +263,4 @@ const UpdateEvent = ( ) => {
   );
 };
 
-export default UpdateEvent;
+export default EditProfile;

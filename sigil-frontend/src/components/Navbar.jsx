@@ -1,17 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
-  ChevronFirst,
-  ChevronLast,
   LogOut,
-  MoreVertical,
-  MoreVerticalIcon,
 } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import GlitchSigil from "../util/icons/logo/GlitchSigil";
 import XSVG from "../util/icons/XSVG";
 import MenuSVG from "../util/icons/MenuSVG";
 import SigilButton from "./SigilButton";
+import { getImageUrl } from "../util/helper";
 
 const NavbarContext = createContext();
 const Navbar = ({ children }) => {
@@ -76,9 +73,9 @@ const Navbar = ({ children }) => {
               <>
                 <Link to="/profile">
                   <img
-                    src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+                    src={user.image_url ? getImageUrl(user.image_url) : '/public/default_avatar.jpg'}
                     alt="User Avatar"
-                    className="w-10 h-10 rounded-md"
+                    className="w-12 h-10 rounded-full object-cover"
                   />
                 </Link>
                 <div

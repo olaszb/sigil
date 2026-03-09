@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EventHero from "../components/event-details/EventHero";
 import { useAuth } from "../contexts/AuthContext";
 import axiosClient from "../services/axios-client";
@@ -6,7 +6,9 @@ import Events from "../components/home/Events";
 import { toastConfig } from "../util/toastConfig";
 import { toast } from "react-toastify";
 import SigilModal from "../components/SigilModal";
-
+import { scrollToId } from "../util/helper";
+import Pagination from "../components/Pagination";
+import LoadingScreen from "../components/LoadingScreen";
 
 const PastEventsPage = () => {
     const {user} = useAuth();
@@ -21,7 +23,7 @@ const PastEventsPage = () => {
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
 
-    const fetchEvents = async (mode = 'past', page = 1) => {
+    const fetchEvents = useCallback( async (mode = 'past', page = 1) => {
         setLoading(true);
         setEvents([]);
         try{
@@ -34,16 +36,18 @@ const PastEventsPage = () => {
                 per_page: response.data.per_page,
                 total: response.data.total,
             });
+
+            scrollToId("title");
         }catch(err){
             console.error(err);
         }finally{
             setLoading(false);
         }
-    };
+    }, []);
     
     useEffect(() => {
         fetchEvents(viewMode);
-    }, [viewMode]);
+    }, [viewMode, fetchEvents]);
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -71,6 +75,9 @@ const PastEventsPage = () => {
         }
     }
 
+    if (loading) return <LoadingScreen />;
+    
+
     return (
         <div className="w-full min-h-screen text-parchment">
             <div className="grayscale">
@@ -80,7 +87,7 @@ const PastEventsPage = () => {
             {user?.role === 'admin' || user?.role === 'organizer' ? (
                 <div className="w-full flex justify-center my-4">
                     <div className="w-full max-w-md text-center">
-                        <h1 className="text-4xl text-parchment font-[Cinzel] my-8">
+                        <h1 id="title" className="text-4xl text-parchment font-[Cinzel] my-8">
                             The Archives
                         </h1>
                         <div className="flex gap-4">
@@ -97,7 +104,7 @@ const PastEventsPage = () => {
                 </div>
             ) : (
                 <div className="text-center">
-                    <h1 className="text-4xl text-parchment font-[Cinzel] my-8">
+                    <h1 id="title" className="text-4xl text-parchment font-[Cinzel] my-8">
                         The Archives
                     </h1>
                 </div>
@@ -116,6 +123,9 @@ const PastEventsPage = () => {
                     )}
                 </div>
             </div>
+            {pagination.last_page > 1 && (
+                <Pagination pagination={pagination} getEvents={fetchEvents} />
+            )}
             {modal.isOpen && (
                 <SigilModal closeModal={() => closeModal()} onAction={() => handleConfirmAction()} text={modal.mode === 'restore' ? "Are you sure you'd like to restore this ritual?" : "Are you sure you'd like to burn this archive?"} />
             )}

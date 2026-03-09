@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import { useCallback, useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
 import HeroSection from "../components/home/HeroSection";
+import Pagination from "../components/Pagination";
+import LoadingScreen from "../components/LoadingScreen";
 
 const HomePage = () => {
     
@@ -15,9 +16,7 @@ const HomePage = () => {
         total: 1,
     });
 
-
-
-    const getEvents = async (page = 1) => {
+    const getEvents = useCallback( async (page = 1) => {
         setLoading(true);
         try {
             const response = await axiosClient.get(`/api/events?page=${page}`);
@@ -28,23 +27,29 @@ const HomePage = () => {
                 per_page: response.data.per_page,
                 total: response.data.total,
             });
-
         }catch (error) {
             console.error("Error fetching events:", error);
         }finally {
             setLoading(false);
         }
-    }
+    }, []);
 
     useEffect(() => {
         getEvents();
-    }, []);
+    }, [getEvents]);
+
+    if (loading) return <LoadingScreen />;
 
   return (
     <div className="bg-secondary-bg text-parchment w-full min-h-screen">
         <HeroSection/>  
-        <h1 className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
+        <h1 id="title" className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
         <Events events={events} type={"current"}/>
+
+
+        {pagination.last_page > 1 && (
+            <Pagination pagination={pagination} getEvents={getEvents} />
+        )}
             
     </div>
   );

@@ -18,6 +18,24 @@ Route::get('/events', [EventController::class, 'index'])->name('events.index');
 //get single event
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('event.show');
 
+//get my events
+Route::get('/users/events', [UserController::class, 'getUserEvents'])
+    ->middleware('auth:sanctum');
+
+//get user events
+Route::get('/users/{user:name}/events', [UserController::class, 'getUserEvents'])->name('user.events');
+
+//get my comments
+Route::get('/users/comments', [UserController::class, 'getUserComments'])
+    ->middleware('auth:sanctum');
+
+//get user comments 
+Route::get('/users/{user:name}/comments', [UserController::class, 'getUserComments'])->name('user.comments');
+
+//get user
+Route::get('/users/{user:name}', [UserController::class, 'show'])->name('user.show');
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
     return $request->user();
@@ -64,9 +82,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //change event status
     Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
 
-    //get user events
-    Route::get('/user/events', [UserController::class, 'getUserEvents'])->name('user.events');
-
     //get event comments
     Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
@@ -75,4 +90,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //delete event comment
     Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('event.comment.destroy');
+
+    //update comment
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
+
+    //update user
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
+
 });

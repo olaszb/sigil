@@ -14,6 +14,7 @@ import AddVenuePage from './views/AddVenue';
 import Venues from './views/Venues';
 import PastEventsPage from './views/PastEvents';
 import ProfilePage from './views/Profile';
+import EditProfile from './views/EditProfile';
 
 function App() {
 
@@ -28,10 +29,12 @@ function App() {
             <Route path='/events/:slug' element={<EventDetails mode={'current'} />} />
             <Route path='/past-events' element={<PastEventsPage />} />
             <Route path='/past-events/:slug' element={<EventDetails mode={'past'} />} />
+            <Route path='/users/:username' element={<ProfilePage />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
               <Route path="/profile" element={<ProfilePage />}/>
+              <Route path="/profile/edit" element={<EditProfile />} />
             </Route>
             
             {/* Routes for admins only */}

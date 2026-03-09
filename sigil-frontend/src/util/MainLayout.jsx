@@ -5,6 +5,8 @@ import DashboardSVG from "./icons/DashboardSVG";
 import QuillSVG from "./icons/QuillSVG";
 import { useAuth } from "../contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
+import ClockSVG from "./icons/ClockSVG";
+import { MapPinned } from "lucide-react";
 const MainLayout = () => {
   const { user } = useAuth();
 
@@ -13,15 +15,15 @@ const MainLayout = () => {
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
         <NavbarItem icon={<HomeSVG />} text="Home" to="/"/>
-        <NavbarItem icon={<HomeSVG />} text="Past Events" to="/past-events" />
+        <NavbarItem icon={<ClockSVG size="110%"/>} text="Past Events" to="/past-events" />
         {(user && user.role !== 'user') && (
           <>
-            <NavbarItem icon={<QuillSVG />} text="Create Event" to="/create-event"/>
-            <NavbarItem icon={<DashboardSVG />} text="Dashboard" to="/dashboard"/>
+            <NavbarItem icon={<QuillSVG size="90%" />} text="Create Event" to="/create-event"/>
+            <NavbarItem icon={<DashboardSVG size="90%"/>} text="Dashboard" to="/dashboard"/>
           </>
         )}
         {user && user.role === 'admin' && (
-          <NavbarItem icon={<HomeSVG />} text="Venues" to="/venues"/>
+          <NavbarItem icon={<MapPinned className="text-parchment" strokeWidth={1} size={28} />} text="Venues" to="/venues"/>
         )
 
         }
