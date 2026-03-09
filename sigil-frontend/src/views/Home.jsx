@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
 import HeroSection from "../components/home/HeroSection";
 import Pagination from "../components/Pagination";
+import { scrollToId } from "../util/helper";
 
 const HomePage = () => {
     
@@ -16,12 +16,7 @@ const HomePage = () => {
         total: 1,
     });
 
-    const scrollToId = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-    }
+    
 
     const getEvents = useCallback( async (page = 1) => {
         setLoading(true);
