@@ -3,7 +3,6 @@ import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
 import HeroSection from "../components/home/HeroSection";
 import Pagination from "../components/Pagination";
-import { scrollToId } from "../util/helper";
 
 const HomePage = () => {
     
@@ -16,8 +15,6 @@ const HomePage = () => {
         total: 1,
     });
 
-    
-
     const getEvents = useCallback( async (page = 1) => {
         setLoading(true);
         try {
@@ -29,7 +26,6 @@ const HomePage = () => {
                 per_page: response.data.per_page,
                 total: response.data.total,
             });
-            setTimeout(() => scrollToId("title"), 100);
         }catch (error) {
             console.error("Error fetching events:", error);
         }finally {

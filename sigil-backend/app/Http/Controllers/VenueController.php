@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Gate;
 
 class VenueController extends Controller
 {
+    protected $pagination_limit = 15;
     public function index()
     {
-        $venues = Venue::all();
+        $venues = Venue::paginate($this->pagination_limit);
         return response()->json($venues);
     }
 

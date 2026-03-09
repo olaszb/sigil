@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { scrollToId } from "../util/helper";
 
 const Pagination = ({ pagination, getEvents }) => {
     const { current_page, last_page } = pagination;
@@ -17,12 +18,17 @@ const Pagination = ({ pagination, getEvents }) => {
         return pages.filter((item, index) => item !== "..." || pages[index-1] !== "...");
     }
 
+    const handlePageChange = (pageNum) => {
+        getEvents(pageNum);
+        setTimeout(() => scrollToId("title"), 100);
+    }
+
     const activeStyles = "border-main-accent text-main-accent bg-main-accent/5 shadow-[0_0_10px_rgba(154,0,0,0.2)]";
     const hoverEffect = "relative overflow-hidden border-parchment/10 hover:border-main-accent before:content-[''] before:absolute before:inset-0 before:bg-main-accent before:translate-y-[100%] before:transition-transform before:duration-400 before:ease-in-out hover:before:translate-y-0 hover:text-primary-bg";
     return (
-        <div className="flex justify-center items-center gap-2 mb-4 mt-8">
+        <div className="flex justify-center items-center gap-2 mb-4 mt-8 text-parchment">
                 <button disabled={pagination.current_page === 1}
-                        onClick={() => getEvents(pagination.current_page - 1)} 
+                        onClick={() => handlePageChange(pagination.current_page - 1)} 
                         className=
                         {`px-3 py-1 border border-parchment/10 hover:border-main-accent disabled:opacity-20 disabled:hover:border-parchment/10 transition-all duration-300
                         ${pagination.current_page !== 1 
@@ -38,7 +44,7 @@ const Pagination = ({ pagination, getEvents }) => {
                         ) : (
                             <button 
                                 key={pageNum}
-                                onClick={() => getEvents(pageNum)}
+                                onClick={() => handlePageChange(pageNum)}
                                 className={`px-3 py-1 border transition-all duration-300 ${current_page === pageNum ? activeStyles : hoverEffect}`}
                             >
                                 <span className="relative z-10">{pageNum}</span>
@@ -48,7 +54,7 @@ const Pagination = ({ pagination, getEvents }) => {
                 </div>
 
                 <button disabled={pagination.current_page === pagination.last_page} 
-                        onClick={() => getEvents(pagination.current_page + 1)} 
+                        onClick={() => handlePageChange(pagination.current_page + 1)} 
                         className=
                         {`px-3 py-1 border border-parchment/10 hover:border-main-accent disabled:opacity-20 disabled:hover:border-parchment/10 transition-all duration-300
                         ${pagination.current_page !== pagination.last_page 
