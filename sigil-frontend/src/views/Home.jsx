@@ -70,7 +70,7 @@ const HomePage = () => {
     <div className="bg-secondary-bg text-parchment w-full min-h-screen">
         <HeroSection featuredEvents={featuredEvents} upcomingEvents={upcomingEvents}/>  
         <h1 id="title" className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
-        <Events events={events} type={"current"}/>
+        <Events events={events} type="current"/>
 
 
         {pagination.last_page > 1 && (

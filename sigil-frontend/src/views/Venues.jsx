@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
 import Venue from "../components/venues/Venue";
-import EventHero from "../components/event-details/EventHero";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import SigilModal from "../components/SigilModal";
@@ -9,6 +8,7 @@ import { LoaderCircle, Sparkles } from "lucide-react";
 import Pagination from "../components/Pagination";
 import { Link } from "react-router-dom";
 import LoadingScreen from "../components/LoadingScreen";
+import SigilHero from "../components/SigilHero";
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
@@ -30,7 +30,7 @@ const Venues = () => {
         const endpoint = "/api/venues";
         const [response] = await Promise.all([
             axiosClient.get(`${endpoint}?page=${page}`),
-            delay(3000) // 2 seconds of forced loading
+            delay(1000) // 2 seconds of forced loading
         ]);
         setVenues(response.data.data);
         setPagination({
@@ -71,17 +71,11 @@ const Venues = () => {
 
   return (
     <div className="w-full">
-      <div className="grayscale">
-        <EventHero image_url={"/public/register_bg.webp"}/>
-      </div>
-
-      <div className="text-center">
-        <h1 id="title" className="text-4xl text-parchment font-[Cinzel] my-8">
-          Ritual Sites
-        </h1>
+      <div className="grayscale mb-10">
+        <SigilHero image_url={"/public/register_bg.webp"} title={"Ritual Sites"} />
       </div>
       
-      <div className="px-4 space-y-4">
+      <div className="px-4 space-y-4 mb-10">
         {venues.map((venue) => (
           <Venue key={venue.id} venue={venue} onDeleteClick={onDeleteClick} />
         ))}

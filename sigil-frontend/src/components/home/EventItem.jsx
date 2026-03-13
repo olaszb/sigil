@@ -43,7 +43,7 @@ const EventItem = ({ event, type, onAction }) => {
 
       <div className="flex-1 flex flex-col px-8 justify-center">
         <Link to={type === 'current' ? `/events/${event.slug}` : type === 'past' ? `/past-events/${event.slug}` : `/archive/events/${event.slug}`}>
-          <h2 className="text-2xl font-[Cinzel] mb-2 group-hover:text-main-accent cursor-default">
+          <h2 className="text-2xl font-[Cinzel] mb-2 text-parchment group-hover:text-main-accent cursor-default">
             {event.title}
           </h2>
         </Link>

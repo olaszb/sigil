@@ -66,10 +66,11 @@ const HeroSection = ({featuredEvents, upcomingEvents}) => {
               ))}
             </div>
           </div>
-
-          <button className="w-full py-3 bg-main-accent text-black font-bold uppercase tracking-widest text-xs hover:bg-white transition-all transform hover:-translate-y-1 active:translate-y-0">
-            View All Events
-          </button>
+          <Link to="/events">
+            <button className="w-full py-3 bg-main-accent text-black font-bold uppercase tracking-widest text-xs hover:bg-white transition-all transform hover:-translate-y-1 active:translate-y-0">
+              View All Events
+            </button>
+          </Link>
         </div>
 
       </div>
