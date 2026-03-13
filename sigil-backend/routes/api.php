@@ -15,6 +15,9 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 //get events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 
+//get featured events
+Route::get('/events/featured', [EventController::class, 'featured'])->name('events.featured');
+
 //get past events
 Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
 
@@ -57,6 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
     
     //get venues
     Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
+
+    //get all venues without pagination
+    Route::get('/venues/all', [VenueController::class, 'getAll'])->name('venues.all');
     
     //delete event
     Route::delete('/events/{event}' , [EventController::class, 'destroy'])->name('event.destroy');

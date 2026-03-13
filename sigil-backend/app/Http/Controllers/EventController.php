@@ -213,4 +213,18 @@ class EventController extends Controller
             'status' => $currentStatus
         ]);
     }
+
+    public function featured(){
+        $events = Event::with('venue')
+        ->withCount([
+            'users as interested_count' => fn($q) => $q->where('status', 'interested'),
+            'users as going_count' => fn($q) => $q->where('status', 'going')
+       ])
+        ->where('start_time', '>=', now())->get()
+        ->sortByDesc(function($event){
+            return $event->interested_count + $event->going_count;
+        })->take(5)->values();
+
+        return response()->json($events);
+    }
 }

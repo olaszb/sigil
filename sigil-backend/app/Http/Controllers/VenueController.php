@@ -15,6 +15,10 @@ class VenueController extends Controller
         $venues = Venue::paginate($this->pagination_limit);
         return response()->json($venues);
     }
+    public function getAll(){
+        $venues = Venue::all();
+        return response()->json($venues);
+    }
 
     public function store(CreateVenueRequest $request){
         Gate::authorize('create', Venue::class);
