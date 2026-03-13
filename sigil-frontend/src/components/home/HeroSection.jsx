@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import { getImageUrl, monthNames } from "../../util/helper";
 import { Link } from "react-router-dom";
 
-const upcomingTestData = [
-  { id: 6, title: "Cursed Code Workshop", time: "In 2 hours" },
-  { id: 7, title: "Phantom API Launch", time: "Tomorrow at 9PM" },
-  { id: 8, title: "Shadow Network Meetup", time: "Friday" },
-];
-const HeroSection = ({featuredEvents}) => {
+const HeroSection = ({featuredEvents, upcomingEvents}) => {
   const [activeHighlight, setActiveHighlight] = useState(0);
+
+  const getTimeRemaining = (date) => {
+    const diff = new Date(date) - new Date();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+
+    if (days == 1) return `Tomorrow at ${new Date(date).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', hour12: true})}`;
+    if (days > 1) return `In ${days} days`;
+    if (hours > 1) return `In ${hours} hours`;
+    return "Starting soon";
+  }
 
   return (
     <div className="relative w-full h-[500px] overflow-hidden group transition-all duration-700 ease-in-out">
@@ -25,19 +31,19 @@ const HeroSection = ({featuredEvents}) => {
         <div className="flex-1 flex flex-col justify-center space-y-4">
           <h2 className="text-main-accent font-['Cinzel'] text-sm tracking-widest uppercase mb-4">Featured Rituals</h2>
           {featuredEvents?.map((event, index) => (
-            <button
-              key={event.id}
-              onMouseEnter={() => setActiveHighlight(index)}
-              className={`text-left transition-all duration-300 border-l-2 pl-4 py-1 
-                ${activeHighlight === index 
-                  ? "border-main-accent text-parchment translate-x-2" 
-                  : "border-transparent text-parchment/40 hover:text-parchment/80"}`}
-            >
-              <span className="block text-xs uppercase opacity-60">{monthNames[new Date(event.start_time).getMonth()]} <span>{new Date(event.start_time).getDate()}</span></span>
-              <Link to={`/events/${event.slug}`}>
-                <span className="text-2xl font-['Cinzel'] font-bold uppercase tracking-tight">{event.title}</span>
-              </Link>
-            </button>
+            <Link to={`/events/${event.slug}`}>
+              <button
+                key={event.id}
+                onMouseEnter={() => setActiveHighlight(index)}
+                className={`text-left transition-all duration-300 border-l-2 pl-4 py-1 
+                  ${activeHighlight === index 
+                    ? "border-main-accent text-parchment translate-x-2" 
+                    : "border-transparent text-parchment/40 hover:text-parchment/80"}`}
+              >
+                <span className="block text-xs uppercase opacity-60">{monthNames[new Date(event.start_time).getMonth()]} <span>{new Date(event.start_time).getDate()}</span></span>
+                  <span className="text-2xl font-['Cinzel'] font-bold uppercase tracking-tight">{event.title}</span>
+              </button>
+            </Link>
           ))}
         </div>
 
@@ -48,13 +54,15 @@ const HeroSection = ({featuredEvents}) => {
               Upcoming
             </h3>
             <div className="space-y-6">
-              {upcomingTestData.map((event) => (
-                <div key={event.id} className="group/item cursor-default">
-                  <p className="text-main-accent text-xs font-mono">{event.time}</p>
-                  <p className="text-parchment font-medium group-hover/item:text-main-accent transition-colors">
-                    {event.title}
-                  </p>
-                </div>
+              {upcomingEvents.map((event) => (
+                <Link to={`/events/${event.slug}`} key={event.id} className="block">
+                  <div key={event.id} className="group/item cursor-default">
+                    <p className="text-main-accent text-xs font-mono">{getTimeRemaining(event.start_time)}</p>
+                    <p className="text-parchment font-medium group-hover/item:text-main-accent transition-colors">
+                      {event.title}
+                    </p>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>

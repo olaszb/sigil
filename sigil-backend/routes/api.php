@@ -18,6 +18,9 @@ Route::get('/events', [EventController::class, 'index'])->name('events.index');
 //get featured events
 Route::get('/events/featured', [EventController::class, 'featured'])->name('events.featured');
 
+//get upcoming events
+Route::get('/events/upcoming', [EventController::class, 'upcoming'])->name('events.upcoming');
+
 //get past events
 Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
 

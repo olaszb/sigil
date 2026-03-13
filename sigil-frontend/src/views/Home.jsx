@@ -16,15 +16,18 @@ const HomePage = () => {
         total: 1,
     });
     const [featuredEvents, setFeaturedEvents] = useState([]);
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
 
     const getInitialData = useCallback( async () => {
         setLoading(true);
         try {
-            const [featuredRes, regularRes] = await Promise.all([
+            const [featuredRes, upcomingRes, regularRes] = await Promise.all([
                 axiosClient.get("/api/events/featured"),
+                axiosClient.get("/api/events/upcoming"),
                 axiosClient.get("/api/events?page=1")
             ])
             setFeaturedEvents(featuredRes.data);
+            setUpcomingEvents(upcomingRes.data);
             setEvents(regularRes.data.data);
             setPagination({
                 current_page: regularRes.data.current_page,
@@ -65,7 +68,7 @@ const HomePage = () => {
 
   return (
     <div className="bg-secondary-bg text-parchment w-full min-h-screen">
-        <HeroSection featuredEvents={featuredEvents} />  
+        <HeroSection featuredEvents={featuredEvents} upcomingEvents={upcomingEvents}/>  
         <h1 id="title" className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
         <Events events={events} type={"current"}/>
 

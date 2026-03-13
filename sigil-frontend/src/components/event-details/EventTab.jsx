@@ -26,8 +26,9 @@ const EventTab = ({ title, start_time, venue_name, mode }) => {
             <h2 className="mt-6 text-xl text-parchment font-[Montserrat]">
               Gates {mode === 'current' ? "open" : "opened"} at{" "}
               {date.toLocaleTimeString([], {
-                hour: "2-digit",
+                hour: "numeric",
                 minute: "2-digit",
+                hour12: true
               })}
             </h2>
             <h3 className="mt-2 text-sm text-parchment uppercase leading-none tracking-tight font-[Montserrat]">

@@ -227,4 +227,10 @@ class EventController extends Controller
 
         return response()->json($events);
     }
+
+    public function upcoming(){
+        $events = Event::with('venue')->where('start_time', '>=', now())->orderBy('start_time', 'asc')->take(3)->get();
+
+        return response()->json($events);
+    }
 }
