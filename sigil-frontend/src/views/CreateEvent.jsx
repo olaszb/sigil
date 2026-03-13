@@ -32,8 +32,9 @@ const CreateEvent = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await axiosClient.get("/api/venues");
+        const response = await axiosClient.get("/api/venues/all");
         setVenues(response.data);
+        console.log("Fetched venues:", response.data);
       } catch (err) {
         console.error("Error fetching venues:", err);
         setError("Failed to load venues. Please try again later.");

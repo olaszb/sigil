@@ -49,7 +49,7 @@ class UserController extends Controller
         if (!$targetUser) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        $events = $targetUser->events()
+        $events = $targetUser->events()->where('start_time', '>=', now())
         ->wherePivot('status', $status)
         ->with('venue')
         ->get();
@@ -58,18 +58,18 @@ class UserController extends Controller
     }
 
     public function getUserComments(Request $request, ?User $user = null)
-{
-    $targetUser = $user ?? $request->user();
+    {
+        $targetUser = $user ?? $request->user();
 
-    if (!$targetUser) {
-        return response()->json(['message' => 'No whispers found for this entity.'], 404);
+        if (!$targetUser) {
+            return response()->json(['message' => 'No whispers found for this entity.'], 404);
+        }
+
+        $comments = $targetUser->comments()->whereHas('event', function($query){})
+            ->with(['event:id,title,slug,start_time','user:id,name,image_url'])
+            ->latest()
+            ->get();
+            
+        return response()->json($comments);
     }
-
-    $comments = $targetUser->comments()
-        ->with('event:id,title,slug')->with('user:id,name,image_url')
-        ->latest()
-        ->get();
-        
-    return response()->json($comments);
-}
 }

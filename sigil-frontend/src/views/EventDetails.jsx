@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
@@ -14,6 +14,7 @@ import SigilModal from "../components/SigilModal";
 import { formatArchiveDate } from "../util/helper";
 import CreateComment from "../components/event-details/CreateComment";
 import CommentItem from "../components/event-details/CommentItem";
+import LoadingScreen from "../components/LoadingScreen";
 
 const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
@@ -26,6 +27,7 @@ const EventDetails = ({ mode }) => {
     const [activeStatus, setActiveStatus] = useState(null);
     const [isCommentClicked, setIsCommentClicked] = useState(false);
     const [comments, setComments] = useState([]);
+    const location = useLocation();
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -36,10 +38,17 @@ const EventDetails = ({ mode }) => {
     }
 
     useEffect(() => {
-        setLoading(true);
-        const fetchEvent = async () => {
+        const fetchEvents = async () => {
+            setLoading(true);
             try {
-                const endpoint = mode === 'archived' ? `/api/archived-events/${slug}` : `/api/events/${slug}`;
+                let endpoint;
+                if (mode === 'archived') {
+                    endpoint = `/api/archived-events/${slug}`;
+                } else if (mode === 'past') {
+                    endpoint = `/api/past-events/${slug}`;
+                } else {
+                    endpoint = `/api/events/${slug}`;
+                }
                 const response = await axiosClient.get(endpoint);
     
                 const data = response.data;
@@ -62,15 +71,26 @@ const EventDetails = ({ mode }) => {
             }finally {
                 setLoading(false);
             }
-        }
-        const fetchUserStatus = async (eventId) => {
-            try{
-                const response = await axiosClient.get(`/api/events/${eventId}/status`);
+        };
+        fetchEvents();
+    }, [slug, mode, user, navigate]);
+
+    useEffect(() => {
+        if (!event?.id || !user || user.role === 'organizer' || user.role === 'admin') return;
+
+        const fetchUserStatus = async () => {
+            try {
+                const response = await axiosClient.get(`/api/events/${event.id}/status`);
                 setActiveStatus(response.data.status);
-            }catch(err){
+            } catch (err) {
                 console.error(err);
             }
-        }
+        };
+        fetchUserStatus();
+    }, [event?.id, user]);
+
+    useEffect(() => {
+        if (!event?.id) return;
         const fetchComments = async (eventId) => {
             try{
                 const response = await axiosClient.get(`/api/events/${eventId}/comments`);
@@ -79,14 +99,23 @@ const EventDetails = ({ mode }) => {
                 console.error(err);
             }
         }
-        fetchEvent();
-        if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
-            fetchUserStatus(event.id);
+        fetchComments(event.id);
+    }, [event?.id]);
+
+    useEffect(() => {
+        if (location.hash && comments.length > 0) {
+            const id = location.hash.replace('#', '');
+            const element = document.getElementById(id);
+            
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    element.classList.add("bg-main-accent/5");
+                    setTimeout(() => element.classList.remove("bg-main-accent/5"), 2000);
+                }, 500);
+            }
         }
-        if(mode === 'past' && event?.id){
-            fetchComments(event.id);
-        }
-    }, [slug, mode, user, navigate, event?.id]);
+    }, [location.hash, comments]);
 
     const handleCommentUpdated = (updatedComment) => {
         setComments(prevComments => prevComments.map(comment => comment.id === updatedComment.id ? updatedComment : comment));
@@ -233,6 +262,7 @@ const EventDetails = ({ mode }) => {
 
                     <EventDescription description={event?.description}/>
                     <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>
+                    
                     <section>
                         <div className="flex items-center w-full">
                             <h2 className="text-main-accent font-[Cinzel] text-xl">Comments</h2>
@@ -240,8 +270,16 @@ const EventDetails = ({ mode }) => {
                         </div>
                         {user && (
                             <div>
-                                <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
-                                <div className="h-[1px] w-full bg-parchment/20 mt-2" />
+                                {mode !== 'archived' ? (
+                                    <>
+                                        <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
+                                        <div className="h-[1px] w-full bg-parchment/20 mt-2" />
+                                    </>
+                                ) : (
+                                    <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-main-accent/40 my-4 italic">
+                                        This ritual is archived. No further whispers may be cast.
+                                    </p>
+                                )}
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (

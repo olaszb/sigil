@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import EventHero from "../components/event-details/EventHero";
 import { useAuth } from "../contexts/AuthContext";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
@@ -9,6 +8,7 @@ import SigilModal from "../components/SigilModal";
 import { scrollToId } from "../util/helper";
 import Pagination from "../components/Pagination";
 import LoadingScreen from "../components/LoadingScreen";
+import SigilHero from "../components/SigilHero";
 
 const PastEventsPage = () => {
     const {user} = useAuth();
@@ -80,16 +80,13 @@ const PastEventsPage = () => {
 
     return (
         <div className="w-full min-h-screen text-parchment">
-            <div className="grayscale">
-                <EventHero image_url={"/public/library.webp"}/>
+            <div className="grayscale mb-10">
+                <SigilHero image_url={"/public/library.webp"} title={"The Archives"} />
             </div>
             
-            {user?.role === 'admin' || user?.role === 'organizer' ? (
+            {(user?.role === 'admin' || user?.role === 'organizer') && (
                 <div className="w-full flex justify-center my-4">
                     <div className="w-full max-w-md text-center">
-                        <h1 id="title" className="text-4xl text-parchment font-[Cinzel] my-8">
-                            The Archives
-                        </h1>
                         <div className="flex gap-4">
                             <button onClick={() => setViewMode('past')} 
                                 className={`flex-1 px-4 py-2 border-b border-main-accent text-parchment hover:bg-main-accent/80 transition-colors duration-300 uppercase tracking-widest text-[12px] ${viewMode === 'past' ? 'bg-main-accent' : ''} `}
@@ -102,14 +99,7 @@ const PastEventsPage = () => {
                         </div>
                     </div>
                 </div>
-            ) : (
-                <div className="text-center">
-                    <h1 id="title" className="text-4xl text-parchment font-[Cinzel] my-8">
-                        The Archives
-                    </h1>
-                </div>
-            )
-            }
+            )}
             <div className="relative min-h-[400px] px-4"> 
                 <div className={`transition-opacity duration-500 ${loading ? 'opacity-20' : 'opacity-100'}`}>
                     {events.length > 0 ? (

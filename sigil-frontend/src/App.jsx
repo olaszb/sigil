@@ -15,6 +15,7 @@ import Venues from './views/Venues';
 import PastEventsPage from './views/PastEvents';
 import ProfilePage from './views/Profile';
 import EditProfile from './views/EditProfile';
+import AllEvents from './views/AllEvents';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
             <Route path='/past-events' element={<PastEventsPage />} />
             <Route path='/past-events/:slug' element={<EventDetails mode={'past'} />} />
             <Route path='/users/:username' element={<ProfilePage />} />
+            <Route path='/events' element={<AllEvents />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>
