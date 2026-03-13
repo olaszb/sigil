@@ -38,8 +38,8 @@ const EventDetails = ({ mode }) => {
     }
 
     useEffect(() => {
-        setLoading(true);
-        const fetchEvent = async () => {
+        const fetchEvents = async () => {
+            setLoading(true);
             try {
                 const endpoint = mode === 'archived' ? `/api/archived-events/${slug}` : `/api/events/${slug}`;
                 const response = await axiosClient.get(endpoint);
@@ -64,15 +64,26 @@ const EventDetails = ({ mode }) => {
             }finally {
                 setLoading(false);
             }
-        }
-        const fetchUserStatus = async (eventId) => {
-            try{
-                const response = await axiosClient.get(`/api/events/${eventId}/status`);
+        };
+        fetchEvents();
+    }, [slug, mode, user, navigate]);
+
+    useEffect(() => {
+        if (!event?.id || !user || user.role === 'organizer' || user.role === 'admin') return;
+
+        const fetchUserStatus = async () => {
+            try {
+                const response = await axiosClient.get(`/api/events/${event.id}/status`);
                 setActiveStatus(response.data.status);
-            }catch(err){
+            } catch (err) {
                 console.error(err);
             }
-        }
+        };
+        fetchUserStatus();
+    }, [event?.id, user]);
+
+    useEffect(() => {
+        if (!event?.id) return;
         const fetchComments = async (eventId) => {
             try{
                 const response = await axiosClient.get(`/api/events/${eventId}/comments`);
@@ -81,14 +92,8 @@ const EventDetails = ({ mode }) => {
                 console.error(err);
             }
         }
-        fetchEvent();
-        if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
-            fetchUserStatus(event.id);
-        }
-        if(event?.id){
-            fetchComments(event.id);
-        }
-    }, [slug, mode, user, navigate, event?.id]);
+        fetchComments(event.id);
+    }, [event?.id]);
 
     useEffect(() => {
         if (location.hash && comments.length > 0) {
