@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,6 +17,11 @@ class CommentController extends Controller
 
     public function store(Request $request, $eventId)
     {
+        $event = Event::findOrFail($eventId);
+        if($event->trashed()){
+            return response()->json(['message' => 'Cannot comment on an archived event'], 403);
+        }
+
         $data = $request->validate([
             'comment' => 'required|string|max:255',
         ]);

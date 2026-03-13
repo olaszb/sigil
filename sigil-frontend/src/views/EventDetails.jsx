@@ -14,6 +14,7 @@ import SigilModal from "../components/SigilModal";
 import { formatArchiveDate } from "../util/helper";
 import CreateComment from "../components/event-details/CreateComment";
 import CommentItem from "../components/event-details/CommentItem";
+import LoadingScreen from "../components/LoadingScreen";
 
 const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
@@ -83,7 +84,7 @@ const EventDetails = ({ mode }) => {
         if(event?.id && user && user.role !== 'organizer' && user.role !== 'admin'){
             fetchUserStatus(event.id);
         }
-        if(mode === 'past' && event?.id){
+        if(event?.id){
             fetchComments(event.id);
         }
     }, [slug, mode, user, navigate, event?.id]);
@@ -233,6 +234,7 @@ const EventDetails = ({ mode }) => {
 
                     <EventDescription description={event?.description}/>
                     <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>
+                    
                     <section>
                         <div className="flex items-center w-full">
                             <h2 className="text-main-accent font-[Cinzel] text-xl">Comments</h2>
@@ -240,8 +242,16 @@ const EventDetails = ({ mode }) => {
                         </div>
                         {user && (
                             <div>
-                                <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
-                                <div className="h-[1px] w-full bg-parchment/20 mt-2" />
+                                {mode !== 'archived' ? (
+                                    <>
+                                        <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
+                                        <div className="h-[1px] w-full bg-parchment/20 mt-2" />
+                                    </>
+                                ) : (
+                                    <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-main-accent/40 my-4 italic">
+                                        This ritual is archived. No further whispers may be cast.
+                                    </p>
+                                )}
                                 <div>
                                     {comments && comments.length > 0 ? (
                                         comments.map((comment) => (

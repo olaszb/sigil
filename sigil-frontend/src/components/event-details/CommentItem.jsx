@@ -65,30 +65,31 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                 </div>
 
                 <div className="relative p-4 bg-black/20 border-l-2 border-main-accent/50 hover:border-main-accent/50 transition-colors duration-500">
-                    {isEditing ? (
-                        <div className="space-y-3">
+                    <div className={`grid transition-all duration-500 ease-in-out ${isEditing ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0'}`}>
+                        <div className="overflow-hidden">
                             <textarea
                                 value={editText}
                                 onChange={(e) => setEditText(e.target.value)}
-                                className="w-full bg-black/40 border-b border-parchment/20 p-2 text-sm text-parchment focus:outline-none focus:border-main-accent resize-none h-20" 
+                                className="w-full bg-black/40 border-b border-parchment/20 p-2 text-sm text-parchment focus:outline-none focus:border-main-accent resize-none h-24"
                             />
-                            <div className="flex justify-end gap-3">
+                            <div className="flex justify-end gap-3 mt-3">
                                 <button onClick={() => setIsEditing(false)} 
-                                className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
-                                    hover:text-parchment hover:bg-white/5 transition-all duration-300 
-                                    border border-transparent hover:border-parchment/10">
+                                    className="px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-parchment/60 
+                                        hover:text-parchment hover:bg-white/5 transition-all duration-300 
+                                        border border-transparent hover:border-parchment/10">
                                     Cancel
                                 </button>
                                 <BoxButton onClick={handleUpdate} color={"main-accent"} disabled={loading} text={loading ? "Rewriting..." : "Save"}/>
                             </div>
                         </div>
-                    ): (
+                    </div>
+                    {!isEditing &&(
                         <p className="text-sm leading-relaxed text-parchment/80 font-light">
                             {comment.comment}
                         </p>
                     )}
-                    {type === 'eventDetails' && (
-                        <div className="absolute top-1 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {(type === 'eventDetails' && !isEditing) && (
+                        <div className="absolute top-1 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ">
                             {(user?.id === comment.user_id) ? (
                                 <>
                                     <button 
