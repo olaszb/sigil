@@ -3,7 +3,7 @@ const QuillSVG = ({ size = "100%" }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox="-5.0 -5.0 110.0 110.0"
+      viewBox="0.0 0.0 100.0 100.0"
       width={size}
       height={size}
     >

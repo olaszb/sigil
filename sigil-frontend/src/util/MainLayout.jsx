@@ -15,17 +15,17 @@ const MainLayout = () => {
     <div className="flex min-h-screen bg-secondary-bg">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
-        <NavbarItem icon={<HomeSVG size="110%"/>} text="Home" to="/"/>
-        <NavbarItem icon={<LibrarySVG size="110%"/>} text="All Events" to="/events" />
+        <NavbarItem icon={<HomeSVG size="120%"/>} text="Home" to="/"/>
+        <NavbarItem icon={<LibrarySVG size="90%"/>} text="All Events" to="/events" />
         <NavbarItem icon={<ClockSVG size="130%"/>} text="Past Events" to="/past-events" />
         {(user && user.role !== 'user') && (
           <>
             <NavbarItem icon={<QuillSVG size="100%" />} text="Create Event" to="/create-event"/>
-            <NavbarItem icon={<DashboardSVG size="100%"/>} text="Dashboard" to="/dashboard"/>
+            <NavbarItem icon={<DashboardSVG size="110%"/>} text="Dashboard" to="/dashboard"/>
           </>
         )}
         {user && user.role === 'admin' && (
-          <NavbarItem icon={<MapPinned className="text-parchment" strokeWidth={1} size={30} />} text="Venues" to="/venues"/>
+          <NavbarItem icon={<MapPinned className="text-parchment" strokeWidth={1} size={35} />} text="Venues" to="/venues"/>
         )
 
         }
