@@ -62,6 +62,16 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                     <span className="text-[9px] font-mono uppercase tracking-tighter text-parchment/30">
                         {formatArchiveDate(comment.created_at)}
                     </span>
+                    {comment.event?.title && (
+                        <Link to={`/events/${comment.event.slug}`}>
+                            <span className="text-parchment/30 mr-2">
+                                |
+                            </span>
+                            <span className="font-[Cinzel] text-sm text-main-accent tracking-wider">
+                                {comment.event.title}
+                            </span>
+                        </Link>
+                    )}
                 </div>
 
                 <div className="relative p-4 bg-black/20 border-l-2 border-main-accent/50 hover:border-main-accent/50 transition-colors duration-500">
