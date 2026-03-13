@@ -21,7 +21,7 @@ const MainLayout = () => {
         {(user && user.role !== 'user') && (
           <>
             <NavbarItem icon={<QuillSVG size="100%" />} text="Create Event" to="/create-event"/>
-            <NavbarItem icon={<DashboardSVG size="110%"/>} text="Dashboard" to="/dashboard"/>
+            <NavbarItem icon={<DashboardSVG size="90%"/>} text="Dashboard" to="/dashboard"/>
           </>
         )}
         {user && user.role === 'admin' && (
