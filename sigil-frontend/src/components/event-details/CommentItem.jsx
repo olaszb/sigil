@@ -32,6 +32,15 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
         }
     }
 
+    const getEventPath = () => {
+        if (!comment.event) return "/events";
+        
+        const isPast = new Date(comment.event.start_time) < new Date();
+        const prefix = isPast ? "/past-events" : "/events";
+        
+        return `${prefix}/${comment.event.slug}#comment-${comment.id}`;
+    };
+
     return (
         <div id={`comment-${comment.id}`} className="relative flex gap-4 group mt-6">
             <div className="flex flex-col items-center">
@@ -63,7 +72,7 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                         {formatArchiveDate(comment.created_at)}
                     </span>
                     {comment.event?.title && (
-                        <Link to={`/events/${comment.event.slug}#comment-${comment.id}`} className="flex items-center cursor-pointer">
+                        <Link to={getEventPath()} className="flex items-center cursor-pointer">
                             <span className="text-parchment/30 mr-2">
                                 |
                             </span>

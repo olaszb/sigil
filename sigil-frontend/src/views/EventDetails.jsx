@@ -41,7 +41,14 @@ const EventDetails = ({ mode }) => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const endpoint = mode === 'archived' ? `/api/archived-events/${slug}` : `/api/events/${slug}`;
+                let endpoint;
+                if (mode === 'archived') {
+                    endpoint = `/api/archived-events/${slug}`;
+                } else if (mode === 'past') {
+                    endpoint = `/api/past-events/${slug}`;
+                } else {
+                    endpoint = `/api/events/${slug}`;
+                }
                 const response = await axiosClient.get(endpoint);
     
                 const data = response.data;

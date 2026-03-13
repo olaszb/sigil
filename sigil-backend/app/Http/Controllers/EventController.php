@@ -59,11 +59,34 @@ class EventController extends Controller
             'users as going_count' => fn($q) => $q->where('status', 'going')
        ])
        ->where('slug', $slug)->firstOrFail();
+
+        if ($event->start_time < now()) {
+            return response()->json(['message' => 'This ritual has passed into the archives.'], 404);
+        }
        
        return response()->json([
         'event' => $event,
         'venue' => $event->venue
        ]);
+    }
+
+    public function showPast($slug)
+    {
+        $event = Event::with('venue')
+            ->withCount([
+                'users as interested_count' => fn($q) => $q->where('status', 'interested'),
+                'users as going_count' => fn($q) => $q->where('status', 'going')
+            ])
+            ->where('slug', $slug)->firstOrFail();
+
+        if ($event->start_time >= now()) {
+            return response()->json(['message' => 'This ritual has not yet manifested.'], 404);
+        }
+
+        return response()->json([
+            'event' => $event,
+            'venue' => $event->venue
+        ]);
     }
 
     /**

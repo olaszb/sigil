@@ -66,7 +66,7 @@ class UserController extends Controller
         }
 
         $comments = $targetUser->comments()->whereHas('event', function($query){})
-            ->with(['event:id,title,slug','user:id,name,image_url'])
+            ->with(['event:id,title,slug,start_time','user:id,name,image_url'])
             ->latest()
             ->get();
             

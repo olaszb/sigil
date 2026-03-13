@@ -15,8 +15,14 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 //get events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 
+//get past events
+Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
+
 //get single event
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('event.show');
+
+//get past event
+Route::get('/past-events/{slug}', [EventController::class, 'showPast']);
 
 //get my events
 Route::get('/users/events', [UserController::class, 'getUserEvents'])
@@ -64,8 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //get archived events
     Route::get('/archived-events', [EventController::class, 'archived'])->name('archived.index');
 
-    //get past events
-    Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.index');
+    
 
     //force delete event
     Route::delete('/events/{id}/force', [EventController::class, 'forceDelete'])->name('event.force');
