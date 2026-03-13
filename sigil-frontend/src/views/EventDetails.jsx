@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
@@ -27,6 +27,7 @@ const EventDetails = ({ mode }) => {
     const [activeStatus, setActiveStatus] = useState(null);
     const [isCommentClicked, setIsCommentClicked] = useState(false);
     const [comments, setComments] = useState([]);
+    const location = useLocation();
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -88,6 +89,21 @@ const EventDetails = ({ mode }) => {
             fetchComments(event.id);
         }
     }, [slug, mode, user, navigate, event?.id]);
+
+    useEffect(() => {
+        if (location.hash && comments.length > 0) {
+            const id = location.hash.replace('#', '');
+            const element = document.getElementById(id);
+            
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    element.classList.add("bg-main-accent/5");
+                    setTimeout(() => element.classList.remove("bg-main-accent/5"), 2000);
+                }, 500);
+            }
+        }
+    }, [location.hash, comments]);
 
     const handleCommentUpdated = (updatedComment) => {
         setComments(prevComments => prevComments.map(comment => comment.id === updatedComment.id ? updatedComment : comment));

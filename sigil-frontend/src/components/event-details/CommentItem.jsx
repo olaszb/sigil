@@ -33,7 +33,7 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
     }
 
     return (
-        <div className="relative flex gap-4 group mt-6">
+        <div id={`comment-${comment.id}`} className="relative flex gap-4 group mt-6">
             <div className="flex flex-col items-center">
                 {type === 'eventDetails' ? (
                     <Link to={comment.user.name === user.name ? `/profile` : `/users/${comment.user.name}`} className="cursor-pointer">
@@ -63,7 +63,7 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                         {formatArchiveDate(comment.created_at)}
                     </span>
                     {comment.event?.title && (
-                        <Link to={`/events/${comment.event.slug}`}>
+                        <Link to={`/events/${comment.event.slug}#comment-${comment.id}`} className="flex items-center cursor-pointer">
                             <span className="text-parchment/30 mr-2">
                                 |
                             </span>
