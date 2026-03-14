@@ -33,6 +33,14 @@ class EventController extends Controller
         return response()->json($events);
     }
 
+    public function getActiveMonths(){
+        $months = Event::where('start_time', '>=', Date::now())
+            ->selectRaw('DISTINCT EXTRACT(MONTH FROM start_time) as month')
+            ->orderBy('month', 'desc')
+            ->pluck('month');
+        return response()->json($months);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

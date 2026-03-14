@@ -15,6 +15,9 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 //get events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 
+//get active months
+Route::get('/events/active-months', [EventController::class, 'getActiveMonths'])->name('months.active');
+
 //get featured events
 Route::get('/events/featured', [EventController::class, 'featured'])->name('events.featured');
 
