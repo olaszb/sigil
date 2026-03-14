@@ -17,9 +17,15 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::where('start_time', '>=' , Date::now())->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
+        $query = Event::where('start_time', '>=', Date::now());
+
+        if($request->has('search')){
+            $searchTerm = $request->query('search');
+            $query->where('title', 'ILIKE', "%{$searchTerm}%");
+        }
+        $events = $query->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
         return response()->json($events);
     }
 
