@@ -21,9 +21,13 @@ class EventController extends Controller
     {
         $query = Event::with("venue:id,name")->where('start_time', '>=', Date::now());
 
-        if($request->has('search')){
+        if($request->filled('search')){
             $searchTerm = $request->query('search');
             $query->where('title', 'ILIKE', "%{$searchTerm}%");
+        }
+
+        if($request->filled('month')){
+            $query->whereMonth('start_time', $request->query('month'));
         }
         $events = $query->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
         return response()->json($events);
