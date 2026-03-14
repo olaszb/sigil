@@ -17,10 +17,35 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::where('start_time', '>=' , Date::now())->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
+        $query = Event::with("venue:id,name")->where('start_time', '>=', Date::now());
+
+        if($request->filled('search')){
+            $searchTerm = $request->query('search');
+            $query->where('title', 'ILIKE', "%{$searchTerm}%");
+        }
+
+        if($request->filled('month')){
+            $query->whereMonth('start_time', $request->query('month'));
+        }
+        $events = $query->orderBy('start_time', 'asc')->paginate($this->pagination_limit);
         return response()->json($events);
+    }
+
+    public function getFirstFive(){
+        $events = Event::with('venue:id,name')->where('start_time', '>=', Date::now())
+        ->orderBy('start_time', 'asc')->take(5)->get();
+
+        return response()->json($events);
+    }
+
+    public function getActiveMonths(){
+        $months = Event::where('start_time', '>=', Date::now())
+            ->selectRaw('DISTINCT EXTRACT(MONTH FROM start_time) as month')
+            ->orderBy('month', 'desc')
+            ->pluck('month');
+        return response()->json($months);
     }
 
     /**

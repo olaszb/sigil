@@ -31,9 +31,8 @@ const HeroSection = ({featuredEvents, upcomingEvents}) => {
         <div className="flex-1 flex flex-col justify-center space-y-4">
           <h2 className="text-main-accent font-['Cinzel'] text-sm tracking-widest uppercase mb-4">Featured Rituals</h2>
           {featuredEvents?.map((event, index) => (
-            <Link to={`/events/${event.slug}`}>
+            <Link to={`/events/${event.slug}`} key={event.id}>
               <button
-                key={event.id}
                 onMouseEnter={() => setActiveHighlight(index)}
                 className={`text-left transition-all duration-300 border-l-2 pl-4 py-1 
                   ${activeHighlight === index 
@@ -56,7 +55,7 @@ const HeroSection = ({featuredEvents, upcomingEvents}) => {
             <div className="space-y-6">
               {upcomingEvents.map((event) => (
                 <Link to={`/events/${event.slug}`} key={event.id} className="block">
-                  <div key={event.id} className="group/item cursor-default">
+                  <div className="group/item cursor-default">
                     <p className="text-main-accent text-xs font-mono">{getTimeRemaining(event.start_time)}</p>
                     <p className="text-parchment font-medium group-hover/item:text-main-accent transition-colors">
                       {event.title}

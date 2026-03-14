@@ -50,6 +50,9 @@ const EventItem = ({ event, type, onAction }) => {
         <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
           {getPlainTextFromLexical(event.description)}
         </p>
+        <p className="border-l border-main-accent mt-1 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
+          Ritual Site: {event.venue.name}
+        </p>
       </div>
 
       {/* Buy Ticket */}

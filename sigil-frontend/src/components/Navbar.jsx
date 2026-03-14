@@ -145,7 +145,7 @@ export function NavbarItem({ icon, text, active, alert, to }) {
         )}
 
         {!expanded && (
-          <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
+          <div className="absolute left-full whitespace-nowrap rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
             {text}
           </div>
         )}

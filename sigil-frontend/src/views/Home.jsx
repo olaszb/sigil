@@ -2,19 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import axiosClient from "../services/axios-client";
 import Events from "../components/home/Events";
 import HeroSection from "../components/home/HeroSection";
-import Pagination from "../components/Pagination";
 import LoadingScreen from "../components/LoadingScreen";
+import { Link } from "react-router-dom";
+import BoxButton from "../components/BoxButton"
 
 const HomePage = () => {
-    
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [pagination, setPagination] = useState({
-        current_page: 1,
-        last_page: 1,
-        per_page: 10,
-        total: 1,
-    });
     const [featuredEvents, setFeaturedEvents] = useState([]);
     const [upcomingEvents, setUpcomingEvents] = useState([]);
 
@@ -24,17 +18,11 @@ const HomePage = () => {
             const [featuredRes, upcomingRes, regularRes] = await Promise.all([
                 axiosClient.get("/api/events/featured"),
                 axiosClient.get("/api/events/upcoming"),
-                axiosClient.get("/api/events?page=1")
+                axiosClient.get("/api/events/first-five")
             ])
             setFeaturedEvents(featuredRes.data);
             setUpcomingEvents(upcomingRes.data);
-            setEvents(regularRes.data.data);
-            setPagination({
-                current_page: regularRes.data.current_page,
-                last_page: regularRes.data.last_page,
-                per_page: regularRes.data.per_page,
-                total: regularRes.data.total,
-            });
+            setEvents(regularRes.data);
         }catch (error) {
             console.error("Error fetching events:", error);
         }finally {
@@ -46,17 +34,11 @@ const HomePage = () => {
         getInitialData();
     }, [getInitialData]);
 
-    const getEvents = useCallback(async (page = 1) => {
+    const getEvents = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/api/events?page=${page}`);
-            setEvents(response.data.data);
-            setPagination({
-                current_page: response.data.current_page,
-                last_page: response.data.last_page,
-                per_page: response.data.per_page,
-                total: response.data.total,
-            });
+            const response = await axiosClient.get(`/api/events/first-five`);
+            setEvents(response.data);
         } catch (error) {
             console.error("Error fetching events:", error);
         } finally {
@@ -72,10 +54,12 @@ const HomePage = () => {
         <h1 id="title" className="text-center font-bold font-[Cinzel] my-10 text-5xl" >Events</h1>
         <Events events={events} type="current"/>
 
+        <div className="flex justify-center items-center mb-8">
+            <Link to={"/events"}>
+                <BoxButton text={"View More"}/>
+            </Link>
 
-        {pagination.last_page > 1 && (
-            <Pagination pagination={pagination} getEvents={getEvents} />
-        )}
+        </div>
             
     </div>
   );
