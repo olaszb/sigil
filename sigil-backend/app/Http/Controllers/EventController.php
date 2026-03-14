@@ -33,6 +33,13 @@ class EventController extends Controller
         return response()->json($events);
     }
 
+    public function getFirstFive(){
+        $events = Event::with('venue:id,name')->where('start_time', '>=', Date::now())
+        ->orderBy('start_time', 'asc')->take(5)->get();
+
+        return response()->json($events);
+    }
+
     public function getActiveMonths(){
         $months = Event::where('start_time', '>=', Date::now())
             ->selectRaw('DISTINCT EXTRACT(MONTH FROM start_time) as month')
