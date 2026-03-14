@@ -19,7 +19,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Event::where('start_time', '>=', Date::now());
+        $query = Event::with("venue:id,name")->where('start_time', '>=', Date::now());
 
         if($request->has('search')){
             $searchTerm = $request->query('search');

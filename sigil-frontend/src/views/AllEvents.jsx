@@ -18,7 +18,7 @@ const AllEvents = () => {
     });
     const [searchTerm, setSearchTerm] = useState("");
 
-    const getEvents = useCallback(async (page = 1, search = searchTerm) => {
+    const getEvents = useCallback(async (page = 1, search = "") => {
         setLoading(true);
         try {
             const response = await axiosClient.get(`/api/events`, {
