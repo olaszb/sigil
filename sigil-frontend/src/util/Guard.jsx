@@ -8,7 +8,7 @@ const PrivateGuard = () => {
 
 const PublicGuard = () => {
     const {user} = useAuth();
-    return !user ? <Outlet/> : <Navigate to="/"/>;
+    return !user ? <Outlet/> : <Navigate to="/profile"/>;
 };
 
 const AdminGuard = () => {
@@ -21,4 +21,16 @@ const AdminOrOrganizerGuard = () => {
     return (user.role === 'admin' || user.role === 'organizer') ? <Outlet /> : <Navigate to="/"/>;
 }
 
-export {PrivateGuard, PublicGuard, AdminGuard, AdminOrOrganizerGuard};
+const VerifiedGuard = () => {
+    const { user } = useAuth();
+
+    if (!user) return <Navigate to="/login" />;
+    
+    if (!user.email_verified_at) {
+        return <Navigate to="/verify-notice" />;
+    }
+
+    return <Outlet />;
+}
+
+export {PrivateGuard, PublicGuard, AdminGuard, AdminOrOrganizerGuard, VerifiedGuard};

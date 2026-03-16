@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 
 const EventItem = ({ event, type, onAction }) => {
-  const date = new Date(event.start_time);
+  const date = new Date(event?.start_time);
   const { user } = useAuth();
 
   return (
@@ -30,10 +30,10 @@ const EventItem = ({ event, type, onAction }) => {
       </div>
 
       {/* Image */}
-      <Link to={type === 'current' ? `/events/${event.slug}` : type === 'past' ? `/past-events/${event.slug}` : `/archive/events/${event.slug}`}>
+      <Link to={type === 'current' ? `/events/${event?.slug}` : type === 'past' ? `/past-events/${event?.slug}` : `/archive/events/${event?.slug}`}>
         <div className="relative shrink-0">
           <img
-            src={getImageUrl(event.image_url)}
+            src={getImageUrl(event?.image_url)}
             className="object-cover h-32 w-48 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
           />
         </div>
@@ -42,16 +42,16 @@ const EventItem = ({ event, type, onAction }) => {
       {/* Title & Description */}
 
       <div className="flex-1 flex flex-col px-8 justify-center">
-        <Link to={type === 'current' ? `/events/${event.slug}` : type === 'past' ? `/past-events/${event.slug}` : `/archive/events/${event.slug}`}>
+        <Link to={type === 'current' ? `/events/${event?.slug}` : type === 'past' ? `/past-events/${event?.slug}` : `/archive/events/${event?.slug}`}>
           <h2 className="text-2xl font-[Cinzel] mb-2 text-parchment group-hover:text-main-accent cursor-default">
-            {event.title}
+            {event?.title}
           </h2>
         </Link>
         <p className="border-l border-parchment/20 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
-          {getPlainTextFromLexical(event.description)}
+          {getPlainTextFromLexical(event?.description)}
         </p>
         <p className="border-l border-main-accent mt-1 text-xs text-parchment/50 font-[Montserrat] pl-2 cursor-default">
-          Ritual Site: {event.venue.name}
+          Ritual Site: {event?.venue?.name}
         </p>
       </div>
 

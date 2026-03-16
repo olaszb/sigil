@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -85,8 +86,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //get archived events
     Route::get('/archived-events', [EventController::class, 'archived'])->name('archived.index');
 
-    
-
     //force delete event
     Route::delete('/events/{id}/force', [EventController::class, 'forceDelete'])->name('event.force');
 
@@ -99,12 +98,15 @@ Route::middleware('auth:sanctum')->group(function () {
     //get event status
     Route::get('/events/{event}/status', [EventController::class, 'getUserStatus'])->name('user.event.getStatus');
 
-    //change event status
-    Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
-
     //get event comments
     Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
+    //update user
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
+});
+
+//verified users only
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //post event comment
     Route::post('/events/{eventId}/comments', [CommentController::class, 'store'])->name('event.comment.store');
 
@@ -114,7 +116,21 @@ Route::middleware('auth:sanctum')->group(function () {
     //update comment
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
 
-    //update user
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
-
+    //change event status
+    Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
 });
+
+//email verification
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return response()->json(['message' => 'Ritual verified.']);
+})->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+
+// Resend verification link
+Route::post('/email/verification-notification', function (Request $request) {
+    if ($request->user()->hasVerifiedEmail()) {
+        return response()->json(['message' => 'Your ritual is already verified.'], 400);
+    }
+    $request->user()->sendEmailVerificationNotification();
+    return response()->json(['message' => 'Verification link sent.']);
+})->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');

@@ -4,7 +4,7 @@ import axiosClient from "../services/axios-client";
 import EventHero from "../components/event-details/EventHero";
 import EventTab from "../components/event-details/EventTab";
 import { useAuth } from "../contexts/AuthContext";
-import { CircleCheck, Star } from "lucide-react";
+import { CircleCheck, MailWarning, Star } from "lucide-react";
 import {toast} from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import EventDescription from "../components/event-details/EventDescription";
@@ -146,6 +146,10 @@ const EventDetails = ({ mode }) => {
     }
 
     const handleChangeStatus = async (newStatus) => {
+        if (user && user.email_verified_at === null) {
+            toast("Your identity is unverified. Check your email to unlock this ritual.", toastConfig);
+            return;
+        }
         try{
             const response = await axiosClient.post(`/api/events/${event.id}/status`,{
                 status: newStatus
@@ -157,6 +161,11 @@ const EventDetails = ({ mode }) => {
     }
     const handleCommentSubmit = async (e, commentText) => {
         e.preventDefault();
+
+        if (user && user.email_verified_at === null) {
+            toast.error("Unverified users cannot cast whispers.", toastConfig);
+            return;
+        }
 
         const text = commentText.trim();
         if(!text) return;
@@ -272,8 +281,24 @@ const EventDetails = ({ mode }) => {
                             <div>
                                 {mode !== 'archived' ? (
                                     <>
-                                        <CreateComment eventId={event?.id} onCommentAdded={handleCommentSubmit} isCommentClicked={isCommentClicked} setIsCommentClicked={setIsCommentClicked}/>
-                                        <div className="h-[1px] w-full bg-parchment/20 mt-2" />
+                                        {user.email_verified_at ? (
+                                            <CreateComment 
+                                                eventId={event?.id} 
+                                                onCommentAdded={handleCommentSubmit} 
+                                                isCommentClicked={isCommentClicked} 
+                                                setIsCommentClicked={setIsCommentClicked}
+                                            />
+                                        ) : (
+                                            <div className="p-4 border border-main-accent/30 bg-[#1a0505] flex items-center gap-4">
+                                                <MailWarning className="text-main-accent shrink-0" size={24} />
+                                                <div>
+                                                    <h3 className="text-sm font-[Cinzel] text-main-accent uppercase tracking-wider mb-1">Silence is Enforced</h3>
+                                                    <p className="text-xs font-[Montserrat] text-parchment/70">
+                                                        Your identity is unverified. Please check your email and verify your sigil to cast whispers.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </>
                                 ) : (
                                     <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-main-accent/40 my-4 italic">

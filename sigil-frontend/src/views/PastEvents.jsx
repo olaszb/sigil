@@ -102,7 +102,7 @@ const PastEventsPage = () => {
             )}
             <div className="relative min-h-[400px] px-4"> 
                 <div className={`transition-opacity duration-500 ${loading ? 'opacity-20' : 'opacity-100'}`}>
-                    {events.length > 0 ? (
+                    {events?.length > 0 ? (
                         <Events events={events} type={viewMode} onAction={openModal}/>
                     ) : !loading && (
                         <div className="w-full text-center py-20">
