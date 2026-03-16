@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, MailWarning, Send } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
@@ -8,6 +8,8 @@ import BoxButton from "../components/BoxButton";
 import CommentItem from "../components/event-details/CommentItem";
 import { getImageUrl } from "../util/helper";
 import LoadingScreen from "../components/LoadingScreen";
+import { toast } from "react-toastify";
+import { toastConfig } from "../util/toastConfig";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
@@ -22,6 +24,7 @@ const ProfilePage = ( ) => {
     const [isOwnProfile, setIsOwnProfile] = useState(false);
 
     const [loading, setLoading] = useState(true);
+    const [isResending, setIsResending] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -86,6 +89,22 @@ const ProfilePage = ( ) => {
         }
     };
 
+    const handleResendVerification = async () => {
+        setIsResending(true);
+        try {
+            const response = await axiosClient.post('/api/email/verification-notification');
+            toast(response.data.message || "A new sigil has been dispatched.", toastConfig);
+        } catch (error) {
+            if (error.response?.status === 429) {
+                toast("Patience. Wait a moment before requesting another.", toastConfig);
+            } else {
+                toast("Failed to resend the verification.", toastConfig);
+            }
+        } finally {
+            setIsResending(false);
+        }
+    }
+
     if (loading) return <LoadingScreen />;
 
     return (
@@ -116,6 +135,29 @@ const ProfilePage = ( ) => {
                     </div>
                 </div>
             </div>
+
+            {isOwnProfile && profileUser?.email_verified_at === null && (
+                <div className="mx-10 mt-5 p-4 border border-main-accent/40 bg-[#1a0505] flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <MailWarning className="text-main-accent shrink-0" size={24} />
+                        <div>
+                            <h3 className="text-sm font-[Cinzel] text-main-accent uppercase tracking-wider">Unverified Identity</h3>
+                            <p className="text-xs font-[Montserrat] text-parchment/70">
+                                Verify your email to unlock the ability to leave whispers and join rituals.
+                            </p>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={handleResendVerification}
+                        disabled={isResending}
+                        className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] bg-main-accent/10 hover:bg-main-accent/20 text-main-accent px-4 py-2 border border-main-accent/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                    >
+                        {isResending ? "Casting..." : <><Send size={12} /> Resend Sigil</>}
+                    </button>
+                </div>
+            )}
+
+
             <div className="bg-black/20 flex flex-row mx-10 mt-5 border border-parchment/10 h-[400px] ">
                 {/* Sidebar */}
                 <div className="flex-[1] bg-black/40 overflow-hidden">

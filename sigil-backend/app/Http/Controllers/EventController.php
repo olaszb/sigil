@@ -152,7 +152,7 @@ class EventController extends Controller
         Gate::authorize('viewAny', Event::class);
         $user = $request->user();
 
-        $query = Event::onlyTrashed();
+        $query = Event::with('venue:id,name')->onlyTrashed();
 
         if (!$user->isAdmin()){
             $query->where('organizer_id', $user->id);
@@ -164,7 +164,7 @@ class EventController extends Controller
     }
 
     public function pastEvents(){
-        $events = Event::where('start_time', '<', now())
+        $events = Event::with('venue:id,name')->where('start_time', '<', now())
             ->orderBy('start_time', 'desc')
             ->paginate($this->pagination_limit);
 

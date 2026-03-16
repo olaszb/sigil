@@ -16,6 +16,7 @@ import PastEventsPage from './views/PastEvents';
 import ProfilePage from './views/Profile';
 import EditProfile from './views/EditProfile';
 import AllEvents from './views/AllEvents';
+import VerifyEmail from './views/VerifyEmail';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
             <Route element={<PrivateGuard/>}>
               <Route path="/profile" element={<ProfilePage />}/>
               <Route path="/profile/edit" element={<EditProfile />} />
+              <Route path="/verify-email" element={<VerifyEmail />}/>
             </Route>
             
             {/* Routes for admins only */}

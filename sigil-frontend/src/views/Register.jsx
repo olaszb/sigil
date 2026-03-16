@@ -33,12 +33,11 @@ const RegisterPage = () => {
             });
 
             const userResponse = await axiosClient.get("/api/user");
-            console.log("Registered user:", userResponse.data);
             setUser(userResponse.data);
             //added so useEffect doesnt throw 401 errors every time we navigate to login page
             localStorage.setItem("isLoggedIn", "true");
             toast("Pact sealed successfully!", toastConfig);
-            navigate("/");
+            navigate("/profile");
         } catch (err) {
             setError("Registration failed. Please check your details.");
             console.error(err);
