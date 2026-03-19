@@ -13,7 +13,7 @@ const CreateComment = ({ onCommentAdded, isCommentClicked, setIsCommentClicked }
     };
 
     return (
-        <div className="mt-2 flex">
+        <div className="mt-2 flex mr-3 md:mr-0">
             {user?.image_url ? (
                 <img src={getImageUrl(user.image_url)} className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             ) : (
