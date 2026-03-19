@@ -155,7 +155,7 @@ const EditorToolbar = () => {
                 <Quote size={16} />
             </button>
 
-            <div className="w-[1px] h-6 bg-parchment/10 mx-1" /> 
+            <div className="hidden md:block w-[1px] h-6 bg-parchment/10 mx-1" /> 
 
             <button type="button"
                 onClick={() => formatAlignment('left')}
