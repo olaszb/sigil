@@ -28,9 +28,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = async () => {
-    await axiosClient.post("/api/logout");
-    setUser(null);
-    localStorage.removeItem('isLoggedIn');
+    try {
+      await axiosClient.post("/api/logout");
+    } finally {
+      setUser(null);
+      localStorage.removeItem('isLoggedIn');
+    }
   };
 
   return (

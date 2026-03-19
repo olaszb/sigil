@@ -19,7 +19,7 @@ const Navbar = ({ children }) => {
   const handleLogout = async () => {
     try {
       await logout();
-      console.log("User logged out successfully.");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
