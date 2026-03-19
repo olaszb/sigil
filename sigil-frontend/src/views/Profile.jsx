@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { ChevronDown, ChevronRight, MailWarning, Send } from "lucide-react";
+import { ChevronDown, ChevronRight, MailWarning, Send, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../services/axios-client";
 import ProfileEventItem from "../components/profile-page/ProfileEventItem";
@@ -16,7 +16,7 @@ const ProfilePage = ( ) => {
     const [activeTab, setActiveTab] = useState("interested");
     const [events, setEvents] = useState([]);
     const [comments, setComments] = useState([]);
-    const { user, logout } = useAuth();
+    const { user, logout, setUser } = useAuth();
     const navigate = useNavigate();
 
     const { username } = useParams();
@@ -105,6 +105,16 @@ const ProfilePage = ( ) => {
         }
     }
 
+    const handleForceVerify = async () => {
+        try {
+            const response = await axiosClient.post('/api/user/force-verify');
+            setUser(response.data.user);
+            toast("Pact sealed manually. You are now verified.", toastConfig);
+        } catch (err) {
+            toast("The Master Key failed to turn.", toastConfig);
+        }
+    }
+
     if (loading) return <LoadingScreen />;
 
     return (
@@ -147,13 +157,22 @@ const ProfilePage = ( ) => {
                             </p>
                         </div>
                     </div>
-                    <button 
-                        onClick={handleResendVerification}
-                        disabled={isResending}
-                        className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] bg-main-accent/10 hover:bg-main-accent/20 text-main-accent px-4 py-2 border border-main-accent/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                    >
-                        {isResending ? "Casting..." : <><Send size={12} /> Resend Sigil</>}
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={handleResendVerification}
+                            disabled={isResending}
+                            className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] bg-main-accent/10 hover:bg-main-accent/20 text-main-accent px-4 py-2 border border-main-accent/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                        >
+                            {isResending ? "Casting..." : <><Send size={12} /> Resend Sigil</>}
+                        </button>
+                        <button 
+                            onClick={handleForceVerify}
+                            className="flex items-center gap-2 px-4 py-2 bg-main-accent/10 border border-main-accent/50 text-main-accent text-[10px] uppercase tracking-widest hover:bg-main-accent hover:text-primary-bg transition-all duration-300"
+                        >
+                            <ShieldCheck size={14} />
+                            Force Verify (Demo Bypass)
+                        </button>
+                    </div>
                 </div>
             )}
 

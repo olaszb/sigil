@@ -105,7 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
 });
 
-//verified users only
+//verified users only 'verified'
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //post event comment
     Route::post('/events/{eventId}/comments', [CommentController::class, 'store'])->name('event.comment.store');
@@ -119,6 +119,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //change event status
     Route::post('/events/{event}/status', [EventController::class, 'changeStatus'])->name('user.event.changeStatus');
 });
+
 
 //email verification
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -134,3 +135,12 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['message' => 'Verification link sent.']);
 })->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
+
+// force verify email
+Route::middleware('auth:sanctum')->post('/user/force-verify', function (Request $request) {
+    $user = $request->user();
+    $user->email_verified_at = now();
+    $user->save();
+
+    return response()->json(['message' => 'Identity verified via Master Key.', 'user' => $user]);
+});
