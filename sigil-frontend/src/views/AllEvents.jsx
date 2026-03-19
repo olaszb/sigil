@@ -92,8 +92,11 @@ const AllEvents = () => {
                 <SigilHero image_url={"/arena.jpg"} title={"The Grand Registry"} />
             </div>
  
-            <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-end gap-6 px-10 mb-12">
+            <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-stretch md:items-end gap-4 md:gap-6 px-4 md:px-10 md:mb-12">
                 <div className="flex-1 w-full">
+                    <label className="text-[10px] uppercase tracking-[0.2em] text-main-accent mb-2 font-bold">
+                        Search Registry
+                    </label>
                     <form onSubmit={handleSearchSubmit} className="relative group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-parchment/30 group-focus-within:text-main-accent transition-colors" size={20} />
                         <input 
