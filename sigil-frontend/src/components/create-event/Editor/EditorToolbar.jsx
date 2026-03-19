@@ -101,7 +101,7 @@ const EditorToolbar = () => {
     };
 
     return (
-        <div className="flex gap-2 p-2 border-b border-parchment/10 group-hover:border-main-accent/60 group-focus-within:border-main-accent/60 transition-colors duration-400 bg-black/20">
+        <div className="flex flex-wrap md:flex-nowrap gap-2 p-2 border-b border-parchment/10 group-hover:border-main-accent/60 group-focus-within:border-main-accent/60 transition-colors duration-400 bg-black/20">
             <button type="button"
                 onClick={() => format("bold")}
                 className={`p-1 transition-colors ${
