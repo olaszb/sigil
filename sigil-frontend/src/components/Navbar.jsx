@@ -72,7 +72,7 @@ const Navbar = ({ children }) => {
               <>
                 <Link to="/profile">
                   <img
-                    src={user.image_url ? getImageUrl(user.image_url) : '/public/default_avatar.jpg'}
+                    src={user.image_url ? getImageUrl(user.image_url) : '/default_avatar.jpg'}
                     alt="User Avatar"
                     className="w-12 h-10 rounded-full object-cover"
                   />

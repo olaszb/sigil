@@ -81,7 +81,7 @@ const PastEventsPage = () => {
     return (
         <div className="w-full min-h-screen text-parchment">
             <div className="grayscale mb-10">
-                <SigilHero image_url={"/public/library.webp"} title={"The Archives"} />
+                <SigilHero image_url={"/library.webp"} title={"The Archives"} />
             </div>
             
             {(user?.role === 'admin' || user?.role === 'organizer') && (

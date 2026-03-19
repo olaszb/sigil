@@ -61,7 +61,7 @@ const AddVenuePage = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/liurnia.webp"
+        src="/liurnia.webp"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}

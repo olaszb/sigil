@@ -72,7 +72,7 @@ const Venues = () => {
   return (
     <div className="w-full">
       <div className="grayscale mb-10">
-        <SigilHero image_url={"/public/register_bg.webp"} title={"Ritual Sites"} />
+        <SigilHero image_url={"/register_bg.webp"} title={"Ritual Sites"} />
       </div>
       
       <div className="px-4 space-y-4 mb-10">

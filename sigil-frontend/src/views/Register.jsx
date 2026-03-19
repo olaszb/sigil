@@ -48,7 +48,7 @@ const RegisterPage = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/anor_londo.jpg"
+        src="/anor_londo.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale "
       />
       {/* Background effects */}

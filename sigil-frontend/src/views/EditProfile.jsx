@@ -88,7 +88,7 @@ const EditProfile = ( ) => {
     <>
       {/* Background image */}
       <img
-        src="/public/edit-profile.jpg"
+        src="/edit-profile.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}

@@ -85,7 +85,7 @@ const CreateEvent = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/Vampire_Castle.jpg"
+        src="/Vampire_Castle.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}

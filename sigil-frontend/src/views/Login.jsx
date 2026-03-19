@@ -41,7 +41,7 @@ const LoginPage = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/Vampire_Castle.jpg"
+        src="/Vampire_Castle.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
@@ -54,7 +54,7 @@ const LoginPage = () => {
                 "
       >
         <div
-          className="relative w-96 h-96 bg-primary-bg border border-parchment/20
+          className="relative w-full max-w-sm min-h-[24rem] py-10 bg-primary-bg border border-parchment/20
                     flex justify-center 
                     "
         >
@@ -101,7 +101,7 @@ const LoginPage = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                         required
-                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                        className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                         font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                     />
                 </div>
@@ -122,7 +122,7 @@ const LoginPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         required
-                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                        className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                         font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                         "
                     />
@@ -130,11 +130,16 @@ const LoginPage = () => {
                 <p className="text-xs text-parchment/50">Don't have an account yet? <Link to={"/register"} className="text-main-accent hover:underline">Register!</Link></p>
             </div>
 
+            {/* Error Message */}
+            <div className="min-h-[24px] mb-2">
+                {error && <p className="text-main-accent text-xs text-center">{error}</p>}
+            </div>
+
             {/* Submit */}
             <div className="my-5">
               <SigilButton type={"submit"} text={"Break The Seal"} />
             </div>
-            {error && <p className="text-danger-alert">{error}</p>}
+            
           </form>
         </div>
       </div>

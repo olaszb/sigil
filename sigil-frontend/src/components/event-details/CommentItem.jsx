@@ -47,13 +47,13 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                 {type === 'eventDetails' ? (
                     <Link to={comment.user.name === user.name ? `/profile` : `/users/${comment.user.name}`} className="cursor-pointer">
                         <img 
-                            src={getImageUrl(comment.user.image_url) || "/public/default_avatar.jpg"} 
+                            src={getImageUrl(comment.user.image_url) || "/default_avatar.jpg"} 
                             className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
                         />
                     </Link>
                 ) : (
                     <img 
-                        src={getImageUrl(comment.user.image_url) || "/public/default_avatar.jpg"} 
+                        src={getImageUrl(comment.user.image_url) || "/default_avatar.jpg"} 
                         className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
                     />
                 )}

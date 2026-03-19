@@ -128,7 +128,7 @@ const ProfilePage = ( ) => {
                 <h2 className="text-main-accent text-center md:text-left md:ml-4 mt-4 font-[Cinzel] text-3xl">Profile</h2>
                 <div className="flex flex-col md:flex-row items-center mb-6 md:mb-4 px-4 md:px-0">
                     <img 
-                    src={profileUser?.image_url ? getImageUrl(profileUser.image_url) : '/public/default_avatar.jpg'} 
+                    src={profileUser?.image_url ? getImageUrl(profileUser.image_url) : '/default_avatar.jpg'} 
                     className="rounded-full w-24 h-24 md:w-22 md:h-20 md:ml-4 mt-4 md:mt-2 object-cover border border-parchment/20 md:border-none"/>
                     <div className="flex flex-col md:flex-row justify-between items-center md:ml-4 w-full mt-4 md:mt-0 gap-4 md:gap-0">
                         <div className="flex flex-col items-center md:items-start text-center md:text-left">

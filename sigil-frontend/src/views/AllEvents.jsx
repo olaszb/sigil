@@ -89,7 +89,7 @@ const AllEvents = () => {
     return (
         <div className="w-full">
             <div className="grayscale mb-10">
-                <SigilHero image_url={"/public/arena.jpg"} title={"The Grand Registry"} />
+                <SigilHero image_url={"/arena.jpg"} title={"The Grand Registry"} />
             </div>
  
             <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-end gap-6 px-10 mb-12">
