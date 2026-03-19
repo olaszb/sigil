@@ -46,7 +46,7 @@ const PastEventsPage = () => {
     }, []);
     
     useEffect(() => {
-        fetchEvents(viewMode);
+        fetchEvents(viewMode, 1);
     }, [viewMode, fetchEvents]);
 
     const openModal = (event, mode) => {
@@ -79,28 +79,28 @@ const PastEventsPage = () => {
     
 
     return (
-        <div className="w-full min-h-screen text-parchment">
-            <div className="grayscale mb-10">
+        <div className="w-full min-h-screen text-parchment pb-10">
+            <div className="grayscale mb-6 md:mb-10">
                 <SigilHero image_url={"/library.webp"} title={"The Archives"} />
             </div>
             
             {(user?.role === 'admin' || user?.role === 'organizer') && (
-                <div className="w-full flex justify-center my-4">
+                <div className="w-full flex justify-center my-6 px-4">
                     <div className="w-full max-w-md text-center">
                         <div className="flex gap-4">
                             <button onClick={() => setViewMode('past')} 
-                                className={`flex-1 px-4 py-2 border-b border-main-accent text-parchment hover:bg-main-accent/80 transition-colors duration-300 uppercase tracking-widest text-[12px] ${viewMode === 'past' ? 'bg-main-accent' : ''} `}
-                                >
+                                className={`flex-1 px-2 md:px-4 py-3 md:py-2 border-b border-main-accent text-parchment hover:bg-main-accent/80 transition-colors duration-300 uppercase tracking-widest text-[10px] md:text-[12px] leading-tight ${viewMode === 'past' ? 'bg-main-accent' : 'bg-black/40'} `}>
                                 Past Events
                             </button>
-                            <button onClick={() => setViewMode('archived')} className={`flex-1 px-4 py-2 border-b border-main-accent text-parchment hover:bg-main-accent/80 transition-colors duration-300 uppercase tracking-widest text-[12px] ${viewMode === 'archived' ? 'bg-main-accent' : ''}`}>
+                            <button onClick={() => setViewMode('archived')} 
+                                className={`flex-1 px-2 md:px-4 py-3 md:py-2 border-b border-main-accent text-parchment hover:bg-main-accent/80 transition-colors duration-300 uppercase tracking-widest text-[10px] md:text-[12px] leading-tight ${viewMode === 'archived' ? 'bg-main-accent' : 'bg-black/40'}`}>
                                 Archived Events
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-            <div className="relative min-h-[400px] px-4"> 
+            <div className="relative min-h-[400px] w-full max-w-6xl mx-auto px-4 md:px-10"> 
                 <div className={`transition-opacity duration-500 ${loading ? 'opacity-20' : 'opacity-100'}`}>
                     {events?.length > 0 ? (
                         <Events events={events} type={viewMode} onAction={openModal}/>
@@ -114,7 +114,7 @@ const PastEventsPage = () => {
                 </div>
             </div>
             {pagination.last_page > 1 && (
-                <Pagination pagination={pagination} getEvents={fetchEvents} />
+                <Pagination pagination={pagination} getEvents={(page) => fetchEvents(viewMode, page)} />
             )}
             {modal.isOpen && (
                 <SigilModal closeModal={() => closeModal()} onAction={() => handleConfirmAction()} text={modal.mode === 'restore' ? "Are you sure you'd like to restore this ritual?" : "Are you sure you'd like to burn this archive?"} />

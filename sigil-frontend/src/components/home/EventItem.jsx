@@ -17,21 +17,23 @@ const EventItem = ({ event, type, onAction }) => {
                 overflow-hidden"
     >
       {/* Date */}
-      <div className="w-full md:w-32 py-4 md:py-0 px-8 bg-main-accent flex flex-row md:flex-col items-center justify-center text-primary-bg cursor-default gap-4 md:gap-0">
-        <p className="text-sm font-bold uppercase leading-none tracking-[0.2rem]">
-          {monthNames[date.getMonth()]}
-        </p>
-        <p className="text-5xl font-[Cinzel] leading-none font-black">
-          {date.getDate()}
-        </p>
-        <p className="text-xs uppercase font-medium leading-none">
-          {weekDays[date.getDay()]}
-        </p>
+      <div className="w-full md:w-32 py-4 md:py-0 px-4 bg-main-accent flex flex-row md:flex-col items-center justify-between md:justify-center text-primary-bg cursor-default shrink-0">
+        <div className="contents md:flex md:flex-col md:items-center">
+          <p className="flex-1 md:flex-none text-right md:text-center text-sm font-bold uppercase leading-none tracking-[0.2rem]">
+            {monthNames[date.getMonth()]}
+          </p>
+          <p className="mx-6 md:mx-0 md:my-2 shrink-0 text-5xl font-[Cinzel] leading-none font-black">
+            {date.getDate()}
+          </p>
+          <p className="flex-1 md:flex-none text-left md:text-center text-xs uppercase font-medium leading-none">
+            {weekDays[date.getDay()]}
+          </p>
+        </div>
       </div>
 
       {/* Image */}
       <Link to={type === 'current' ? `/events/${event?.slug}` : type === 'past' ? `/past-events/${event?.slug}` : `/archive/events/${event?.slug}`}
-      className="flex w-full md:w-48 shrink-0">
+      className="flex w-full md:w-40 lg:w-48 shrink-0">
         <div className="relative w-full h-48 md:h-full overflow-hidden">
           <img
             src={getImageUrl(event?.image_url)}
@@ -41,7 +43,7 @@ const EventItem = ({ event, type, onAction }) => {
       </Link>
 
       {/* Title & Description */}
-      <div className="flex-1 flex flex-col p-6 md:py-4 md:pl-8 md:pr-48 justify-center pb-20 md:pb-4">
+      <div className="flex-1 flex flex-col p-6 md:py-4 md:pl-6 lg:pl-8 md:pr-40 lg:pr-64 justify-center pb-24 md:pb-4">
         <Link to={type === 'current' ? `/events/${event?.slug}` : type === 'past' ? `/past-events/${event?.slug}` : `/archive/events/${event?.slug}`}>
           <h2 className="text-xl lg:text-2xl font-[Cinzel] mb-2 text-parchment group-hover:text-main-accent cursor-default">
             {event?.title}
@@ -64,15 +66,22 @@ const EventItem = ({ event, type, onAction }) => {
       )
       }
       {type === 'archived' && (
-        <>
-          <div className="absolute top-0 right-0">
-            <EventButton text={"Restore Ritual"} onClick={() => onAction(event, 'restore')} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
-          </div>
-
-          <div className="absolute bottom-0 right-0">
-            <EventButton text={"Burn Archive"} onClick={() => onAction(event, 'forceDelete')} clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}/>
-          </div>
-        </>
+        <div className="absolute bottom-0 left-0 w-full flex flex-row md:flex-col md:top-0 md:bottom-0 md:right-0 md:left-auto md:w-auto md:justify-between pointer-events-none">
+          
+          <EventButton 
+            text={"Restore Ritual"} 
+            onClick={() => onAction(event, 'restore')} 
+            clipPath={"[clip-path:polygon(0%_0%,85%_0%,100%_100%,0%_100%)] md:[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}
+            className="w-1/2 md:w-auto flex justify-center text-center pointer-events-auto"
+          />
+          
+          <EventButton 
+            text={"Burn Archive"} 
+            onClick={() => onAction(event, 'forceDelete')} 
+            clipPath={"[clip-path:polygon(15%_0%,100%_0%,100%_100%,0%_100%)]"}
+            className="w-1/2 md:w-auto flex justify-center text-center md:ml-0 pointer-events-auto"
+          />
+        </div>
       )
       }
     </div>
