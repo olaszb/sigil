@@ -30,7 +30,7 @@ const Venues = () => {
         const endpoint = "/api/venues";
         const [response] = await Promise.all([
             axiosClient.get(`${endpoint}?page=${page}`),
-            delay(1000) // 2 seconds of forced loading
+            delay(1000)
         ]);
         setVenues(response.data.data);
         setPagination({
