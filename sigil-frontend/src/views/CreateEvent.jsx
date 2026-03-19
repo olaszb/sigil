@@ -95,7 +95,7 @@ const CreateEvent = () => {
       <div className="relative min-h-screen w-full flex items-start md:items-center justify-center z-20 py-12 px-4 md:py-20">
         <div className="relative w-full max-w-5xl bg-primary-bg border border-parchment/20 flex flex-col">
           {/* Form */}
-          <h1 className="text-4xl font-[Cinzel] mb-8 justify-self-center self-center mt-4 text-parchment">
+          <h1 className="text-3xl md:text-4xl font-[Cinzel] mb-4 md:mb-8 text-center mt-6 md:mt-8 text-parchment">
             Rite of Creation
           </h1>
           <form
