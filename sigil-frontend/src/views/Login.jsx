@@ -48,19 +48,11 @@ const LoginPage = () => {
       <div className="fixed inset-0 bg-black/60 z-10"></div>
       <div className="fixed inset-0 pointer-events-none z-15 bg-[radial-gradient(circle,transparent_40%,black_120%)]"></div>
 
-      <div
-        className="relative min-h-screen w-full flex items-center justify-center
-                    z-20
-                "
-      >
-        <div
-          className="relative w-full max-w-sm min-h-[24rem] py-10 bg-primary-bg border border-parchment/20
-                    flex justify-center 
-                    "
-        >
+      <div className="relative min-h-screen w-full flex items-center justify-center z-20">
+        <div className="relative w-full max-w-sm min-h-[24rem] py-10 bg-primary-bg border border-parchment/20 flex justify-center">
           {/* Animation */}
           <div
-            className="absolute -bottom-9 -left-0.6 w-[100.5%] h-10 bg-subtle-accent pointer-events-none"
+            className="absolute -bottom-9 -left-0.6 w-[101%] md:w-[100.5%] h-10 bg-subtle-accent pointer-events-none"
             style={{
               clipPath:
                 "polygon(0% 0%, 100% 0%, 100% 20%, 85% 90%, 75% 40%, 60% 80%, 50% 30%, 35% 100%, 25% 50%, 10% 85%, 0% 20%)",
