@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getImageUrl, monthNames } from "../../util/helper";
 import { Link } from "react-router-dom";
 
@@ -17,15 +17,15 @@ const HeroSection = ({featuredEvents, upcomingEvents}) => {
   }
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden group transition-all duration-700 ease-in-out">
+    <div className="relative w-full min-h-[500px] md:h-[500px] overflow-hidden group transition-all duration-700 ease-in-out">
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105 group-hover:scale-100"
         style={{ backgroundImage: `url(${getImageUrl(featuredEvents[activeHighlight]?.image_url)})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-black/80" />
 
-      {/* CONTENT GRID */}
-      <div className="relative z-10 flex h-full gap-8 p-12">
+      {/* Content Grid */}
+      <div className="relative z-10 flex flex-col md:flex-row h-full gap-8 p-6 md:p-12">
         
         {/* Highlighted Events */}
         <div className="flex-1 flex flex-col justify-center space-y-4">
@@ -47,7 +47,7 @@ const HeroSection = ({featuredEvents, upcomingEvents}) => {
         </div>
 
         {/* Upcoming Events */}
-        <div className="mr-15 w-80 bg-black/40 backdrop-blur-md border border-parchment/10 p-8 flex flex-col justify-between rounded-sm">
+        <div className="hidden lg:flex w-80 bg-black/40 backdrop-blur-md border border-parchment/10 p-8 flex flex-col justify-between rounded-sm">
           <div>
             <h3 className="text-parchment font-['Cinzel'] font-bold text-xl mb-6 border-b border-main-accent/30 pb-2">
               Upcoming
