@@ -156,7 +156,7 @@ const RegisterPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
-                            required
+                            required={step === 2}
                             className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                             "
@@ -178,7 +178,7 @@ const RegisterPage = () => {
                             value={passwordConfirmation}
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                             placeholder="Confirm Password"
-                            required
+                            required={step === 2}
                             className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                             "
