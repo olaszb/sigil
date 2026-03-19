@@ -95,16 +95,10 @@ const EditProfile = ( ) => {
       <div className="fixed inset-0 bg-black/60 z-10"></div>
       <div className="fixed inset-0 pointer-events-none z-15 bg-[radial-gradient(circle,transparent_40%,black_120%)]"></div>
 
-      <div
-        className="relative min-h-screen w-full flex items-center justify-center
-                    z-20"
-      >
-        <div
-          className="relative w-full max-w-2xl bg-primary-bg border border-parchment/20
-                    flex flex-col"
-        >
+      <div className="relative min-h-screen w-full flex items-start md:items-center justify-center z-20 py-12 px-4 md:py-20">
+        <div className="relative w-full max-w-2xl bg-primary-bg border border-parchment/20 flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)]">
           {/* Form */}
-          <h1 className="text-4xl font-[Cinzel] mb-8 justify-self-center self-center mt-4 text-parchment">
+          <h1 className="text-3xl md:text-4xl font-[Cinzel] mb-8 text-center mt-4 text-parchment">
             Rite of Modification
           </h1>
           <form
@@ -112,7 +106,7 @@ const EditProfile = ( ) => {
             onSubmit={handleUpdateProfile}
           >
             {/* Left Column */}
-            <div className="flex-[4] p-4 border-r border-parchment/20 h-full">
+            <div className="flex-[4] p-6 md:p-8 border-b md:border-b-0 md:border-r border-parchment/20 h-full">
               {/* Name */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
@@ -204,7 +198,7 @@ const EditProfile = ( ) => {
             </div>
 
             {/* Right Column */}
-            <div className="flex-[3] bg-black/20 p-4 flex flex-col justify-center items-center border-t md:border-t-0">
+            <div className="flex-[3] bg-black/20 p-6 md:p-8 flex flex-col justify-between items-center">
               
               {/* Image Upload */}
               <div className="flex flex-col items-center mb-4">
@@ -247,6 +241,10 @@ const EditProfile = ( ) => {
                     </>
                   )}
                 </label>
+              </div>
+
+              <div className="min-h-[24px]">
+                {error && <p className="text-main-accent text-xs text-center">{error}</p>}
               </div>
 
               {/* Submit */}
