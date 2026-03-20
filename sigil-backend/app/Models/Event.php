@@ -35,4 +35,8 @@ class Event extends Model
     public function comments(){
         return $this->hasMany(Comment::class);
     }
+
+    public function ticketTypes(){
+        return $this->hasMany(TicketType::class);
+    }
 }

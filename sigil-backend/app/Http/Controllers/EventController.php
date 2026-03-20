@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\TicketType;
 use Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -56,20 +58,34 @@ class EventController extends Controller
         Gate::authorize('create', Event::class);
         $data = $request->validated();
 
-        if($request->hasFile('image_url')) {
-            $data['image_url'] = $request->file('image_url')->store('event_images', 'public');
-        }
+        return DB::transaction(function () use ($request, $data) {
+            if($request->hasFile('image_url')){
+                $data['image_url'] = $request->file('image_url')->store('event_images', 'public');
+            }
 
-        // $data['organizer_id'] = $request->user()->id;
-        $event_id = Event::max('id') + 1; 
-        $data['slug'] = Str::slug($data['title']) . '-' . $event_id;
+            $nextId = (Event::max('id') ?? 0) + 1;
+            $data['slug'] = Str::slug($data['title']) . '-' . $nextId;
 
-        $event = Event::create($data);
+            $event = Event::create($data);
+            $tiers = json_decode($request->ticket_tiers, true);
 
-        return response()->json([
-            'message' => 'Event created successfully',
-            'event' => $event,
-        ], 201);
+            foreach($tiers as $tier){
+                TicketType::create([
+                    'event_id' => $event->id,
+                    'name' => $tier['name'],
+                    'section_name' => $tier['section_name'],
+                    'price' => $tier['price'],
+                    'quantity_available' => $tier['quantity']
+                ]);
+            }
+
+            $event->load('ticketTypes');
+
+            return response()->json([
+                'message' => 'Ritual and Offerings bound successfully',
+                'event' => $event,
+            ], 201);
+        });
 
     }
 
