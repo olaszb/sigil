@@ -34,22 +34,22 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        Venue::factory()->create([
-            'name' => 'Grand Hall',
-            'address' => '123 Main St',
-            'city' => 'Metropolis',
-            'country' => 'Freedonia',
-            'postal_code' => '12345',
-            'capacity' => 500,
-        ]);
+        // Venue::factory()->create([
+        //     'name' => 'Grand Hall',
+        //     'address' => '123 Main St',
+        //     'city' => 'Metropolis',
+        //     'country' => 'Freedonia',
+        //     'postal_code' => '12345',
+        //     'capacity' => 500,
+        // ]);
 
-        Event::factory()->create([
-            'venue_id' => 1,
-            'organizer_id' => 1,
-            'title' => 'Dexfest',
-            'description' => 'Tokyo, Japan. Dexcore, Nocturnal Bloodlust, Sailing Before The Wind',
-            'start_time' => now()->addMonths(2),
-            'slug' => 'dexfest-2026',
-        ]);
+        // Event::factory()->create([
+        //     'venue_id' => 1,
+        //     'organizer_id' => 1,
+        //     'title' => 'Dexfest',
+        //     'description' => 'Tokyo, Japan. Dexcore, Nocturnal Bloodlust, Sailing Before The Wind',
+        //     'start_time' => now()->addMonths(2),
+        //     'slug' => 'dexfest-2026',
+        // ]);
     }
 }
