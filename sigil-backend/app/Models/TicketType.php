@@ -11,6 +11,7 @@ class TicketType extends Model
         'event_id',
         'name',
         'type',
+        'section_name',
         'price',
         'quantity_available'
     ];

@@ -94,7 +94,7 @@ class EventController extends Controller
      */
     public function show($slug)
     {  
-       $event = Event::with('venue')
+       $event = Event::with('venue', 'ticketTypes')
        ->withCount([
             'users as interested_count' => fn($q) => $q->where('status', 'interested'),
             'users as going_count' => fn($q) => $q->where('status', 'going')
@@ -138,22 +138,56 @@ class EventController extends Controller
         Gate::authorize('update', $event);
         $data = $request->validated();
 
-        if($request->hasFile('image_url')){
-            if($event->image_url){
-                Storage::disk('public')->delete($event->image_url);
+        return DB::transaction(function () use ($request, $event ,$data) {
+            if($request->hasFile('image_url')){
+                if($event->image_url){
+                    Storage::disk('public')->delete($event->image_url);
+                }
+                $data['image_url'] = $request->file('image_url')->store('event_images', 'public');
             }
-            $data['image_url'] = $request->file('image_url')->store('event_images', 'public');
-        }
-        if($event->title !== $data['title']){
-            $data['slug'] = Str::slug($data['title']) . '-' . $event->id;
-        }
 
-        $event->update($data);
+            if($event->title !== $data['title']){
+                $data['slug'] = Str::slug($data['title']) . '-' . $event->id;
+            }
 
-        return response()->json([
-            'message' => 'Event updated successfully!',
-            'event' => $event,
-        ], 200);
+            $event->update($data);
+
+            $incomingTiers = json_decode($request->ticket_tiers, true);
+            $processedTierIds = [];
+            
+            foreach($incomingTiers as $tier){
+                $isExistingTier = is_numeric($tier['id']) && TicketType::where('id', $tier['id'])->where('event_id', $event->id)->exists();
+
+                if($isExistingTier){
+                    TicketType::where('id', $tier['id'])->update([
+                        'name' => $tier['name'],
+                        'section_name' => $tier['name'],
+                        'price' => $tier['price'],
+                        'quantity_available' => $tier['quantity'],
+                    ]);
+                    $processedTierIds[] = $tier['id'];
+                }else{
+                    $newTier = TicketType::create([
+                        'event_id' => $event->id,
+                        'name' => $tier['name'],
+                        'section_name' => $tier['section_name'],
+                        'price' => $tier['price'],
+                        'quantity_available' => $tier['quantity'],
+                    ]);
+                    $processedTierIds[] = $newTier->id;
+                }
+            }
+
+            TicketType::where('event_id', $event->id)->whereNotIn('id', $processedTierIds)->delete();
+
+            $event->load('ticketTypes');
+
+            return response()->json([
+                'message' => 'Ritual modified successfully!',
+                'event' => $event,
+            ], 200);
+
+        });
     }
 
     

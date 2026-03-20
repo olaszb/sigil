@@ -86,13 +86,14 @@ const CreateEvent = () => {
   };
 
   const getSectionCapacity = (sectionName) => {
-    if (!selectedVenueLayout) return 0;
-    const section = selectedVenueLayout.sections.find(
-      (s) => s.name === sectionName,
-    );
+    if (!selectedVenueLayout || !selectedVenueLayout.sections) return 0;
+    const section = selectedVenueLayout.sections.find((s) => s.name === sectionName);
     if (!section) return 0;
 
-    if (section.type === "standing") return parseInt(section.capacity) || 0;
+    if (section.type === "standing") {
+      return parseInt(section.capacity) || 0;
+    }
+
     const rows = parseInt(section.rows) || 0;
     const cols = parseInt(section.columns) || 0;
     const voids = Array.isArray(section.void_seats) ? section.void_seats.length : 0;
@@ -101,19 +102,14 @@ const CreateEvent = () => {
     return totalSeats > 0 ? totalSeats : 0;
   };
 
-  const getRemainingCapacity = (sectionName, currentTierId) => {
+  const getSectionUsedCapacity = (sectionName) => {
     if (!sectionName) return 0;
-  
-    const totalCap = getSectionCapacity(sectionName);
-    
-    const usedByOthers = ticketTiers
-      .filter((t) => t.section_name === sectionName && t.id !== currentTierId)
+    return ticketTiers
+      .filter((t) => t.section_name === sectionName)
       .reduce((sum, t) => {
-        const qty = parseInt(t.quantity);
-        return sum + (isNaN(qty) ? 0 : qty);
+        const qty = parseInt(t.quantity) || 0;
+        return sum + qty;
       }, 0);
-
-    return totalCap - usedByOthers;
   };
 
   const handleImageChange = (e) => {
@@ -129,11 +125,13 @@ const CreateEvent = () => {
     setError(null);
 
     for (const tier of ticketTiers) {
-      const remaining = getRemainingCapacity(tier.section_name, tier.id);
-      if (parseInt(tier.quantity) > remaining) {
-        setError(
-          `Chamber "${tier.section_name}" is overfilled! Max available: ${remaining}`,
-        );
+      if (!tier.section_name) continue;
+      
+      const totalCap = getSectionCapacity(tier.section_name);
+      const used = getSectionUsedCapacity(tier.section_name);
+      
+      if (used > totalCap) {
+        setError(`Chamber "${tier.section_name}" is overfilled! Max capacity is ${totalCap}.`);
         return;
       }
     }
@@ -384,11 +382,10 @@ const CreateEvent = () => {
               ) : (
                 <div className="space-y-4">
                   {ticketTiers.map((tier) => {
-                    const remaining = getRemainingCapacity(
-                      tier.section_name,
-                      tier.id,
-                    );
-                    const isOverfilled = parseInt(tier.quantity) > remaining;
+                    const totalCap = getSectionCapacity(tier.section_name);
+                    const usedCap = getSectionUsedCapacity(tier.section_name);
+                    const remaining = totalCap - usedCap;
+                    const isOverfilled = remaining < 0;
 
                     return (
                       <div
@@ -511,7 +508,7 @@ const CreateEvent = () => {
             </div>
 
             {/* Submit */}
-            <div className="my-3 flex justify-center">
+            <div className="my-3 mb-8 flex justify-center">
               <SigilButton type={"submit"} text={"Create Ritual"} />
             </div>
           </form>

@@ -67,14 +67,35 @@ const UpdateEvent = () => {
         setSelectedVenueId(data.venue_id);
         setOriginalImage(data.image_url);
 
-        if(data.tickets && data.tickets.length > 0){
-          setTicketTiers(data.tickets.map(t => ({
+        const loadedVenueId = String(data.venue_id);
+        setSelectedVenueId(loadedVenueId);
+
+        if (venuesList) {
+          const venue = venuesList.find((v) => String(v.id) === loadedVenueId);
+          
+          let layoutData = venue?.layout || null;
+          if (typeof layoutData === 'string') {
+              try { layoutData = JSON.parse(layoutData); } catch(e){}
+          }
+          setSelectedVenueLayout(layoutData);
+        }
+
+        if(data.ticket_types && data.ticket_types.length > 0){
+          setTicketTiers(data.ticket_types.map(t => ({
             id: t.id,
             name: t.name,
-            section_name: t.section_name,
+            section_name: t.section_name || "",
             price: t.price,
-            quantity: t.quantity,
+            quantity: t.quantity_available,
           })));
+        }else{
+          setTicketTiers([{
+            id: "initial-tier",
+            name: "Standard Entry",
+            section_name: "",
+            price: "",
+            quantity: "",
+          }]);
         }
       } catch (err) {
         console.error("Error fetching venues:", err);
@@ -86,12 +107,23 @@ const UpdateEvent = () => {
     initializeUpdatePage();
   }, [slug]);
 
-  useEffect(() => {
-    if (selectedVenueId && venues.length > 0) {
-      const venue = venues.find((v) => v.id === parseInt(selectedVenueId));
-      setSelectedVenueLayout(venue?.layout || null);
-    }
-  }, [selectedVenueId, venues]);
+  const handleVenueChange = (venueId) => {
+    const venue = venues.find((v) => String(v.id) === String(venueId));
+    
+    setSelectedVenueId(String(venueId));
+    setSelectedVenueLayout(venue?.layout || null);
+    setIsOpen(false);
+
+    setTicketTiers([
+      {
+        id: "initial-tier",
+        name: "Standard Entry",
+        section_name: "",
+        price: "",
+        quantity: "",
+      },
+    ]);
+  };
 
   const addTicketTier = () => {
     setTicketTiers([
@@ -112,22 +144,30 @@ const UpdateEvent = () => {
   };
 
   const getSectionCapacity = (sectionName) => {
-    if (!selectedVenueLayout) return 0;
-    const section = selectedVenueLayout.sections.find(
-      (s) => s.name === sectionName,
-    );
+    if (!selectedVenueLayout || !selectedVenueLayout.sections) return 0;
+    const section = selectedVenueLayout.sections.find((s) => s.name === sectionName);
     if (!section) return 0;
 
-    if (section.type === "standing") return section.capacity;
-    return section.rows * section.columns - (section.void_seats?.length || 0);
+    if (section.type === "standing") {
+      return parseInt(section.capacity) || 0;
+    }
+
+    const rows = parseInt(section.rows) || 0;
+    const cols = parseInt(section.columns) || 0;
+    const voids = Array.isArray(section.void_seats) ? section.void_seats.length : 0;
+
+    const totalSeats = (rows * cols) - voids;
+    return totalSeats > 0 ? totalSeats : 0;
   };
 
-  const getRemainingCapacity = (sectionName, currentTierId) => {
-    const totalCap = getSectionCapacity(sectionName);
-    const usedByOthers = ticketTiers
-      .filter((t) => t.section_name === sectionName && t.id !== currentTierId)
-      .reduce((sum, t) => sum + (parseInt(t.quantity) || 0), 0);
-    return totalCap - usedByOthers;
+  const getSectionUsedCapacity = (sectionName) => {
+    if (!sectionName) return 0;
+    return ticketTiers
+      .filter((t) => t.section_name === sectionName)
+      .reduce((sum, t) => {
+        const qty = parseInt(t.quantity);
+        return sum + (isNaN(qty) ? 0 : qty);
+      }, 0);
   };
 
   const handleImageChange = (e) => {
@@ -142,9 +182,12 @@ const UpdateEvent = () => {
     e.preventDefault();
     setError(null);
     for (const tier of ticketTiers) {
-      const remaining = getRemainingCapacity(tier.section_name, tier.id);
-      if (parseInt(tier.quantity) > remaining) {
-        setError(`Chamber "${tier.section_name}" is overfilled!`);
+      if (!tier.section_name) continue;
+      const totalCap = getSectionCapacity(tier.section_name);
+      const used = getSectionUsedCapacity(tier.section_name);
+      
+      if (used > totalCap) {
+        setError(`Chamber "${tier.section_name}" is overfilled! Max capacity is ${totalCap}.`);
         return;
       }
     }
@@ -237,11 +280,11 @@ const UpdateEvent = () => {
                     <button
                       type="button"
                       onClick={() => setIsOpen(!isOpen)}
-                      className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                      className="w-full min-h-[32px] border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                               font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                     >
                       {selectedVenueId
-                        ? venues.find((v) => v.id === selectedVenueId)?.name
+                        ? venues.find((v) => String(v.id) === String(selectedVenueId))?.name
                         : "Select Location"}
                     </button>
                     {isOpen && (
@@ -256,10 +299,7 @@ const UpdateEvent = () => {
                             venues.map((v) => (
                               <div
                                 key={v.id}
-                                onClick={() => {
-                                  setSelectedVenueId(v.id);
-                                  setIsOpen(false);
-                                }}
+                                onClick={() => handleVenueChange(v.id)}
                                 className="w-full border-b border-parchment/20 hover:bg-main-accent hover:text-white transition-colors duration-400 font-[Montserrat]"
                               >
                                 {v.name}
@@ -406,11 +446,10 @@ const UpdateEvent = () => {
               ) : (
                 <div className="space-y-4">
                   {ticketTiers.map((tier) => {
-                    const remaining = getRemainingCapacity(
-                      tier.section_name,
-                      tier.id,
-                    );
-                    const isOverfilled = parseInt(tier.quantity) > remaining;
+                    const totalCap = getSectionCapacity(tier.section_name);
+                    const usedCap = getSectionUsedCapacity(tier.section_name);
+                    const remaining = totalCap - usedCap;
+                    const isOverfilled = remaining < 0;
 
                     return (
                       <div
@@ -486,10 +525,10 @@ const UpdateEvent = () => {
                           <label
                             className={`text-[9px] uppercase tracking-tighter flex justify-between ${isOverfilled ? "text-main-accent" : "text-parchment/40"}`}
                           >
-                            Quantity{" "}
+                            Quantity
                             <span>
-                              Remaining:{" "}
-                              {tier.section_name ? remaining : "--"}
+                              Remaining:
+                              {tier.section_name !== "" ? remaining : "--"}
                             </span>
                           </label>
                           <input
@@ -532,7 +571,7 @@ const UpdateEvent = () => {
             </div>
 
             {/* Submit */}
-            <div className="my-3 flex justify-center">
+            <div className="my-3 mb-8 flex justify-center">
               <SigilButton type={"submit"} text={"Modify Ritual"} />
             </div>
           </form>
