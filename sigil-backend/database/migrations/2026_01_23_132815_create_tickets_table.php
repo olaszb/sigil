@@ -16,9 +16,12 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->foreignId('ticket_type_id')->constrained()->onDelete('cascade');
-            $table->string('seat_number')->nullable();
+            $table->string('section')->nullable();
+            $table->string('row')->nullable();
+            $table->string('column')->nullable();
             $table->string('ticket_code')->unique();
             $table->string('status')->default('available');
+            $table->timestamp('held_until')->nullable();
             $table->timestamps();
         });
     }

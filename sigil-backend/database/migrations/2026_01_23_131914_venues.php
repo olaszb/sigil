@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('postal_code')->nullable();
             $table->integer('capacity')->nullable();
+            $table->json('layout')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('venues');
     }
 };
