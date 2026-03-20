@@ -36,6 +36,9 @@ class CreateVenueRequest extends FormRequest
             'layout.sections.*.capacity' => 'nullable|integer|min:1',
             'layout.sections.*.rows' => 'nullable|integer|min:1',
             'layout.sections.*.columns' => 'nullable|integer|min:1',
+
+            'layout.sections.*.void_seats' => 'nullable|array',
+            'layout.sections.*.void_seats.*' => 'string',
         ];
     }
 }

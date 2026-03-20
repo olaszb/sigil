@@ -25,7 +25,7 @@ const CreateEvent = () => {
 
   const [ticketTiers, setTicketTiers] = useState([
     {
-      id: Date.now(),
+      id: "initial-tier",
       name: "Standard Entry",
       section_name: "",
       price: "",
@@ -49,21 +49,23 @@ const CreateEvent = () => {
     fetchVenues();
   }, []);
 
-  useEffect(() => {
-    if (selectedVenueId) {
-      const venue = venues.find((v) => v.id === parseInt(selectedVenueId));
-      setSelectedVenueLayout(venue?.layout || null);
-      setTicketTiers([
-        {
-          id: Date.now(),
-          name: "Standard Entry",
-          section_name: "",
-          price: "",
-          quantity: "",
-        },
-      ]);
-    }
-  }, [selectedVenueId, venues]);
+  const handleVenueChange = (venueId) => {
+    const venue = venues.find((v) => v.id === parseInt(venueId));
+    
+    setSelectedVenueId(venueId);
+    setSelectedVenueLayout(venue?.layout || null);
+    setIsOpen(false);
+
+    setTicketTiers([
+      {
+        id: "initial-tier",
+        name: "Standard Entry",
+        section_name: "",
+        price: "",
+        quantity: "",
+      },
+    ]);
+  };
 
   const addTicketTier = () => {
     setTicketTiers([
@@ -90,15 +92,27 @@ const CreateEvent = () => {
     );
     if (!section) return 0;
 
-    if (section.type === "standing") return section.capacity;
-    return section.rows * section.columns - (section.void_seats?.length || 0);
+    if (section.type === "standing") return parseInt(section.capacity) || 0;
+    const rows = parseInt(section.rows) || 0;
+    const cols = parseInt(section.columns) || 0;
+    const voids = Array.isArray(section.void_seats) ? section.void_seats.length : 0;
+
+    const totalSeats = (rows * cols) - voids;
+    return totalSeats > 0 ? totalSeats : 0;
   };
 
   const getRemainingCapacity = (sectionName, currentTierId) => {
+    if (!sectionName) return 0;
+  
     const totalCap = getSectionCapacity(sectionName);
+    
     const usedByOthers = ticketTiers
       .filter((t) => t.section_name === sectionName && t.id !== currentTierId)
-      .reduce((sum, t) => sum + (parseInt(t.quantity) || 0), 0);
+      .reduce((sum, t) => {
+        const qty = parseInt(t.quantity);
+        return sum + (isNaN(qty) ? 0 : qty);
+      }, 0);
+
     return totalCap - usedByOthers;
   };
 
@@ -230,10 +244,7 @@ const CreateEvent = () => {
                             venues.map((v) => (
                               <div
                                 key={v.id}
-                                onClick={() => {
-                                  setSelectedVenueId(v.id);
-                                  setIsOpen(false);
-                                }}
+                                onClick={() => handleVenueChange(v.id)}
                                 className="w-full border-b border-parchment/20 hover:bg-main-accent hover:text-white transition-colors duration-400 font-[Montserrat]"
                               >
                                 {v.name}

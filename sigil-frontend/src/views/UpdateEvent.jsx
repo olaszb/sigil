@@ -33,7 +33,7 @@ const UpdateEvent = () => {
 
   const [ticketTiers, setTicketTiers] = useState([
     {
-      id: Date.now(),
+      id: "initial-tier",
       name: "Standard Entry",
       section_name: "",
       price: "",
