@@ -1,7 +1,6 @@
-const EventButton = ({text, onClick, clipPath}) => {
+const EventButton = ({text, onClick, clipPath, className = ""}) => {
 
     return (
-        
           <button onClick={() => onClick()}
             className={`relative overflow-hidden
                       pl-8 pr-6 py-3 bg-main-accent text-primary-bg
@@ -12,13 +11,13 @@ const EventButton = ({text, onClick, clipPath}) => {
                       before:bg-parchment before:translate-y-[100%]
                       before:transition-transform before:duration-400 before:ease-in-out
                       hover:before:translate-y-0
-                      
+                      ${className} 
                       `}
-          >
+        >
             <span className="relative z-10 hover:text-primary-bg transition-colors duration-300">
-              {text}
+                {text}
             </span>
-          </button>
+        </button>
     );
 }
 

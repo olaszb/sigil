@@ -30,7 +30,7 @@ const Venues = () => {
         const endpoint = "/api/venues";
         const [response] = await Promise.all([
             axiosClient.get(`${endpoint}?page=${page}`),
-            delay(1000) // 2 seconds of forced loading
+            delay(1000)
         ]);
         setVenues(response.data.data);
         setPagination({
@@ -71,21 +71,21 @@ const Venues = () => {
 
   return (
     <div className="w-full">
-      <div className="grayscale mb-10">
-        <SigilHero image_url={"/public/register_bg.webp"} title={"Ritual Sites"} />
+      <div className="grayscale mb-6 md:mb-10">
+        <SigilHero image_url={"/register_bg.webp"} title={"Ritual Sites"} />
       </div>
       
-      <div className="px-4 space-y-4 mb-10">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-10 space-y-4 mb-10">
         {venues.map((venue) => (
           <Venue key={venue.id} venue={venue} onDeleteClick={onDeleteClick} />
         ))}
       </div>
 
-      <div className="fixed bottom-10 right-10 z-50">
+      <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50">
         <Link to="/add-venue">
           <button className="group relative flex items-center justify-center w-14 h-14 bg-primary-bg border border-main-accent rounded-full shadow-[0_0_15px_rgba(154,0,0,0.4)] hover:scale-110 transition-all duration-300">
             <Sparkles className="text-main-accent group-hover:rotate-12 transition-transform" />
-            <span className="absolute right-16 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-main-accent text-[8px] uppercase tracking-widest px-3 py-1 whitespace-nowrap border border-main-accent/20">
+            <span className="hidden md:block absolute right-16 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-main-accent text-[8px] uppercase tracking-widest px-3 py-1 whitespace-nowrap border border-main-accent/20">
               Register New Site
             </span>
           </button>

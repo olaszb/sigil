@@ -19,7 +19,7 @@ const Navbar = ({ children }) => {
   const handleLogout = async () => {
     try {
       await logout();
-      console.log("User logged out successfully.");
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -33,13 +33,12 @@ const Navbar = ({ children }) => {
         />
       )}
 
-      <aside className="h-screen w-16 flex-shrink-0 relative">
-        <nav
-          className={`fixed h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
-          ${expanded ? "fixed w-64 translate-x-0" : "absolute w-16"} transition-all z-50`}
+      <aside className={`fixed md:relative top-0 left-0 z-50 transition-all duration-300 ${expanded ? "w-64" : "w-0 md:w-16"}`}>
+        <nav className={`fixed h-full flex flex-col bg-primary-bg text-parchment border-r shadow-sm 
+          transition-all duration-500 ease-in-out
+          ${expanded ? "w-64 translate-x-0" : "-translate-x-full md:translate-x-0 md:w-16"}`}
         >
-          <div
-            className={`
+          <div className={`
               flex items-center h-20 my-2 pb-2 transition-all
               ${expanded ? "justify-between px-3" : "justify-center"}
           `}
@@ -68,12 +67,12 @@ const Navbar = ({ children }) => {
             <ul className="flex-1 px-3">{children}</ul>
           </NavbarContext.Provider>
 
-          <div className="border-t flex p-3">
+          <div className="border-t flex p-3 border-parchment bg-black/20">
             {user ? (
               <>
                 <Link to="/profile">
                   <img
-                    src={user.image_url ? getImageUrl(user.image_url) : '/public/default_avatar.jpg'}
+                    src={user.image_url ? getImageUrl(user.image_url) : '/default_avatar.jpg'}
                     alt="User Avatar"
                     className="w-12 h-10 rounded-full object-cover"
                   />
@@ -109,6 +108,21 @@ const Navbar = ({ children }) => {
           </div>
         </nav>
       </aside>
+
+      {!expanded && (
+        <button 
+          onClick={() => setExpanded(true)}
+          className="md:hidden fixed top-4 left-4 z-[60] 
+               w-12 h-12 flex items-center justify-center 
+               bg-primary-bg border border-parchment/20 rounded-md 
+               text-parchment shadow-[0_0_15px_rgba(0,0,0,0.5)]
+               active:scale-95 transition-transform"
+        >
+          <div className="flex justify-center items-center">
+            <MenuSVG />
+          </div>
+        </button>
+      )}
     </>
   );
 };
@@ -145,7 +159,7 @@ export function NavbarItem({ icon, text, active, alert, to }) {
         )}
 
         {!expanded && (
-          <div className="absolute left-full whitespace-nowrap rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
+          <div className="hidden md:block absolute left-full whitespace-nowrap rounded-md px-2 py-1 ml-6 bg-main-accent text-parchment text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-99">
             {text}
           </div>
         )}

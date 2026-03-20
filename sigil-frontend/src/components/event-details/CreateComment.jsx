@@ -13,11 +13,11 @@ const CreateComment = ({ onCommentAdded, isCommentClicked, setIsCommentClicked }
     };
 
     return (
-        <div className="mt-2 flex">
+        <div className="mt-2 flex mr-3 md:mr-0">
             {user?.image_url ? (
                 <img src={getImageUrl(user.image_url)} className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             ) : (
-                <img src="/public/default_avatar.jpg" className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
+                <img src="/default_avatar.jpg" className={`rounded-full transition-all duration-300 ${isCommentClicked ? 'w-12 h-12' : 'w-9 h-9'}`}/>
             )}
             <form className="w-full" onSubmit={handleSubmit}>
                     <textarea name="comment" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Leave a whisper in the archives..." 

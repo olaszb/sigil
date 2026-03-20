@@ -203,12 +203,12 @@ const EventDetails = ({ mode }) => {
         <EventHero image_url={event?.image_url} />
         
 
-        <div className="relative max-w-6xl mx-auto px-8">
-            <div className="absolute left-8 right-8 -top-26.5 z-30 pointer-events-none">
+        <div className="relative max-w-6xl mx-auto px-0 md:px-8">
+            <div className="relative lg:absolute left-0 lg:left-8 right-0 lg:right-8 -mt-20 lg:-top-26.5 z-30 pointer-events-none">
                 <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name} mode={mode}/>
             </div>
 
-            <div className="pt-4 pb-20 w-[90%]">
+            <div className="pt-8 lg:pt-4 pb-20 w-full md:w-[80%] lg:w-[90%] px-4 lg:px-0 mx-auto lg:mx-0">
                 {(user?.id === event?.organizer_id || user?.role === 'admin') && 
                     <div className={`mb-4 flex ${mode ==='archived' ? 'flex-col' : ''}`}>
                         {mode === 'archived' ? (
@@ -244,7 +244,7 @@ const EventDetails = ({ mode }) => {
                     </div>
                 }
                 {(user?.role !== 'organizer' && user?.role !== 'admin' && mode === 'current') && (
-                    <div className="bg-black/60 mb-8 flex items-center w-fit border border-parchment/10">
+                    <div className="bg-black/60 mb-8 flex items-center w-fit border border-parchment/10 ">
                         <button onClick={() => handleChangeStatus('interested')} className={`px-4 py-3 flex items-center border-r border-parchment/10 group transition-all duration-400
                             ${activeStatus === 'interested' ?
                             'bg-main-accent/10 text-main-accent shadow-[inset_0_0_15px_rgba(154,0,0,0.2)]' : 
@@ -266,8 +266,8 @@ const EventDetails = ({ mode }) => {
                     </div>
                 )}
 
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                  <div className="md:col-span-2 space-y-4">
+               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+                  <div className="lg:col-span-2 space-y-8 lg:space-y-4">
 
                     <EventDescription description={event?.description}/>
                     <VenueDetails venue={venue} interestedCount={event?.interested_count} goingCount={event?.going_count}/>

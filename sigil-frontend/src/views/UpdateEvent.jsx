@@ -113,23 +113,17 @@ const UpdateEvent = ( ) => {
     <>
       {/* Background image */}
       <img
-        src="/public/liurnia.webp"
+        src="/liurnia.webp"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale"
       />
       {/* Background effects */}
       <div className="fixed inset-0 bg-black/60 z-10"></div>
       <div className="fixed inset-0 pointer-events-none z-15 bg-[radial-gradient(circle,transparent_40%,black_120%)]"></div>
 
-      <div
-        className="relative min-h-screen w-full flex items-center justify-center
-                    z-20"
-      >
-        <div
-          className="relative w-full max-w-5xl bg-primary-bg border border-parchment/20
-                    flex flex-col"
-        >
+      <div className="relative min-h-screen w-full flex items-start md:items-center justify-center z-20 py-12 px-4 md:py-20">
+        <div className="relative w-full max-w-5xl bg-primary-bg border border-parchment/20 flex flex-col">
           {/* Form */}
-          <h1 className="text-4xl font-[Cinzel] mb-8 justify-self-center self-center mt-4 text-parchment">
+          <h1 className="text-3xl md:text-4xl font-[Cinzel] mb-4 md:mb-8 text-center mt-6 md:mt-8 text-parchment">
             Rite of Modification
           </h1>
           <form
@@ -137,7 +131,7 @@ const UpdateEvent = ( ) => {
             onSubmit={handleUpdateEvent}
           >
             {/* Left Column */}
-            <div className="flex-[4] p-4 border-r border-parchment/20 h-full">
+            <div className="flex-[4] p-6 md:p-8 border-b md:border-b-0 md:border-r border-parchment/20 h-full">
               {/* Title */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
@@ -231,7 +225,7 @@ const UpdateEvent = ( ) => {
             </div>
 
             {/* Right Column */}
-            <div className="flex-[3] bg-black/20 p-4 flex flex-col border-t md:border-t-0">
+            <div className="flex-[3] bg-black/20 p-4 flex flex-col">
               {/* Date */}
               <div className="mb-5 flex flex-col">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">
@@ -253,7 +247,7 @@ const UpdateEvent = ( ) => {
               </div>
               
               {/* Image Upload */}
-              <div className="flex-1 flex flex-col mb-4 h-[250px]">
+              <div className="flex-1 flex flex-col mb-4 min-h-[250px] md:h-[300px]">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-3">
                   Binding Sigil (Image)
                 </label>
@@ -293,6 +287,10 @@ const UpdateEvent = ( ) => {
                     </>
                   )}
                 </label>
+              </div>
+
+              <div className="min-h-[24px]">
+                    {error && <p className="text-main-accent text-xs text-center">{error}</p>}
               </div>
 
               {/* Submit */}

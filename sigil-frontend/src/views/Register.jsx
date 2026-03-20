@@ -48,22 +48,17 @@ const RegisterPage = () => {
     <>
       {/* Background image */}
       <img
-        src="/public/anor_londo.jpg"
+        src="/anor_londo.jpg"
         className="fixed inset-0 w-full h-full object-cover z-0 grayscale "
       />
       {/* Background effects */}
       <div className="fixed inset-0 bg-black/60 z-10"></div>
       <div className="fixed inset-0 pointer-events-none z-15 bg-[radial-gradient(circle,transparent_40%,black_120%)]"></div>
 
-      <div
-        className="relative min-h-screen w-full flex items-center justify-center
-                    z-20
-                "
-      >
-        <div
-          className={`relative w-96 bg-primary-bg border border-parchment/20
-                    flex justify-center transition-all duration-700 ease-in-out
-                     ${step === 1 ? 'h-96' : 'h-120'} `}
+      <div className="relative min-h-screen w-full flex items-center justify-center z-20 px-4">
+        <div className={`relative w-full max-w-sm bg-primary-bg border border-parchment/20
+                flex flex-col justify-center items-center py-10 transition-all duration-700 ease-in-out
+                ${step === 1 ? 'min-h-[24rem]' : 'min-h-[30rem]'} `}
         >
           {/* Animation */}
           <div
@@ -88,13 +83,13 @@ const RegisterPage = () => {
 
           {/* Form */}
           <form
-            className="flex flex-col justify-center items-center text-parchment"
+            className="flex flex-col justify-center items-center text-parchment w-full px-8"
             onSubmit={handleRegister}>
 
             <h1 className="text-4xl font-[Cinzel] mb-4">Binding Ritual</h1>
 
             {/* Name */}
-            <div className="mb-5 flex flex-col">
+            <div className="mb-5 flex flex-col w-full">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Identifier</label>
                 <div className="relative group">
                     <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
@@ -108,14 +103,14 @@ const RegisterPage = () => {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Name"
                         required
-                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                        className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                         font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                     />
                 </div>
             </div>
 
             {/* Email */}
-            <div className="mb-5 flex flex-col">
+            <div className="mb-5 flex flex-col w-full">
                 <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Sigil Address</label>
                 <div className="relative group">
                     <div className="absolute right-2 bottom-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
@@ -129,7 +124,7 @@ const RegisterPage = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                         required
-                        className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                        className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                         font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
                     />
                 </div>
@@ -144,11 +139,11 @@ const RegisterPage = () => {
                 </button>
             )}
 
-            <div className={`transition-all duration-1000 overflow-hidden flex flex-col items-center 
-                ${step === 2 ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+            <div className={`transition-all duration-1000 overflow-hidden flex flex-col items-center w-full
+                ${step === 2 ? 'max-h-[30rem] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
 
                 {/* Password */}
-                <div className="mb-5 flex flex-col">
+                <div className="mb-5 flex flex-col w-full">
                     <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Shadow Key</label>
                     <div className="relative group">
                         <div className="absolute bottom-2 right-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
@@ -161,8 +156,8 @@ const RegisterPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
-                            required
-                            className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                            required={step === 2}
+                            className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                             "
                         />
@@ -170,7 +165,7 @@ const RegisterPage = () => {
                 </div>
 
                 {/* Password Confirmation */}
-                <div className="mb-5 flex flex-col">
+                <div className="mb-5 flex flex-col w-full">
                     <label className="text-[10px] font-mono uppercase tracking-[0.3em] text-parchment/40 mb-1">Confirm Key</label>
                     <div className="relative group">
                         <div className="absolute bottom-2 right-2 text-parchment/30 group-hover:text-main-accent group-focus-within:text-main-accent transition-colors duration-400">
@@ -183,21 +178,24 @@ const RegisterPage = () => {
                             value={passwordConfirmation}
                             onChange={(e) => setPasswordConfirmation(e.target.value)}
                             placeholder="Confirm Password"
-                            required
-                            className="w-60 border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
+                            required={step === 2}
+                            className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
                                             font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none
                                             "
                         />
                     </div>
                 </div>
 
+                <div className="min-h-[24px]">
+                    {error && <p className="text-main-accent text-xs text-center">{error}</p>}
+                </div>
+
                 {/* Submit */}
-                <div className="my-2">
+                <div className="my-2 mb-4 w-full flex justify-center">
                     <SigilButton type={"submit"} text={"Seal The Pact"} />
                 </div>
             </div>
 
-            {error && <p className="text-danger-alert">{error}</p>}
           </form>
         </div>
       </div>

@@ -47,13 +47,13 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                 {type === 'eventDetails' ? (
                     <Link to={comment.user.name === user.name ? `/profile` : `/users/${comment.user.name}`} className="cursor-pointer">
                         <img 
-                            src={getImageUrl(comment.user.image_url) || "/public/default_avatar.jpg"} 
+                            src={getImageUrl(comment.user.image_url) || "/default_avatar.jpg"} 
                             className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
                         />
                     </Link>
                 ) : (
                     <img 
-                        src={getImageUrl(comment.user.image_url) || "/public/default_avatar.jpg"} 
+                        src={getImageUrl(comment.user.image_url) || "/default_avatar.jpg"} 
                         className="w-10 h-10 rounded-full border border-parchment/10 z-10 bg-secondary-bg"
                     />
                 )}
@@ -108,19 +108,19 @@ const CommentItem = ({ comment, handleDelete, type, onCommentUpdated }) => {
                         </p>
                     )}
                     {(type === 'eventDetails' && !isEditing) && (
-                        <div className="absolute top-1 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ">
+                        <div className="absolute top-2 right-2 md:top-1 md:right-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2 p-1 md:p-0">
                             {(user?.id === comment.user_id) ? (
                                 <>
                                     <button 
                                         onClick={() => handleDelete(comment.id)}
-                                        className="text-[10px] mr-4 uppercase tracking-widest text-main-accent/40 hover:text-main-accent transition-colors"
+                                        className="text-[10px] mr-4 uppercase tracking-widest text-main-accent md:text-main-accent/40 hover:text-main-accent transition-colors"
                                     >
                                         Banish
                                     </button>
 
                                     <button 
                                         onClick={() => setIsEditing(true)}
-                                        className="text-[10px] uppercase tracking-widest text-main-accent/40 hover:text-main-accent transition-colors"
+                                        className="text-[10px] uppercase tracking-widest text-main-accent md:text-main-accent/40 hover:text-main-accent transition-colors"
                                     >
                                         Edit
                                     </button>

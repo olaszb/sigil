@@ -2,7 +2,7 @@ import { getImageUrl } from "../../util/helper";
 
 const EventHero = ({ image_url }) => {
     return (
-        <div className="relative w-full h-[500px]">
+        <div className="relative w-full h-[300px] md:h-[500px]">
             <div 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${getImageUrl(image_url)})` }}

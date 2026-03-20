@@ -12,7 +12,7 @@ const MainLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="flex min-h-screen bg-secondary-bg">
+    <div className="flex flex-col md:flex-row min-h-screen bg-secondary-bg overflow-x-hidden">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={true} closeOnClick={true} closeButton={false} />
       <Navbar>
         <NavbarItem icon={<HomeSVG size="120%"/>} text="Home" to="/"/>
@@ -33,7 +33,7 @@ const MainLayout = () => {
       </Navbar>
 
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+      <main className="flex-1 w-full min-w-0 flex flex-col md:pt-0">
         <Outlet />
       </main>
     </div>
