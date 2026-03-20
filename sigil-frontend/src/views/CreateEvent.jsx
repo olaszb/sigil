@@ -91,7 +91,6 @@ const CreateEvent = () => {
     if (!section) return 0;
 
     if (section.type === "standing") return section.capacity;
-    // Seated calculation: (Rows * Cols) - Voids
     return section.rows * section.columns - (section.void_seats?.length || 0);
   };
 
