@@ -47,14 +47,16 @@ const TicketSelection = ({event, closeModal}) => {
                             </p>
                             <p className="text-[10px] tracking-tighter opacity-40 uppercase">
                                 Portal Code: {event?.venue?.postal_code}
-                            </p>
+                            </p> 
                         </div>
                     </div>
                 </div>
                 {/* Tickets Section */}
                 <div className="w-full bg-black/20">
                     <div className="flex flex-col p-8">
-                        <div className="flex justify-between px-4 py-4 bg-black/40 border border-main-accent/50 shadow-[0_0_50px_rgba(154,0,0,0.2)]">
+                        <div className="flex justify-between px-4 py-4 bg-black/40 border border-main-accent/50 shadow-[0_0_50px_rgba(154,0,0,0.2)]
+                            hover:-translate-x-1 hover:-translate-y-1 transition-all duration-300
+                            overflow-hidden hover:shadow-[0_0_50px_rgba(154,0,0,0.2),10px_10px_0px_0px_rgba(153,0,0,0.5)]">
                             <div>
                                 Normal
                             </div>
