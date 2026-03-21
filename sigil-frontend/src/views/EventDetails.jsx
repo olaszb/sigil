@@ -15,6 +15,7 @@ import { formatArchiveDate } from "../util/helper";
 import CreateComment from "../components/event-details/CreateComment";
 import CommentItem from "../components/event-details/CommentItem";
 import LoadingScreen from "../components/LoadingScreen";
+import TicketSelection from "../components/ticket-selection/TicketSelection";
 
 const EventDetails = ({ mode }) => {
     const [event, setEvent] = useState(null);
@@ -23,7 +24,8 @@ const EventDetails = ({ mode }) => {
     const { slug } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [modal, setModal] = useState({isOpen: false, event:null, mode:null})
+    const [modal, setModal] = useState({isOpen: false, event:null, mode:null});
+    const [ticketModal, setTicketModal] = useState({isOpen: true, event:null});
     const [activeStatus, setActiveStatus] = useState(null);
     const [isCommentClicked, setIsCommentClicked] = useState(false);
     const [comments, setComments] = useState([]);
@@ -35,6 +37,14 @@ const EventDetails = ({ mode }) => {
 
     const closeModal = () => {
         setModal({isOpen: false, event:null, mode:null});
+    }
+
+    const openTicketModal = () => {
+        setTicketModal({isOpen: true, event, mode});
+    }
+
+    const closeTicketModal = () => {
+        setTicketModal({isOpen: false, event:null, mode:null});
     }
 
     useEffect(() => {
@@ -324,6 +334,9 @@ const EventDetails = ({ mode }) => {
         </div>
         {modal.isOpen && 
             <SigilModal closeModal={() => closeModal()} onAction={() => handleConfirmAction()} text={modal.mode === 'restore' ? "Are you sure you'd like to restore this ritual?" : modal.mode === 'forceDelete' ? "Are you sure you'd like to burn this archive?" : "Are you sure you'd like to archive this ritual?"} />
+        }
+        {ticketModal.isOpen &&
+            <TicketSelection closeModal={() => closeTicketModal()} event={event} />
         }
     </div>
   );
