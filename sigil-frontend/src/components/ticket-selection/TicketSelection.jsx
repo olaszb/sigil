@@ -1,20 +1,54 @@
 import { Calendar, MapPin, X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import XSVG from "../../util/icons/XSVG";
+import SeatSVG from "../../util/icons/SeatSVG";
 
 const TicketSelection = ({event, closeModal}) => {
+    const [selectedTier, setSelectedTier] = useState(null);
+    const [selectedSeats, setSelectedSeats] = useState([]);
+
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === "Escape") closeModal();
         };
         window.addEventListener("keydown", handleEsc);
+        console.log(event);
         
         return () => window.removeEventListener("keydown", handleEsc);
     }, [closeModal]);
 
+    const getActiveSection = () => {
+        if (!selectedTier || !event?.venue?.layout?.sections) return null;
+
+        let layout = event.venue.layout;
+        if(typeof layout === 'string'){
+            try {layout = JSON.parse(layout);} catch (e) {}
+        }
+
+        return layout?.sections?.find(sec => sec.name === selectedTier.section_name);
+    }
+
+    const activeSection = getActiveSection();
+
+    const handleTierSelect = (tier) => {
+        if (selectedTier?.id !== tier.id) {
+            setSelectedSeats([]);
+        }
+        setSelectedTier(tier);
+    }
+
+    const toggleSeat = (rId, cId) => {
+        const seatId = `${rId}-${cId}`;
+        if (selectedSeats.includes(seatId)) {
+            setSelectedSeats(selectedSeats.filter(id => id !== seatId));
+        } else {
+            setSelectedSeats([...selectedSeats, seatId]);
+        }
+    }
+
     return (
         <div onClick={closeModal} className="fixed inset-0 z-[100] flex justify-center items-center bg-black/80 backdrop-blur-sm">
-            <div onClick={(e) => e.stopPropagation()} className="flex flex-col min-w-6xl min-h-3xl bg-primary-bg border border-main-accent/50 max-w-md w-full mx-4 shadow-[0_0_50px_rgba(154,0,0,0.2)] text-center">
+            <div onClick={(e) => e.stopPropagation()} className="flex flex-col w-full max-w-5xl min-h-3xl bg-primary-bg border border-main-accent/50 w-full mx-4 shadow-[0_0_50px_rgba(154,0,0,0.2)] text-center">
                 {/* Top Section */}
                 <div className="flex flex-col items-start px-8 py-4 border-b border-main-accent/40 space-y-3 pb-4">
                     <div className="flex justify-between items-center w-full">
@@ -52,20 +86,80 @@ const TicketSelection = ({event, closeModal}) => {
                     </div>
                 </div>
                 {/* Tickets Section */}
-                <div className="w-full bg-black/20">
-                    <div className="flex flex-col p-8">
-                        <div className="flex justify-between px-4 py-4 bg-black/40 border border-main-accent/50 shadow-[0_0_50px_rgba(154,0,0,0.2)]
-                            hover:-translate-x-1 hover:-translate-y-1 transition-all duration-300
-                            overflow-hidden hover:shadow-[0_0_50px_rgba(154,0,0,0.2),10px_10px_0px_0px_rgba(153,0,0,0.5)]">
-                            <div>
-                                Normal
+                <div className="w-full bg-black/20 flex flex-col md:flex-row">
+                    <div className={`flex flex-col p-6 gap-4 border-parchment/10 ${activeSection?.type === 'seated' ? 'md:w-1/2 md:border-r' : 'w-full'}`}>
+                        <h2 className="text-left font-[Cinzel] text-xl text-parchment/80 mb-2">Select Tickets</h2>
+                        {event?.ticket_types?.map((tier) => {
+                            const isSelected = selectedTier?.id === tier.id;
+                            const isSoldOut = tier.quantity_available <= 0;
+
+                            return (
+                                <div key={tier.id} onClick={() => !isSoldOut && handleTierSelect(tier)}
+                                    className={`flex px-4 py-4 bg-black/40 border transition-all duration-400 overflow-hidden text-left
+                                        ${isSoldOut ? 'opacity-50 cursor-not-allowed border-parchment/10' : 'cursor-pointer'}
+                                        ${isSelected 
+                                            ? 'border-main-accent shadow-[0_0_30px_rgba(153,0,0,0.2),8px_8px_0px_0px_rgba(153,0,0,0.5)] -translate-x-1 -translate-y-1' 
+                                            : !isSoldOut ? 'border-main-accent/30 hover:border-main-accent/60 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(153,0,0,0.2),8px_8px_0px_0px_rgba(153,0,0,0.5)]' : ''}
+                                        `}
+                                    >
+                                    <div className="flex flex-col">
+                                        <p className="font-[Cinzel] text-lg text-parchment">{tier.name}</p>
+                                        <p className="text-[10px] uppercase tracking-widest font-[Montserrat] text-parchment/50">Section: {tier.section_name}</p>
+                                    </div>
+                                    <div className="flex flex-col items-end justify-center">
+                                        <p className="text-main-accent font-bold tracking-wider">{tier.price} Ft</p>
+                                        <p className="text-[10px] uppercase tracking-widest text-parchment/40">
+                                            {isSoldOut ? "Sold Out" : `${tier.quantity_available} Left`}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {activeSection?.type === 'seated' && (
+                        <div className="flex flex-col p-6 md:w-1/2 items-center justify-start bg-black/40 relative">
+                            <h2 className="font-[Cinzel] text-xl text-main-accent mb-6">Select Your Seats</h2>
+
+                            <div className="overflow-x-auto max-w-full pb-4">
+                                <div className="inline-flex flex-col gap-2 p-4 bg-[#0a0a0a] border border-parchment/5 rounded-sm">
+                                    <div className="w-full text-center border-b-2 border-main-accent/30 text-[10px] uppercase tracking-[0.5em] text-parchment/30 pb-2 mb-4">
+                                        The Stage
+                                    </div>
+
+                                    {Array.from({length: activeSection.rows}).map((_, rId) => (
+                                        <div key={`row-${rId}`} className="flex gap-2 justify-center">
+                                            {Array.from({length: activeSection.columns}).map((_, cId) => {
+                                                const seatId = `${rId}-${cId}`;
+                                                const isVoid = activeSection.void_seats?.includes(seatId);
+                                                const isSelected = selectedSeats.includes(seatId);
+
+                                                if(isVoid) return <div key={seatId} className="w-6 h-6 md:w-8 md:h-8"/>;
+
+                                                return (
+                                                    <div key={seatId}
+                                                        onClick={() => toggleSeat(rId, cId)}
+                                                        title={`Row ${rId + 1}, Seat ${cId + 1}`}
+                                                        className={`w-6 h-6 md:w-8 md:h-8 cursor-pointer transition-all duration-300 flex items-center justify-center
+                                                            ${isSelected 
+                                                                ? 'text-main-accent scale-110 drop-shadow-[0_0_8px_rgba(153,0,0,0.8)]' 
+                                                                : 'text-parchment/20 hover:text-parchment/60 hover:scale-105'}
+                                                            `}
+                                                        >
+                                                        <SeatSVG />
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="flex justify-between">
-                                <p>8000 Ft</p>
-                                <p>Sold</p>
+                            {/* Selection Status */}
+                            <div className="mt-4 flex gap-4 text-[10px] uppercase tracking-widest text-parchment/40">
+                                <span className="flex items-center gap-1.5"><div className="w-3 h-3 border border-parchment/20 bg-parchment/20"></div> Available</span>
+                                <span className="flex items-center gap-1.5"><div className="w-3 h-3 border border-main-accent bg-main-accent"></div> Selected ({selectedSeats.length})</span>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div> 
         </div>

@@ -214,7 +214,7 @@ const EventDetails = ({ mode }) => {
         
 
         <div className="relative max-w-6xl mx-auto px-0 md:px-8">
-            <div className="relative lg:absolute left-0 lg:left-8 right-0 lg:right-8 -mt-20 lg:-top-26.5 z-30 pointer-events-none">
+            <div className="relative lg:absolute left-0 lg:left-8 right-0 lg:right-8 lg:-top-26.5 z-30 pointer-events-none">
                 <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name} mode={mode}/>
             </div>
 
