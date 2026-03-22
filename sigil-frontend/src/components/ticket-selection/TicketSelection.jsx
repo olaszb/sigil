@@ -1,5 +1,5 @@
 import { Calendar, MapPin, X, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import XSVG from "../../util/icons/XSVG";
 import SeatSVG from "../../util/icons/SeatSVG";
 
@@ -7,6 +7,8 @@ const TicketSelection = ({event, closeModal}) => {
     const [activePanelTier, setActivePanelTier] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState({});
     const [standingQuantities, setStandingQuantities] = useState({});
+
+    const drawerRef = useRef(null);
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -17,11 +19,19 @@ const TicketSelection = ({event, closeModal}) => {
         return () => window.removeEventListener("keydown", handleEsc);
     }, [closeModal]);
 
+    useEffect(() => {
+        if (activePanelTier && drawerRef.current) {
+            setTimeout(() => {
+                drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
+    }, [activePanelTier]);
+
     const parsedLayout = (() => {
         if (!event?.venue?.layout) return null;
         let layout = event.venue.layout;
         if(typeof layout === 'string'){
-            try { layout = JSON.parse(layout); } catch (e) {}
+            try { layout = JSON.parse(layout); } catch (e) {console.log(e)}
         }
         return layout;
     })();
@@ -163,7 +173,7 @@ const TicketSelection = ({event, closeModal}) => {
                             })}
                         </div>
                         {activePanelTier && activeSection && (
-                            <div className="flex flex-col p-6 w-full items-center justify-start bg-black/40 relative">
+                            <div ref={drawerRef} className="flex flex-col p-6 w-full items-center justify-start bg-black/40 relative">
                                 <button 
                                     onClick={() => setActivePanelTier(null)} 
                                     className="absolute top-4 right-4 text-parchment/40 hover:text-main-accent transition-colors"
@@ -178,7 +188,7 @@ const TicketSelection = ({event, closeModal}) => {
                                     For: {activePanelTier.name}
                                 </p>
 
-                                {activeSection.type === 'seated' && (
+                                {activeSection?.type === 'seated' && (
                                     <div className="flex flex-col items-center w-full">
                                         <div className="overflow-x-auto max-w-full pb-4">
                                             <div className="inline-flex flex-col gap-2 p-4 bg-[#0a0a0a] border border-parchment/5 rounded-sm">
@@ -223,7 +233,7 @@ const TicketSelection = ({event, closeModal}) => {
                                         </div>
                                     </div>
                                 )}
-                                {activeSection.type === 'standing' && (
+                                {activeSection?.type === 'standing' && (
                                     <div className="flex flex-col items-center w-full py-4">
                                         <div className="flex items-center gap-8 bg-[#0a0a0a] border border-parchment/10 p-6 shadow-inner">
                                             <button 
