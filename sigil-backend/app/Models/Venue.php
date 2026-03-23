@@ -15,7 +15,13 @@ class Venue extends Model
         'country',
         'postal_code',
         'capacity',
+        'layout'
     ];
+
+    protected $casts = [
+        'layout' => 'array',
+    ];
+    
     public function events(){
         return $this->hasMany(Event::class);
     }

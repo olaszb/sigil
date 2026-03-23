@@ -8,8 +8,12 @@ class TicketType extends Model
 {
 
     protected $fillable = [
+        'event_id',
         'name',
+        'type',
+        'section_name',
         'price',
+        'quantity_available'
     ];
 
     public function event(){

@@ -28,6 +28,7 @@ class CreateEventRequest extends FormRequest
             'description' => 'required|max:5000',
             'start_time' => 'required|date',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'ticket_tiers' => 'required|string'
         ];
     }
 }

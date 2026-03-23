@@ -27,7 +27,18 @@ class CreateVenueRequest extends FormRequest
             'city' => 'required|string|max:50',
             'country' => 'required|string|max:50',
             'postal_code' => 'required|numeric|digits_between:3,5',
-            'capacity' => 'required|numeric|max:2000'
+            'capacity' => 'required|numeric|max:2000',
+
+            'layout' => 'nullable|array',
+            'layout.sections' => 'required_with:layout|array',
+            'layout.sections.*.name' => 'required|string|max:255',
+            'layout.sections.*.type' => 'required|in:standing,seated',
+            'layout.sections.*.capacity' => 'nullable|integer|min:1',
+            'layout.sections.*.rows' => 'nullable|integer|min:1',
+            'layout.sections.*.columns' => 'nullable|integer|min:1',
+
+            'layout.sections.*.void_seats' => 'nullable|array',
+            'layout.sections.*.void_seats.*' => 'string',
         ];
     }
 }

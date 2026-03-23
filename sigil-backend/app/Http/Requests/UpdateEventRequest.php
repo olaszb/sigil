@@ -27,7 +27,8 @@ class UpdateEventRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required|max:5000',
             'start_time' => 'required|date',
-            // 'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'ticket_tiers' => 'required|string',
         ];
     }
 }

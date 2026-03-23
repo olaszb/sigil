@@ -11,9 +11,16 @@ class Ticket extends Model
         'user_id',
         'event_id',
         'ticket_type_id',
-        'seat_number',
+        'section',
+        'row',
+        'column',
         'ticket_code',
         'status',
+        'held_until'
+    ];
+
+    protected $casts = [
+        'held_until' => 'datetime',
     ];
 
     public function event(){
@@ -21,5 +28,9 @@ class Ticket extends Model
     }
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function ticketType(){
+        return $this->belongsTo(TicketType::class);
     }
 }
