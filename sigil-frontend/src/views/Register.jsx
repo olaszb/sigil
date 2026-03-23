@@ -39,7 +39,7 @@ const RegisterPage = () => {
             toast("Pact sealed successfully!", toastConfig);
             navigate("/profile");
         } catch (err) {
-            setError("Registration failed. Please check your details.");
+            setError(err.response?.data?.message || "An unexpected error occurred. Please try again.");
             console.error(err);
         }
     };

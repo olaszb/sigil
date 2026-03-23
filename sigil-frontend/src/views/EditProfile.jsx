@@ -79,7 +79,7 @@ const EditProfile = ( ) => {
         toast('Profile updated successfully!', toastConfig);
         navigate(`/profile`);
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(err.response?.data?.message || "An unexpected error occurred. Please try again.");
       console.error(err);
     }
   };

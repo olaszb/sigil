@@ -63,14 +63,14 @@ const Navbar = ({ children }) => {
             </div>
           </div>
 
-          <NavbarContext.Provider value={{ expanded }}>
+          <NavbarContext.Provider value={{ expanded, setExpanded }}>
             <ul className="flex-1 px-3">{children}</ul>
           </NavbarContext.Provider>
 
           <div className="border-t flex p-3 border-parchment bg-black/20">
             {user ? (
               <>
-                <Link to="/profile">
+                <Link to="/profile" onClick={() => setExpanded(false)}>
                   <img
                     src={user.image_url ? getImageUrl(user.image_url) : '/default_avatar.jpg'}
                     alt="User Avatar"
@@ -80,7 +80,7 @@ const Navbar = ({ children }) => {
                 <div
                   className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "ml-3 w-52 opacity-100" : "w-0 opacity-0"}`}
                 >
-                  <Link to="/profile">
+                  <Link to="/profile" onClick={() => setExpanded(false)}>
                     <div className="leading-4">
                       <h4 className="font-semibold font-[Montserrat]">
                         {user.name}
@@ -101,8 +101,8 @@ const Navbar = ({ children }) => {
                   flex items-center overflow-hidden transition-all duration-500 ease-in-out
                   ${expanded ? "max-w-[500px] opacity-100" : "max-w-0 opacity-0"}
               `}>
-                <SigilButton type="button" text={"Login"} onClick={() => navigate('/login')}/>
-                <SigilButton type="button" text={"Register"} onClick={() => navigate('/register')}/>
+                <SigilButton type="button" text={"Login"} onClick={() => {navigate('/login'); setExpanded(false)}}/>
+                <SigilButton type="button" text={"Register"} onClick={() => {navigate('/register'); setExpanded(false)}}/>
               </div>
             )}
           </div>
@@ -130,9 +130,9 @@ const Navbar = ({ children }) => {
 export default Navbar;
 
 export function NavbarItem({ icon, text, active, alert, to }) {
-  const { expanded } = useContext(NavbarContext);
+  const { expanded, setExpanded } = useContext(NavbarContext);
   return (
-    <Link to={to}>
+    <Link to={to} onClick={() => setExpanded(false)}>
       <li
         className={`relative flex items-center py-1 px-3 my-1
             font-medium rounded-md cursor-pointer transition-colors group

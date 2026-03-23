@@ -1,7 +1,7 @@
 import { monthNames, weekDays } from "../../util/helper";
 import SigilButton from "../SigilButton";
 
-const EventTab = ({ title, start_time, venue_name, mode }) => {
+const EventTab = ({ title, start_time, venue_name, mode, openModal }) => {
   const date = new Date(start_time);
 
   return (
@@ -41,7 +41,7 @@ const EventTab = ({ title, start_time, venue_name, mode }) => {
           {mode === 'current' && (
             <>
               <div className="flex justify-center mb-8">
-                <SigilButton text={"Ticket Types"} />
+                <SigilButton text={"Ticket Types"} onClick={openModal}/>
               </div>
             </>
           )}

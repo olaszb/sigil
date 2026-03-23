@@ -8,11 +8,13 @@ import Editor from "../components/create-event/Editor/Editor";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
 import SigilButton from "../components/SigilButton";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CreateEvent = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [startTime, setStartTime] = useState("");
+  const [startTime, setStartTime] = useState(null);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
@@ -136,12 +138,19 @@ const CreateEvent = () => {
       }
     }
 
+    if (!startTime) {
+      setError("You must select a date and time for the ritual.");
+      return;
+    }
+
+    const formattedDate = `${startTime.getFullYear()}-${String(startTime.getMonth() + 1).padStart(2, '0')}-${String(startTime.getDate()).padStart(2, '0')} ${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}:00`;
+
     const formData = new FormData();
     formData.append("organizer_id", user.id);
     formData.append("venue_id", selectedVenueId);
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("start_time", startTime);
+    formData.append("start_time", formattedDate);
     formData.append("ticket_tiers", JSON.stringify(ticketTiers));
     if (image) {
       formData.append("image_url", image);
@@ -159,7 +168,7 @@ const CreateEvent = () => {
           navigate("/");
         });
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(err.response?.data?.message || "An unexpected error occurred. Please try again.");
       console.error(err);
     }
   };
@@ -295,16 +304,16 @@ const CreateEvent = () => {
                     Ritual Date & Time
                   </label>
                   <div className="relative group">
-                    <input
-                      name="start_time"
-                      id="start_time"
-                      type="datetime-local"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      placeholder="Event Start Time"
-                      required
-                      className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400
-                                              font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none"
+                    <DatePicker
+                      selected={startTime}
+                      onChange={(date) => setStartTime(date)}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="MMMM d, yyyy h:mm aa"
+                      placeholderText="Select Date & Time"
+                      className="w-full border-b border-parchment/20 p-1 focus:border-main-accent hover:border-main-accent transition-colors duration-400 font-[Montserrat] bg-black/60 placeholder:text-parchment/30 outline-none text-parchment"
+                      wrapperClassName="w-full"
                     />
                   </div>
                 </div>
