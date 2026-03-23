@@ -60,9 +60,11 @@ const EventItem = ({ event, type, onAction }) => {
       {/* Buy Ticket */}
       {(type === "current" && user?.role === 'user') &&
       (
-        <div className="absolute bottom-0 right-0 md:top-0 md:bottom-auto">
-          <EventButton text={"Claim Your Sigil"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
-        </div>
+        <Link to={`/events/${event?.slug}`}>
+          <div className="absolute bottom-0 right-0 md:top-0 md:bottom-auto">
+            <EventButton text={"Claim Your Sigil"} clipPath={"[clip-path:polygon(0%_0%,100%_0%,100%_100%,15%_100%)]"}/>
+          </div>
+        </Link>
       )
       }
       {type === 'archived' && (

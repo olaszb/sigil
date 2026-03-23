@@ -57,13 +57,13 @@ function App() {
             </Route>
 
 
+            {/* Only for not logged in users */}
+            <Route element={<PublicGuard/>}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
           </Route>
           
-          {/* Only for not logged in users */}
-          <Route element={<PublicGuard/>}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-          </Route>
 
           {/* Fallback */}
           <Route path="*" element={<NotFoundPage />} />

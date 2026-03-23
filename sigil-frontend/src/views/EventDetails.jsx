@@ -25,7 +25,7 @@ const EventDetails = ({ mode }) => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [modal, setModal] = useState({isOpen: false, event:null, mode:null});
-    const [ticketModal, setTicketModal] = useState({isOpen: true, event:null});
+    const [ticketModal, setTicketModal] = useState({isOpen: false, event:null});
     const [activeStatus, setActiveStatus] = useState(null);
     const [isCommentClicked, setIsCommentClicked] = useState(false);
     const [comments, setComments] = useState([]);
@@ -215,7 +215,7 @@ const EventDetails = ({ mode }) => {
 
         <div className="relative max-w-6xl mx-auto px-0 md:px-8">
             <div className="relative lg:absolute left-0 lg:left-8 right-0 lg:right-8 lg:-top-26.5 z-30 pointer-events-none">
-                <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name} mode={mode}/>
+                <EventTab title={event?.title} start_time={event?.start_time} venue_name={venue?.name} mode={mode} openModal={openTicketModal}/>
             </div>
 
             <div className="pt-8 lg:pt-4 pb-20 w-full md:w-[80%] lg:w-[90%] px-4 lg:px-0 mx-auto lg:mx-0">
