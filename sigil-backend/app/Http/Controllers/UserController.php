@@ -19,11 +19,10 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:8|confirmed',
             'image_url' => 'nullable|image|max:2048|mimes:jpeg,png,jpg,gif,svg',
-        ]); 
+        ]);
 
         $user->name = $request->input('name', $user->name);
         $user->email = $request->input('email', $user->email);
-
 
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
