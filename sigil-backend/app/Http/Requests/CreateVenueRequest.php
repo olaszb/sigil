@@ -27,7 +27,7 @@ class CreateVenueRequest extends FormRequest
             'city' => 'required|string|max:50',
             'country' => 'required|string|max:50',
             'postal_code' => 'required|numeric|digits_between:3,5',
-            'capacity' => 'required|numeric|max:2000',
+            'capacity' => 'required|numeric|max:10000',
 
             'layout' => 'nullable|array',
             'layout.sections' => 'required_with:layout|array',

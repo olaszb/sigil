@@ -36,8 +36,9 @@ const PastEventsPage = () => {
                 per_page: response.data.per_page,
                 total: response.data.total,
             });
-
-            scrollToId("title");
+            setTimeout(() => {
+                scrollToId("title");
+            }, 200);
         }catch(err){
             console.error(err);
         }finally{
@@ -47,6 +48,7 @@ const PastEventsPage = () => {
     
     useEffect(() => {
         fetchEvents(viewMode, 1);
+        
     }, [viewMode, fetchEvents]);
 
     const openModal = (event, mode) => {
