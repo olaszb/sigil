@@ -8,7 +8,7 @@ services:
     env_file:
       - ./sigil-backend/.env
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-sigil_db}
+      POSTGRES_DB: ${DB_DATABASE:-sigil}
       POSTGRES_USER: ${DB_USERNAME:-sigil_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:

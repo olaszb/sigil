@@ -51,6 +51,9 @@ Route::get('/users/comments', [UserController::class, 'getUserComments'])
 //get user comments 
 Route::get('/users/{user:name}/comments', [UserController::class, 'getUserComments'])->name('user.comments');
 
+//get event comments
+Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
+
 //get user
 Route::get('/users/{user:name}', [UserController::class, 'show'])->name('user.show');
 
@@ -97,9 +100,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //get event status
     Route::get('/events/{event}/status', [EventController::class, 'getUserStatus'])->name('user.event.getStatus');
-
-    //get event comments
-    Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
     //update user
     Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
