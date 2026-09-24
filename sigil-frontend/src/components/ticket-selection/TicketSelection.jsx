@@ -2,11 +2,16 @@ import { Calendar, MapPin, X, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import XSVG from "../../util/icons/XSVG";
 import SeatSVG from "../../util/icons/SeatSVG";
+import { toast } from "react-toastify";
+import { toastConfig } from "../../util/toastConfig";
+import axiosClient from "../../services/axios-client";
 
 const TicketSelection = ({event, closeModal}) => {
     const [activePanelTier, setActivePanelTier] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState({});
     const [standingQuantities, setStandingQuantities] = useState({});
+
+    const [isCheckingOut, setIsCheckingOut] = useState(false);
 
     const drawerRef = useRef(null);
 
@@ -66,7 +71,7 @@ const TicketSelection = ({event, closeModal}) => {
             newState[tierId] = [...(newState[tierId] || []), seatId];
             return newState;
         });
-    }
+    };
 
     const updateStandingQuantity = (tierId, amount, maxAvailable) => {
         setStandingQuantities(prev => {
@@ -74,7 +79,7 @@ const TicketSelection = ({event, closeModal}) => {
             const next = Math.max(0, Math.min(current + amount, maxAvailable));
             return { ...prev, [tierId]: next };
         });
-    }
+    };
 
     const allSelectedSeats = Object.values(selectedSeats).flat();
 
@@ -90,6 +95,47 @@ const TicketSelection = ({event, closeModal}) => {
         },
         { totalPrice: 0, totalTickets: 0 }
     );
+
+    const buildSelections = () => {
+        return (event?.ticket_types || [])
+            .map((tier) => {
+                const seats = selectedSeats[tier.id] || [];
+                const standingCount = standingQuantities[tier.id] || 0;
+                const quantity = seats.length + standingCount;
+
+                if (quantity <= 0) return null;
+
+                return {
+                    ticket_type_id: tier.id,
+                    quantity,
+                    seats,
+                };
+            }).filter(Boolean); 
+    };
+
+    const handleCheckout = async () => {
+        try {
+            const selections = buildSelections();
+            if (!selections.length) {
+                toast("Select at least one ticket.", toastConfig);
+                return;
+            }
+
+            setIsCheckingOut(true);
+
+            const response = await axiosClient.post("/api/checkout/session", {
+                event_id: event.id,
+                selections,
+            });
+
+            window.location.href = response.data.checkout_url;
+        }catch (error) {
+            const msg = error?.response?.data?.message || "Checkout failed. Please try again.";
+            toast(msg, toastConfig);
+        } finally {
+            setIsCheckingOut(false);
+        }
+    };
 
     return (
         <div onClick={closeModal} className="fixed inset-0 z-[100] flex justify-center items-center bg-black/80 backdrop-blur-sm">
@@ -272,10 +318,13 @@ const TicketSelection = ({event, closeModal}) => {
                             <span className="font-[Cinzel] text-2xl font-bold text-main-accent">{totalPrice} Ft</span>
                         </div>
                         <button 
-                            onClick={() => console.log("Proceed to checkout!")}
+                            onClick={handleCheckout}
+                            disabled={isCheckingOut}
                             className="py-2 px-4 border border-main-accent bg-main-accent/10 hover:bg-main-accent hover:shadow-[0_0_30px_rgba(153,0,0,0.5)] transition-all duration-300 text-parchment hover:text-primary-bg flex justify-center items-center group"
                         >
-                            <span className="font-[Cinzel] text-lg font-bold">Checkout</span>
+                            <span className="font-[Cinzel] text-lg font-bold">
+                                {isCheckingOut ? "Redirecting..." : "Checkout"}
+                            </span>
                         </button>
                     </div>
                 )}

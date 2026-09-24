@@ -16,7 +16,10 @@ class Ticket extends Model
         'column',
         'ticket_code',
         'status',
-        'held_until'
+        'held_until',
+        'stripe_session_id',
+        'paid_amount',
+        'currency',
     ];
 
     protected $casts = [

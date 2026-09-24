@@ -17,6 +17,7 @@ import ProfilePage from './views/Profile';
 import EditProfile from './views/EditProfile';
 import AllEvents from './views/AllEvents';
 import VerifyEmail from './views/VerifyEmail';
+import CheckoutResult from './views/CheckoutResult';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Route path='/past-events/:slug' element={<EventDetails mode={'past'} />} />
             <Route path='/users/:username' element={<ProfilePage />} />
             <Route path='/events' element={<AllEvents />} />
+            <Route path='/checkout' element={<CheckoutResult />} />
           
             {/* Private Routes */}
             <Route element={<PrivateGuard/>}>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
@@ -143,4 +144,14 @@ Route::middleware('auth:sanctum')->post('/user/force-verify', function (Request 
     $user->save();
 
     return response()->json(['message' => 'Identity verified via Master Key.', 'user' => $user]);
+});
+
+// stripe endpoints
+Route::post('/stripe/webhook', [CheckoutController::class, 'webhook']);
+
+// authenticated checkout
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::post('/checkout/session', [CheckoutController::class, 'createSession']);
+
+    Route::get('/checkout/session/{stripeSessionId}', [CheckoutController::class, 'showSession']);
 });
