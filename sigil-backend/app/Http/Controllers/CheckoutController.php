@@ -55,17 +55,17 @@ class CheckoutController extends Controller
                 return response()->json(['error' => 'Seats should not be selected for non-seated tickets.'], 400);
             }
 
-            //HUF is zero decimal in Stripe
+            $actualPrice = (int) round((float) $ticketType->price);
+            $stripeUnitAmout = $actualPrice * 100;
 
-            $unitAmount = (int) round((float) $ticketType->price);
-            if ($unitAmount <= 0) {
+            if ($actualPrice <= 0) {
                 return response()->json(['error' => 'Invalid ticket price.'], 400);
             }
 
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'huf',
-                    'unit_amount' => $unitAmount,
+                    'unit_amount' => $stripeUnitAmout,
                     'product_data' => [
                         'name' => "{$event->title} - {$ticketType->name}",
                     ],
@@ -73,7 +73,7 @@ class CheckoutController extends Controller
                 'quantity' => $qty,
             ];
 
-            $amountTotal += $unitAmount * $qty;
+            $amountTotal += $actualPrice * $qty;
 
             $normalizedSelections[] = [
                 'ticket_type_id' => $ticketTypeId,
