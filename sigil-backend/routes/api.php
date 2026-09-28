@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -51,6 +52,10 @@ Route::get('/users/comments', [UserController::class, 'getUserComments'])
 
 //get user comments 
 Route::get('/users/{user:name}/comments', [UserController::class, 'getUserComments'])->name('user.comments');
+
+//get my tickets
+Route::get('/users/tickets', [TicketController::class, 'getMyTickets'])
+    ->middleware('auth:sanctum');
 
 //get event comments
 Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
