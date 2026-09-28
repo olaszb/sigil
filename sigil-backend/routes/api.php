@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -50,6 +52,13 @@ Route::get('/users/comments', [UserController::class, 'getUserComments'])
 
 //get user comments 
 Route::get('/users/{user:name}/comments', [UserController::class, 'getUserComments'])->name('user.comments');
+
+//get my tickets
+Route::get('/users/tickets', [TicketController::class, 'getMyTickets'])
+    ->middleware('auth:sanctum');
+
+//get event comments
+Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
 //get user
 Route::get('/users/{user:name}', [UserController::class, 'show'])->name('user.show');
@@ -98,9 +107,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //get event status
     Route::get('/events/{event}/status', [EventController::class, 'getUserStatus'])->name('user.event.getStatus');
 
-    //get event comments
-    Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
-
     //update user
     Route::put('/users/{user}', [UserController::class, 'update'])->name('user.update');
 });
@@ -143,4 +149,14 @@ Route::middleware('auth:sanctum')->post('/user/force-verify', function (Request 
     $user->save();
 
     return response()->json(['message' => 'Identity verified via Master Key.', 'user' => $user]);
+});
+
+// stripe endpoints
+Route::post('/stripe/webhook', [CheckoutController::class, 'webhook']);
+
+// authenticated checkout
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::post('/checkout/session', [CheckoutController::class, 'createSession']);
+
+    Route::get('/checkout/session/{stripeSessionId}', [CheckoutController::class, 'showSession']);
 });

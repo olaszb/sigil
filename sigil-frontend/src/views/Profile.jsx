@@ -11,12 +11,14 @@ import { getImageUrl } from "../util/helper";
 import LoadingScreen from "../components/LoadingScreen";
 import { toast } from "react-toastify";
 import { toastConfig } from "../util/toastConfig";
+import TicketItem from "../components/profile-page/TicketItem";
 
 const ProfilePage = ( ) => {
     const [eventsExpanded, setEventsExpanded] = useState(true);
     const [activeTab, setActiveTab] = useState("interested");
     const [events, setEvents] = useState([]);
     const [comments, setComments] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const { user, logout, setUser } = useAuth();
     const navigate = useNavigate();
 
@@ -59,10 +61,14 @@ const ProfilePage = ( ) => {
                     const url = username ? `/api/users/${username}/comments` : `/api/users/comments`;
                     const { data } = await axiosClient.get(url);
                     setComments(data);
-                } else {
+                } else if (["interested", "going", "attended"].includes(activeTab)) {
                     const url = username ? `/api/users/${username}/events` : `/api/users/events`;
                     const { data } = await axiosClient.get(url , { params: { status: activeTab } });
                     setEvents(data);
+                } else if (activeTab === "tickets" && isOwnProfile) {
+                    const url = "/api/users/tickets";
+                    const { data } = await axiosClient.get(url);
+                    setTickets(data);
                 }
             } catch (error) {
                 console.error("Failed to fetch data:", error);
@@ -72,7 +78,7 @@ const ProfilePage = ( ) => {
         };
 
         fetchData();
-    }, [activeTab, profileUser?.id, username]);
+    }, [activeTab, profileUser?.id, username, isOwnProfile]);
 
     
 
@@ -117,6 +123,7 @@ const ProfilePage = ( ) => {
         setIsTabLoading(true); 
         setEvents([]);
         setComments([]);
+        setTickets([]);
         setActiveTab(newTab);
     }
 
@@ -190,7 +197,12 @@ const ProfilePage = ( ) => {
                 <div className="w-full md:w-48 lg:w-64 bg-black/40 shrink-0 border-b md:border-b-0 md:border-r border-parchment/10 overflow-hidden">
                     {(profileUser?.role !== 'organizer' && profileUser?.role !== 'admin') && (
                         <>
-                            <div onClick={() => setEventsExpanded((prev) => !prev)} 
+                            <div onClick={() => {
+                                    setEventsExpanded((prev) => !prev); 
+                                    if (!["interested", "going", "attended"].includes(activeTab)) {
+                                        handleTabChange('interested');
+                                    }
+                                }} 
                                 className="group py-4 flex items-center justify-center text-center hover:bg-parchment/5 transition-colors duration-400 cursor-pointer">
                                 <span className="group-hover:text-main-accent transition-colors duration-400 mr-2">
                                     Events
@@ -239,7 +251,13 @@ const ProfilePage = ( ) => {
                                     <CommentItem key={comment.id} comment={comment} type={"profile"}/>
                                 ))}
                             </div>
-                        ) : (
+                        ) : (activeTab === 'tickets' && tickets.length > 0 && isOwnProfile) ? (
+                            <div className="space-y-4">
+                                {tickets.map((ticket) => (
+                                    <TicketItem key={ticket.id} ticket={ticket} />
+                                ))}
+                            </div>
+                        ) :(
                             <div className="flex items-center justify-center min-h-[300px]">
                                 <p className="text-parchment/50 font-[Montserrat] italic">
                                     The archives are empty for this selection...
