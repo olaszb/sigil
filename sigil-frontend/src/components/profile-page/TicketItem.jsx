@@ -1,10 +1,13 @@
 import { Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SigilButton from "../SigilButton";
+import { useState } from "react";
+import axiosClient from "../../services/axios-client";
 
 const TicketItem = ({ ticket }) => {
     const navigate = useNavigate();
     const event = ticket.event;
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const getEventUrl = () => {
         if (!event) return "/events";
@@ -18,8 +21,26 @@ const TicketItem = ({ ticket }) => {
         return isPast ? `/past-events/${event.slug}` : `/events/${event.slug}`;
     }
 
-    const handleDownload = () => {
-        console.log("Downloading ticket:", ticket.ticket_code);
+    const handleDownload = async () => {
+        setIsDownloading(true);
+        try {
+            const response = await axiosClient.get(`/api/tickets/${ticket.id}/download`, {
+                responseType: 'blob'
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Sigil-Ticket-${ticket.ticket_code}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        } catch (error) {
+            console.error("Error downloading ticket:", error);
+        } finally {
+            setIsDownloading(false);
+        }
     }
 
     return (
@@ -36,7 +57,7 @@ const TicketItem = ({ ticket }) => {
 
                 <div className="flex flex-col gap-1 text-xs font-[Montserrat] text-parchment/60 cursor-default">
                     <p>
-                        <span className="text-parchment font-bold uppercase tracking-widest text-[10px]">Section:</span>
+                        <span className="text-parchment font-bold uppercase tracking-widest text-[10px]">Section:&nbsp;</span>
                         {ticket.section || "N/A"}
                     </p>
 
@@ -64,8 +85,12 @@ const TicketItem = ({ ticket }) => {
                     onClick={handleDownload}
                     className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-parchment/40 font-bold hover:text-main-accent transition-colors w-full lg:mb-2"
                 >
-                    <Download size={18} />
-                    <span>Download</span>
+                    {isDownloading ? "Generating..." : (
+                        <>
+                            <Download size={18} />
+                            <span>Download</span>
+                        </>
+                    )}
                 </button>
                 
                 <SigilButton 

@@ -57,6 +57,9 @@ Route::get('/users/{user:name}/comments', [UserController::class, 'getUserCommen
 Route::get('/users/tickets', [TicketController::class, 'getMyTickets'])
     ->middleware('auth:sanctum');
 
+//download ticket pdf
+Route::get('/tickets/{ticket}/download', [TicketController::class, 'downloadPDF'])->middleware('auth:sanctum');
+
 //get event comments
 Route::get('/events/{eventId}/comments', [CommentController::class, 'index'])->name('event.comments');
 
