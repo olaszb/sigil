@@ -9,6 +9,8 @@ const TicketItem = ({ ticket }) => {
     const event = ticket.event;
     const [isDownloading, setIsDownloading] = useState(false);
 
+    const isArchived = event ? !!event.deleted_at : false;
+
     const getEventUrl = () => {
         if (!event) return "/events";
 
@@ -42,6 +44,7 @@ const TicketItem = ({ ticket }) => {
             setIsDownloading(false);
         }
     }
+
 
     return (
         <div className="group relative flex flex-col lg:flex-row bg-primary-bg w-full max-w-6xl mb-4 border border-parchment/20
@@ -80,7 +83,7 @@ const TicketItem = ({ ticket }) => {
             </div>
 
             {/* Actions Section (Right Side) */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-center justify-center gap-4 p-6 bg-[#0a0a0a] border-t lg:border-t-0 lg:border-l border-parchment/10 shrink-0">
+            <div className="flex flex-col sm:flex-row lg:flex-col items-center justify-center gap-4 p-8 min-w-[240px] max-w-[240px] bg-[#0a0a0a] border-t lg:border-t-0 lg:border-l border-parchment/10 shrink-0">
                 <button 
                     onClick={handleDownload}
                     className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-parchment/40 font-bold hover:text-main-accent transition-colors w-full lg:mb-2"
@@ -93,10 +96,16 @@ const TicketItem = ({ ticket }) => {
                     )}
                 </button>
                 
-                <SigilButton 
-                    text="Go To Event" 
-                    onClick={() => navigate(getEventUrl())} 
-                />
+                {!isArchived ? (
+                    <SigilButton 
+                        text="Go To Event" 
+                        onClick={() => navigate(getEventUrl())} 
+                    />
+                ) : (
+                    <p className="text-[10px] uppercase text-parchment/40 font-bold">
+                        This event has been archived.
+                    </p>
+                )}
             </div>
         </div>
     );
