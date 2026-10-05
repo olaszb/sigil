@@ -99,10 +99,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/archived-events', [EventController::class, 'archived'])->name('archived.index');
 
     //force delete event
-    Route::delete('/events/{id}/force', [EventController::class, 'forceDelete'])->name('event.force');
+    Route::delete('/events/{event}/force', [EventController::class, 'forceDelete'])->withTrashed()->name('event.force');
 
     //restore event
-    Route::post('/events/{id}/restore', [EventController::class, 'restore'])->name('event.restore');
+    Route::post('/events/{event}/restore', [EventController::class, 'restore'])->withTrashed()->name('event.restore');
 
     //get archived event
     Route::get('/archived-events/{slug}', [EventController::class, 'showArchived'])->name('archived.show');

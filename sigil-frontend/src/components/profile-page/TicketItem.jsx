@@ -103,7 +103,7 @@ const TicketItem = ({ ticket }) => {
                     />
                 ) : (
                     <p className="text-[10px] uppercase text-parchment/40 font-bold">
-                        This event has been archived.
+                        This ritual has been cancelled.
                     </p>
                 )}
             </div>

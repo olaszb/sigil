@@ -30,6 +30,7 @@ const EventDetails = ({ mode }) => {
     const [isCommentClicked, setIsCommentClicked] = useState(false);
     const [comments, setComments] = useState([]);
     const location = useLocation();
+    const hasTickets = (event?.tickets_count || 0) > 0;
 
     const openModal = (event, mode) => {
         setModal({isOpen: true, event, mode});
@@ -132,19 +133,23 @@ const EventDetails = ({ mode }) => {
     }
 
     const handleConfirmAction = async () => {
-        const {event, mode} = modal;
+        const {event, mode: action} = modal;
         try{
-            if (mode === 'restore'){
+            if (action === 'restore'){
                 await axiosClient.post(`/api/events/${event.id}/restore`);
                 toast('Ritual restored successfully!', toastConfig);
                 navigate('/past-events');
-            }else if (mode === 'forceDelete'){
+            }else if (action === 'forceDelete'){
+                if (hasTickets) {
+                    toast("Events with active ticket holders cannot be erased.", toastConfig);
+                    return;
+                }
                 await axiosClient.delete(`/api/events/${event.id}/force`);
-                toast('Ritual restored successfully!', toastConfig);
+                toast('Ritual force-deleted successfully!', toastConfig);
                 navigate('/past-events');
-            }else if (mode === 'delete'){
-                await axiosClient.delete(`/api/events/${event.id}`);
-                toast("Ritual archived successfully!", toastConfig);
+            }else if (action === 'delete'){
+                const res = await axiosClient.delete(`/api/events/${event.id}`);
+                toast(res.data.message, toastConfig);
                 navigate('/past-events');
             }
             
@@ -225,7 +230,7 @@ const EventDetails = ({ mode }) => {
                             <>
                                 <div className="flex">
                                     <SigilButton text={'Restore Ritual'} onClick={() => openModal(event, 'restore')}/>
-                                    <SigilButton text={'Burn Archive'} onClick={() => openModal(event, 'forceDelete')}/>
+                                    <SigilButton text={'Burn Archive'} onClick={() => openModal(event, 'forceDelete')} disabled={hasTickets} />
                                 </div>
                                 <div className="flex items-center gap-2 mt-2">
                                     <div className="h-[1px] w-8 bg-main-accent"/>
@@ -248,7 +253,7 @@ const EventDetails = ({ mode }) => {
                                         >
                                             <span className="relative z-10">Update Ritual</span>
                                 </Link>
-                                <SigilButton text={"Archive Ritual"} onClick={() => openModal(event, 'delete')} />
+                                <SigilButton text={hasTickets ? "Cancel Ritual" : "Archive Ritual"} onClick={() => openModal(event, 'delete')} />
                             </>
                         )}
                     </div>
