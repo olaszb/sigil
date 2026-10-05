@@ -23,13 +23,48 @@ class EventFactory extends Factory
     public function definition(): array
     {
         $title = fake()->unique()->words(3, true);
+        $paragraphs = $this->faker->paragraphs(3);
+
+        $children = array_map(function ($text) {
+            return [
+                'children' => [
+                    [
+                        'detail' => 0,
+                        'format' => 0,
+                        'mode' => 'normal',
+                        'style' => '',
+                        'text' => $text,
+                        'type' => 'text',
+                        'version' => 1,
+                    ]
+                ],
+                'direction' => null,
+                'format' => '',
+                'indent' => 0,
+                'type' => 'paragraph',
+                'version' => 1,
+                'textFormat' => 0,
+                'textStyle' => '',
+            ];
+        }, $paragraphs);
+
+        $lexicalState = [
+            'root' => [
+                'children' => $children,
+                'direction' => null,
+                'format' => '',
+                'indent' => 0,
+                'type' => 'root',
+                'version' => 1,
+            ]
+        ];
 
         return [
             'venue_id' => Venue::factory(),
             'organizer_id' => User::factory(),
             'title' => ucwords($title),
             'slug' => Str::slug($title) . '-' . fake()->unique()->numberBetween(100, 999),
-            'description' => $this->faker->paragraphs(3, true),
+            'description' => json_encode($lexicalState),
             'start_time' => $this->faker->dateTimeBetween('+3 days', '+6 months'),
             'image_url' => null,
         ];
