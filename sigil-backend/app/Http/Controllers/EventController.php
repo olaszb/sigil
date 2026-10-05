@@ -94,7 +94,7 @@ class EventController extends Controller
      */
     public function show($slug)
     {  
-       $event = Event::with('venue', 'ticketTypes')
+       $event = Event::with(['venue', 'ticketTypes' => fn($q) => $q->withCount('tickets')])
        ->withCount([
             'users as interested_count' => fn($q) => $q->where('status', 'interested'),
             'users as going_count' => fn($q) => $q->where('status', 'going')

@@ -3,7 +3,7 @@ import axiosClient from "../services/axios-client";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../util/create-event/create_event.css";
-import { Castle, PenTool, ScrollText, Sparkles, Plus, Trash2, Coins } from "lucide-react";
+import { Castle, PenTool, ScrollText, Sparkles, Plus, Trash2, Coins, Lock } from "lucide-react";
 import Editor from "../components/create-event/Editor/Editor";
 import { getImageUrl } from "../util/helper";
 import { toastConfig } from "../util/toastConfig";
@@ -40,6 +40,7 @@ const UpdateEvent = () => {
       section_name: "",
       price: "",
       quantity: "",
+      tickets_count: 0,
     },
   ]);
 
@@ -94,6 +95,7 @@ const UpdateEvent = () => {
             section_name: t.section_name || "",
             price: t.price,
             quantity: t.quantity_available,
+            tickets_count: t.tickets_count || 0,
           })));
         }else{
           setTicketTiers([{
@@ -102,6 +104,7 @@ const UpdateEvent = () => {
             section_name: "",
             price: "",
             quantity: "",
+            tickets_count: 0,
           }]);
         }
       } catch (err) {
@@ -135,7 +138,7 @@ const UpdateEvent = () => {
   const addTicketTier = () => {
     setTicketTiers([
       ...ticketTiers,
-      { id: Date.now(), name: "", section_name: "", price: "", quantity: "" },
+      { id: Date.now(), name: "", section_name: "", price: "", quantity: "", tickets_count: 0 },
     ]);
   };
 
@@ -470,8 +473,9 @@ const UpdateEvent = () => {
                   {ticketTiers.map((tier) => {
                     const totalCap = getSectionCapacity(tier.section_name);
                     const usedCap = getSectionUsedCapacity(tier.section_name);
-                    const remaining = totalCap - usedCap;
+                    const remaining = totalCap - usedCap - (tier.tickets_count || 0);
                     const isOverfilled = remaining < 0;
+                    const hasTicketsSold = (tier.tickets_count || 0) > 0;
 
                     return (
                       <div
@@ -481,6 +485,11 @@ const UpdateEvent = () => {
                         <div className="md:col-span-3">
                           <label className="text-[9px] uppercase tracking-tighter text-parchment/40">
                             Tier Name
+                            {hasTicketsSold && (
+                              <span className="flex items-center gap-1 text-[8px] text-main-accent uppercase tracking-wider font-mono bg-main-accent/10 px-1.5 py-0.5 rounded border border-main-accent/30">
+                                <Lock size={9} /> {tier.tickets_count} Claimed
+                              </span>
+                            )}
                           </label>
                           <input
                             type="text"
@@ -572,10 +581,20 @@ const UpdateEvent = () => {
                         <div className="md:col-span-1 flex justify-center">
                           <button
                             type="button"
+                            disabled={hasTicketsSold}
                             onClick={() => removeTicketTier(tier.id)}
-                            className="text-parchment/20 hover:text-main-accent transition-colors mb-1"
+                            title={
+                              hasTicketsSold
+                                ? `Bound to ${tier.tickets_count} claimed offering(s). Cannot be destroyed.`
+                                : "Remove Tier"
+                            }
+                            className={`transition-colors mb-1 ${
+                              hasTicketsSold
+                                ? "text-parchment/10 cursor-not-allowed"
+                                : "text-parchment/20 hover:text-main-accent cursor-pointer"
+                            }`}
                           >
-                            <Trash2 size={16} />
+                            {hasTicketsSold ? <Lock size={16} /> : <Trash2 size={16} />}
                           </button>
                         </div>
                       </div>
