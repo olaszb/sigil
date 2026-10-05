@@ -65,7 +65,12 @@ const UpdateEvent = () => {
         setTitle(data.title);
         setDescription(data.description);
         setOriginalDescription(data.description);
-        setStartTime(data.start_time);
+        if (data.start_time) {
+          const cleanDateString = data.start_time.replace(" ", "T");
+          setStartTime(new Date(cleanDateString));
+        } else {
+          setStartTime(null);
+        }
         setSelectedVenueId(data.venue_id);
         setOriginalImage(data.image_url);
 
@@ -199,7 +204,14 @@ const UpdateEvent = () => {
       return;
     }
 
-    const formattedDate = `${startTime.getFullYear()}-${String(startTime.getMonth() + 1).padStart(2, '0')}-${String(startTime.getDate()).padStart(2, '0')} ${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}:00`;
+    const dateObj = startTime instanceof Date ? startTime : new Date(String(startTime).replace(" ", "T"));
+
+    if (isNaN(dateObj.getTime())) {
+      setError("Invalid date provided.");
+      return;
+    }
+
+    const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:00`;
 
     const formData = new FormData();
     formData.append("_method", "PUT");
