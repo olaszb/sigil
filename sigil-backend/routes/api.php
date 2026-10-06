@@ -162,4 +162,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/checkout/session', [CheckoutController::class, 'createSession']);
 
     Route::get('/checkout/session/{stripeSessionId}', [CheckoutController::class, 'showSession']);
+
+    Route::get('/events/{event}/taken-seats', [EventController::class, 'getTakenSeats']);
 });
