@@ -192,9 +192,9 @@ const ProfilePage = ( ) => {
             )}
 
 
-            <div className="bg-black/20 flex flex-col md:flex-row mx-4 md:mx-10 mt-5 border border-parchment/10 min-h-[400px]">
+            <div className="bg-black/20 flex flex-col md:flex-row mx-4 md:mx-10 mt-5 border border-parchment/10 h-[500px]">
                 {/* Sidebar */}
-                <div className="w-full md:w-48 lg:w-64 bg-black/40 shrink-0 border-b md:border-b-0 md:border-r border-parchment/10 overflow-hidden">
+                <div className="w-full md:w-48 lg:w-64 bg-black/40 shrink-0 border-b md:border-b-0 md:border-r border-parchment/10 overflow-y-auto">
                     {(profileUser?.role !== 'organizer' && profileUser?.role !== 'admin') && (
                         <>
                             <div onClick={() => {
@@ -236,7 +236,7 @@ const ProfilePage = ( ) => {
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 h-full overflow-y-auto pr-1">
                     <div className={`p-4 md:p-8 pb-4 transition-all duration-700 ease-in-out
                         ${isTabLoading ? "opacity-50 translate-y-8 scale-100" : "opacity-100 translate-y-0 scale-100"}`}>
                         {events && events.length > 0 ? (

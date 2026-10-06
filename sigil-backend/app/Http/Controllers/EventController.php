@@ -94,11 +94,12 @@ class EventController extends Controller
      */
     public function show($slug)
     {  
-       $event = Event::with('venue', 'ticketTypes')
+       $event = Event::with(['venue', 'ticketTypes' => fn($q) => $q->withCount('tickets')])
        ->withCount([
             'users as interested_count' => fn($q) => $q->where('status', 'interested'),
             'users as going_count' => fn($q) => $q->where('status', 'going')
        ])
+       ->withCount('tickets')
        ->where('slug', $slug)->firstOrFail();
 
         if ($event->start_time < now()) {
@@ -118,6 +119,7 @@ class EventController extends Controller
                 'users as interested_count' => fn($q) => $q->where('status', 'interested'),
                 'users as going_count' => fn($q) => $q->where('status', 'going')
             ])
+            ->withCount('tickets')
             ->where('slug', $slug)->firstOrFail();
 
         if ($event->start_time >= now()) {
@@ -161,7 +163,7 @@ class EventController extends Controller
                 if($isExistingTier){
                     TicketType::where('id', $tier['id'])->update([
                         'name' => $tier['name'],
-                        'section_name' => $tier['name'],
+                        'section_name' => $tier['section_name'],
                         'price' => $tier['price'],
                         'quantity_available' => $tier['quantity'],
                     ]);
@@ -178,7 +180,22 @@ class EventController extends Controller
                 }
             }
 
-            TicketType::where('event_id', $event->id)->whereNotIn('id', $processedTierIds)->delete();
+            //prevent types with already bought tickets from deletion
+            $tiersToRemove = TicketType::where('event_id', $event->id)
+                ->whereNotIn('id', $processedTierIds)
+                ->get();
+
+            foreach ($tiersToRemove as $tier) {
+                if ($tier->tickets()->exists()) {
+                    return response()->json([
+                        'message' => "Cannot remove the '{$tier->name}' tier because offerings have already been claimed under it."
+                    ], 422);
+                }
+            }
+
+            TicketType::where('event_id', $event->id)
+                ->whereNotIn('id', $processedTierIds)
+                ->delete();
 
             $event->load('ticketTypes');
 
@@ -194,8 +211,15 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         Gate::authorize('delete', $event);
+
         $event->delete();
-        return response()->json(['message' => 'Event archived successfully!']);
+
+
+        return response()->json([
+            'message' => $event->tickets()->exists() 
+                ? 'Ritual has been cancelled and archived. Ticket records remain preserved.'
+                : 'Ritual archived successfully!'
+        ]);
     }
 
     public function archived(Request $request){
@@ -221,9 +245,14 @@ class EventController extends Controller
         return response()->json($events);
     }
 
-    public function forceDelete($id) {
-        $event = Event::withTrashed()->findOrFail($id);
+    public function forceDelete(Event $event) {
         Gate::authorize('forceDelete', $event);
+
+        if ($event->tickets()->exists()) {
+            return response()->json([
+                'message' => 'This event has active ticket sales and cannot be deleted or archived.'
+            ], 422);
+        }
 
         if($event->image_url){
             Storage::disk('public')->delete($event->image_url);
@@ -233,8 +262,7 @@ class EventController extends Controller
         return response()->json(['message' => 'Event permanently deleted!']);
     }
 
-    public function restore($id){
-        $event = Event::withTrashed()->findOrFail($id);
+    public function restore(Event $event){
         Gate::authorize('restore', $event);
 
         $event->restore();
@@ -243,7 +271,7 @@ class EventController extends Controller
     }
 
     public function showArchived($slug, Request $request){
-        $event = Event::withTrashed()->where('slug', $slug)->firstOrFail();
+        $event = Event::withTrashed()->with('venue', 'ticketTypes')->withCount('tickets')->where('slug', $slug)->firstOrFail();
         Gate::authorize('view', $event);
 
         return response()->json([

@@ -1,14 +1,18 @@
-const SigilButton = ({text, onClick, type = "button", clipPath="[clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)]"}) => {
+const SigilButton = ({text, onClick, type = "button", clipPath="[clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)]", disabled = false}) => {
     return (
-        <button type={type} onClick={onClick} className={`relative overflow-hidden
-            pl-8 pr-8 py-3 bg-main-accent text-primary-bg
-         ${clipPath}
-        tracking-[0.15em] text-[10px] font-black uppercase
-        
-        before:content-[''] before:absolute before:inset-0
-        before:bg-parchment before:translate-y-[100%]
-        before:transition-transform before:duration-400 before:ease-in-out
-        hover:before:translate-y-0 hover:text-primary-bg`}
+        <button type={type} onClick={onClick} 
+        className={`relative overflow-hidden pl-8 pr-8 py-3 ${clipPath}
+            tracking-[0.15em] text-[10px] font-black uppercase transition-all duration-300
+            ${
+                disabled
+                    ? "bg-main-accent/30 text-parchment/30 cursor-not-allowed opacity-50 select-none shadow-none pointer-events-none"
+                    : `bg-main-accent text-primary-bg cursor-pointer
+                        before:content-[''] before:absolute before:inset-0
+                        before:bg-parchment before:translate-y-[100%]
+                        before:transition-transform before:duration-400 before:ease-in-out
+                        hover:before:translate-y-0 hover:text-primary-bg`
+            }`}
+        disabled={disabled}
         >
             <span className="relative z-10">{text}</span>
         </button>
