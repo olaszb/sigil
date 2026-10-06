@@ -163,7 +163,7 @@ class EventController extends Controller
                 if($isExistingTier){
                     TicketType::where('id', $tier['id'])->update([
                         'name' => $tier['name'],
-                        'section_name' => $tier['name'],
+                        'section_name' => $tier['section_name'],
                         'price' => $tier['price'],
                         'quantity_available' => $tier['quantity'],
                     ]);
