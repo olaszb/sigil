@@ -10,6 +10,7 @@ const TicketSelection = ({event, closeModal}) => {
     const [activePanelTier, setActivePanelTier] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState({});
     const [standingQuantities, setStandingQuantities] = useState({});
+    const [takenSeatsByTier, setTakenSeatsByTier] = useState({});
 
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -32,6 +33,21 @@ const TicketSelection = ({event, closeModal}) => {
         }
     }, [activePanelTier]);
 
+    useEffect(() => {
+        if (!event?.id) return;
+
+        const fetchTakenSeats = async () => {
+            try {
+                const res = await axiosClient.get(`/api/events/${event.id}/taken-seats`);
+                setTakenSeatsByTier(res.data.taken_seats || {});
+            } catch (error) {
+                console.error("Error fetching taken seats:", error);
+            }
+        };
+
+        fetchTakenSeats();
+    }, [event?.id]);
+
     const parsedLayout = (() => {
         if (!event?.venue?.layout) return null;
         let layout = event.venue.layout;
@@ -52,9 +68,15 @@ const TicketSelection = ({event, closeModal}) => {
         setActivePanelTier(tier);
     }
 
+    const isSeatTaken = (tierId, seatId) => {
+        return (takenSeatsByTier[tierId] || []).includes(seatId);
+    };
+
     const toggleSeat = (rId, cId) => {
         const seatId = `${rId}-${cId}`;
         const tierId = activePanelTier.id;
+
+        if (isSeatTaken(tierId, seatId)) return;
 
         setSelectedSeats(prev => {
             const tierSeats = prev[tierId] || [];
@@ -136,6 +158,8 @@ const TicketSelection = ({event, closeModal}) => {
             setIsCheckingOut(false);
         }
     };
+
+    
 
     return (
         <div onClick={closeModal} className="fixed inset-0 z-[100] flex justify-center items-center bg-black/80 backdrop-blur-sm">
@@ -247,6 +271,7 @@ const TicketSelection = ({event, closeModal}) => {
                                                         {Array.from({length: activeSection.columns}).map((_, cId) => {
                                                             const seatId = `${rId}-${cId}`;
                                                             const isVoid = activeSection.void_seats?.includes(seatId);
+                                                            const taken = isSeatTaken(activePanelTier.id, seatId);
 
                                                             const isSelectedByMe = (selectedSeats[activePanelTier.id] || []).includes(seatId);
                                                             const isSelectedElsewhere = !isSelectedByMe && allSelectedSeats.includes(seatId);
@@ -255,16 +280,29 @@ const TicketSelection = ({event, closeModal}) => {
 
                                                             return (
                                                                 <div key={seatId}
-                                                                    onClick={() => toggleSeat(rId, cId)}
+                                                                    onClick={() => {
+                                                                        if (!taken) {
+                                                                            toggleSeat(rId, cId);
+                                                                        }
+                                                                    }}
                                                                     title={`Row ${rId + 1}, Seat ${cId + 1}`}
                                                                     className={`w-6 h-6 md:w-8 md:h-8 cursor-pointer transition-all duration-300 flex items-center justify-center
-                                                                        ${isSelectedByMe 
-                                                                            ? 'text-main-accent scale-110 drop-shadow-[0_0_8px_rgba(153,0,0,0.8)]' 
-                                                                            : isSelectedElsewhere ? "text-parchment/40 opacity-50 border border-parchment/20 bg-parchment/5" 
-                                                                            : 'text-parchment/20 hover:text-parchment/60 hover:scale-105'}
+                                                                        ${taken
+                                                                            ? "text-red-500 bg-red-500/15 border border-red-500/60 cursor-not-allowed"
+                                                                            : isSelectedByMe 
+                                                                                ? 'text-main-accent scale-110 drop-shadow-[0_0_8px_rgba(153,0,0,0.8)]' 
+                                                                                : isSelectedElsewhere 
+                                                                                    ? "text-parchment/40 opacity-50 border border-parchment/20 bg-parchment/5" 
+                                                                                    : 'text-parchment/20 hover:text-parchment/60 hover:scale-105'}
                                                                         `}
                                                                     >
-                                                                    {!isSelectedElsewhere ? <SeatSVG /> : <span className="text-[8px]">X</span>}
+                                                                    {taken ? (
+                                                                        <span className="text-[8px] font-bold">X</span>
+                                                                    ) : !isSelectedElsewhere ? (
+                                                                        <SeatSVG />
+                                                                    ) : (
+                                                                        <span className="text-[8px]">X</span>
+                                                                    )}
                                                                 </div>
                                                             );
                                                         })}
@@ -275,6 +313,7 @@ const TicketSelection = ({event, closeModal}) => {
                                         {/* Selection Status */}
                                         <div className="mt-4 flex gap-4 text-[10px] uppercase tracking-widest text-parchment/40">
                                             <span className="flex items-center gap-1.5"><div className="w-3 h-3 border border-parchment/20 bg-parchment/20"></div> Available</span>
+                                            <span className="flex items-center gap-1.5"><div className="w-3 h-3 border border-red-500 bg-red-500/15"/> Taken</span>
                                             <span className="flex items-center gap-1.5"><div className="w-3 h-3 border border-main-accent bg-main-accent"></div> Selected ({(selectedSeats[activePanelTier.id] || []).length})</span>
                                         </div>
                                     </div>

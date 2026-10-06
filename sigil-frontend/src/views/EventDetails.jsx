@@ -41,6 +41,10 @@ const EventDetails = ({ mode }) => {
     }
 
     const openTicketModal = () => {
+        if (user && user.email_verified_at === null) {
+            toast("Your identity is unverified. Check your email to unlock this ritual.", toastConfig);
+            return;
+        }
         setTicketModal({isOpen: true, event, mode});
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\Ticket;
 use App\Models\TicketType;
 use Date;
 use Illuminate\Support\Facades\DB;
@@ -207,7 +208,6 @@ class EventController extends Controller
         });
     }
 
-    
     public function destroy(Event $event)
     {
         Gate::authorize('delete', $event);
@@ -335,5 +335,33 @@ class EventController extends Controller
         $events = Event::with('venue')->where('start_time', '>=', now())->orderBy('start_time', 'asc')->take(3)->get();
 
         return response()->json($events);
+    }
+
+    public function getTakenSeats(Event $event){
+        $takenSeats = Ticket::query()
+            ->where('event_id', $event->id)
+            ->whereIn('status', ['sold', 'held'])
+            ->whereNotNull('ticket_type_id')
+            ->select('ticket_type_id', 'row', 'column')
+            ->get()
+            ->groupBy('ticket_type_id')
+            ->map(function ($tickets){
+                return $tickets
+                    ->map(function($ticket){
+                        return "{$ticket->row}-{$ticket->column}";
+                    })
+                    ->unique()
+                    ->values()
+                    ->all();
+            })
+            ->mapWithKeys(function ($seats, $ticketTypeId){
+                return [(string) $ticketTypeId => $seats]; 
+            })
+            ->all();
+            
+        return response()->json([
+            'taken_seats' => $takenSeats,
+            'event_id' => $event->id
+        ]);  
     }
 }
